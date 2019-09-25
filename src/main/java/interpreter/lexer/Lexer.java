@@ -5,25 +5,33 @@ import interpreter.lexer.token.Token;
 import interpreter.lexer.token.Word;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Hashtable;
 
 public class Lexer {
     private int line;
     private char peek;
-    private Hashtable keyWords = new Hashtable();
+    private Hashtable keyWords;
     private Token curToken;
     private BufferedReader reader;
 
+    public static final char EOF = 0;
+
     private void reserve(Word w){
-        // TODO 保留关键字
+//        keyWords.put(w.lexeme, w);
     }
 
     public Lexer() {
-        // TODO 无参构造函数
+        this.line = 0;
+        this.peek = ' ';
+        this.keyWords = new Hashtable();
+        this.reader = null;
+        this.initKeyWords();
     }
 
     public Lexer(BufferedReader reader) {
-        // TODO 字符流reader作参数的构造函数
+        this();
+        this.reader = reader;
     }
 
     private void initKeyWords() {
@@ -31,19 +39,33 @@ public class Lexer {
     }
 
     public boolean isKeyWord(Word w) {
-        // TODO 检查是否为保留字
-
+//        return this.keyWords.containsKey(w.lexeme);
         return false;
     }
 
-    public void getNextChar() {
+    public boolean isKeyWord(String s) {
+        return this.keyWords.containsKey(s);
+    }
+
+    public void getNextChar() throws IOException {
         // TODO 读取下一个字符
+        if(reader != null) {
+            int ch = reader.read();
+            if (ch == -1){
+                peek = EOF;
+            } else {
+                peek = (char) ch;
+            }
+        }
     }
 
-    public boolean getNextChar(char c) {
+    public boolean getNextChar(char c) throws IOException {
         // TODO 读取下一个字符并判断是否为 c
-
-        return false;
+        getNextChar();
+        if( peek != c ) {
+            return false;
+        }
+        return true;
     }
 
     public Token getNextToken() throws SyntaxError {
