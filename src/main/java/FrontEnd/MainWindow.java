@@ -1,8 +1,8 @@
 package FrontEnd;
 
+import FrontEnd.parts.*;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainWindow {
     private JPanel mainPanel;
@@ -26,14 +26,14 @@ public class MainWindow {
     private JScrollPane outputScrollPane;
     private JTextPane outputPane;
     private JToolBar funcToolBar;
+    private JButton editButton;
 
     // ¹¹Ôìº¯Êý
     private MainWindow() {
-        funcToolBar.setFloatable(false);
-        fileButton.addActionListener(e -> {
-            JDialog jd = new JDialog();
-            jd.setVisible(true);
-        });
+        MToolBar.setToolBar(funcToolBar);
+        MButton.setFileButton(fileButton);
+        MButton.setEditButton(editButton);
+
     }
 
     public static void main(String[] args) {

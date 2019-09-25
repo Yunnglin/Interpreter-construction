@@ -31,6 +31,12 @@
             <constraints/>
             <properties/>
           </component>
+          <component id="3ccf1" class="javax.swing.JButton" binding="editButton">
+            <constraints/>
+            <properties>
+              <text value="编辑"/>
+            </properties>
+          </component>
           <component id="c660d" class="javax.swing.JToolBar$Separator">
             <constraints/>
             <properties/>
