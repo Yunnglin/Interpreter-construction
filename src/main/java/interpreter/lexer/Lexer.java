@@ -1,5 +1,6 @@
 package interpreter.lexer;
 
+import interpreter.Const;
 import interpreter.exception.SyntaxError;
 import interpreter.lexer.token.Token;
 import interpreter.lexer.token.Word;
@@ -15,10 +16,10 @@ public class Lexer {
     private Token curToken;
     private BufferedReader reader;
 
-    public static final char EOF = 0;
+    private static final char EOF = 0;
 
     private void reserve(Word w){
-//        keyWords.put(w.lexeme, w);
+        keyWords.put(w.getLexeme(), w);
     }
 
     public Lexer() {
@@ -39,8 +40,7 @@ public class Lexer {
     }
 
     public boolean isKeyWord(Word w) {
-//        return this.keyWords.containsKey(w.lexeme);
-        return false;
+        return this.keyWords.containsKey(w.getLexeme());
     }
 
     public boolean isKeyWord(String s) {
@@ -62,18 +62,87 @@ public class Lexer {
     public boolean getNextChar(char c) throws IOException {
         // TODO 读取下一个字符并判断是否为 c
         getNextChar();
-        if( peek != c ) {
-            return false;
-        }
-        return true;
+        return c == peek;
     }
 
-    public Token getNextToken() throws SyntaxError {
+    public Token getNextToken() throws SyntaxError, IOException {
         // 核心代码，解析得到新的token
-
+        String whitespaces = " \t\r\n";
+        int comments = 0;
         // TODO 读取新的非空字符
-
-        // TODO 解析操作符、注释等
+        while(whitespaces.indexOf(peek) != -1) {
+            if(peek == '\n') {
+                ++line;
+            }
+            getNextChar();
+        }
+        if(peek == EOF) {
+            return null;
+        }
+        // 解析操作符、注释等
+        switch (peek) {
+            case '=':
+                if(getNextChar('=')) {
+                    return new Word(Const.EQ, "==");
+                } else {
+                    return new Token(Const.ASSIGN);
+                }
+            case '<':
+                if(getNextChar('>')) {
+                    return new Word(Const.NEQ, "<>");
+                } else {
+                    return new Token(Const.LESS_THAN);
+                }
+            case '/':
+                if(getNextChar('*')) {
+                    // 进入注释
+                    ++comments;
+                    while(comments != 0) {
+                        if(getNextChar(EOF)) {
+                            return null;
+                        } else if (peek == '*'){
+                            if(getNextChar(EOF)) {
+                                return null;
+                            } else if (peek == '/') {
+                                --comments;
+                            }
+                        }
+                    }
+                } else {
+                    return new Token(Const.DIVIDE);
+                }
+            case '*':
+                getNextChar();
+                return new Token(Const.MULTIPLY);
+            case '+':
+                getNextChar();
+                return new Token(Const.SUM);
+            case '(':
+                getNextChar();
+                return new Token(Const.L_PARENTHESES);
+            case ')':
+                getNextChar();
+                return new Token(Const.R_PARENTHESES);
+            case '{':
+                getNextChar();
+                return new Token(Const.L_BRACES);
+            case '}':
+                getNextChar();
+                return new Token(Const.R_BRACES);
+            case '[':
+                getNextChar();
+                return new Token(Const.L_SQUARE_BRACKETS);
+            case ']':
+                getNextChar();
+                return new Token(Const.R_SQUARE_BRACKETS);
+            case ';':
+                getNextChar();
+                return new Token(Const.SEMICOLON);
+            case '-':
+                // TODO 考虑是否和整数与实数的解析同时进行，即词法阶段完成对负数的识别
+                getNextChar();
+                return new Token(Const.SUB);
+        }
 
         // TODO 解析整数和实数
         if(Character.isDigit(peek)) {

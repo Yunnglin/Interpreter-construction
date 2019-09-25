@@ -37,4 +37,10 @@ public class lexerTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void general() {
+        String whitespaces = " \t\r\n";
+        System.out.println(whitespaces.indexOf('\0'));
+    }
 }
