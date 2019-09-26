@@ -46,6 +46,11 @@ public class MainWindow {
         MTextPane mTextPane = new MTextPane(editPane,rowPane);
         mTextPane.setTextPane();
         mTextPane.setRowPane();
+        editPane.addKeyListener(new MKeyListener(this));
+
+        MScrollPane mScrollPane = new MScrollPane(this);
+        mScrollPane.init();
+
 
     }
 
