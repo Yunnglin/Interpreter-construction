@@ -27,13 +27,50 @@ public class MainWindow {
     private JTextPane outputPane;
     private JToolBar funcToolBar;
     private JButton editButton;
+    private JSplitPane splitTreeEdit;
+    private JSplitPane splitInOut;
 
     // ¹¹Ôìº¯Êý
     private MainWindow() {
-        MToolBar.setToolBar(funcToolBar);
-        MButton.setFileButton(fileButton);
-        MButton.setEditButton(editButton);
+        MToolBar mToolBar = new MToolBar();
+        mToolBar.setToolBar(funcToolBar);
 
+        MButton mButton = new MButton();
+        mButton.setFileButton(fileButton);
+        mButton.setEditButton(editButton);
+
+        MSplitPane mSplitPane = new MSplitPane();
+        mSplitPane.setSplitInOut(splitInOut);
+        mSplitPane.setSplitTreeEdit(splitTreeEdit);
+
+        MTextPane mTextPane = new MTextPane(editPane,rowPane);
+        mTextPane.setTextPane();
+        mTextPane.setRowPane();
+
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public JTextPane getRowPane() {
+        return rowPane;
+    }
+
+    public JTextPane getEditPane() {
+        return editPane;
+    }
+
+    public JScrollPane getEditScrollPane() {
+        return editScrollPane;
+    }
+
+    public JScrollPane getRowScrollPane() {
+        return rowScrollPane;
+    }
+
+    public JTree getFoldersTree(){
+        return foldersTree;
     }
 
     public static void main(String[] args) {
