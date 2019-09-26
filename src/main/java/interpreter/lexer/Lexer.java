@@ -7,7 +7,9 @@ import interpreter.lexer.token.Word;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class Lexer {
     private int line;
@@ -70,6 +72,15 @@ public class Lexer {
         // 读取下一个字符并判断是否为 c
         getNextChar();
         return c == peek;
+    }
+
+    public ArrayList<Token> getAllToken() throws IOException, SyntaxError {
+        ArrayList<Token> tokens = new ArrayList<Token>();
+        Token token = null;
+        while((token = this.getNextToken())!=null) {
+            tokens.add(token);
+        }
+        return tokens;
     }
 
     public Token getNextToken() throws SyntaxError, IOException {
