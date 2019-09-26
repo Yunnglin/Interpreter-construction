@@ -50,14 +50,12 @@ public class lexerTest {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(filepath));
+            Lexer myLexer = new Lexer(reader);
             try {
-                Lexer myLexer = new Lexer(reader);
                 ArrayList<Token> tokens = myLexer.getAllToken();
                 System.out.println(tokens);
-            } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
             } catch (IOException e) {
+                System.out.println(e.getMessage());
                 e.printStackTrace();
             } catch (SyntaxError syntaxError) {
                 System.out.println(syntaxError.getMessage());
@@ -66,7 +64,6 @@ public class lexerTest {
                 reader.close();
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
