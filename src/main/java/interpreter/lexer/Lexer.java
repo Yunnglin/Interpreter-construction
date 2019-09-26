@@ -36,7 +36,14 @@ public class Lexer {
     }
 
     private void initKeyWords() {
-        // TODO 初始化保留字
+        // 初始化保留字
+        reserve(new Word(Const.IF, "if"));
+        reserve(new Word(Const.ELSE, "else"));
+        reserve(new Word(Const.WHILE, "while"));
+        reserve(new Word(Const.READ, "read"));
+        reserve(new Word(Const.WRITE, "write"));
+        reserve(new Word(Const.INT, "int"));
+        reserve(new Word(Const.REAL, "real"));
     }
 
     public boolean isKeyWord(Word w) {
@@ -48,7 +55,7 @@ public class Lexer {
     }
 
     public void getNextChar() throws IOException {
-        // TODO 读取下一个字符
+        // 读取下一个字符
         if(reader != null) {
             int ch = reader.read();
             if (ch == -1){
@@ -60,7 +67,7 @@ public class Lexer {
     }
 
     public boolean getNextChar(char c) throws IOException {
-        // TODO 读取下一个字符并判断是否为 c
+        // 读取下一个字符并判断是否为 c
         getNextChar();
         return c == peek;
     }
@@ -69,7 +76,7 @@ public class Lexer {
         // 核心代码，解析得到新的token
         String whitespaces = " \t\r\n";
         int comments = 0;
-        // TODO 读取新的非空字符
+        // 读取新的非空字符
         while(whitespaces.indexOf(peek) != -1) {
             if(peek == '\n') {
                 ++line;
@@ -154,9 +161,8 @@ public class Lexer {
 
         }
 
-        // TODO 无法识别的符号
-
-        return null;
+        // 无法识别的符号
+        throw SyntaxError.newLexicalError(Character.toString(peek), line);
     }
 
 

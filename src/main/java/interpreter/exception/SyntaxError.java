@@ -14,4 +14,8 @@ public class SyntaxError extends InterpError {
     public String toString() {
         return this.getMessage();
     }
+
+    public static SyntaxError newLexicalError(String lex, int line) {
+        return new SyntaxError("BAD CHARACTER "+lex, line);
+    }
 }
