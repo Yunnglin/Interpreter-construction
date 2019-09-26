@@ -1,5 +1,14 @@
 package FrontEnd.parts;
 
+import javax.swing.*;
+
 public class MSplitPane {
-    String url = "https://blog.csdn.net/xietansheng/article/details/74366517";
+    public void setSplitTreeEdit(JSplitPane jsp){
+        jsp.setDividerLocation(100);
+        jsp.setDividerSize(5);
+    }
+    public void setSplitInOut(JSplitPane jsp){
+        jsp.setDividerLocation(700);
+        jsp.setDividerSize(5);
+    }
 }

@@ -55,7 +55,7 @@
           </component>
         </children>
       </toolbar>
-      <splitpane id="9601f">
+      <splitpane id="9601f" binding="splitTreeEdit">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
@@ -77,7 +77,7 @@
               </component>
             </children>
           </scrollpane>
-          <splitpane id="546bb">
+          <splitpane id="546bb" binding="splitInOut">
             <constraints>
               <splitpane position="right"/>
             </constraints>

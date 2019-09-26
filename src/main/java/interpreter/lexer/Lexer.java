@@ -2,6 +2,8 @@ package interpreter.lexer;
 
 import interpreter.Const;
 import interpreter.exception.SyntaxError;
+import interpreter.lexer.token.IntNum;
+import interpreter.lexer.token.Real;
 import interpreter.lexer.token.Token;
 import interpreter.lexer.token.Word;
 
@@ -164,17 +166,46 @@ public class Lexer {
 
         // TODO 解析整数和实数
         if(Character.isDigit(peek)) {
-
+            String num;
+            num="";
+            do{
+                num+=peek;
+                getNextChar();
+            }while (Character.isDigit(peek));
+            if(peek!='.') return new IntNum(Integer.parseInt(num));
+            num+=peek;
+            getNextChar();
+            //记录行数 报错退出？？？？？？
+            if(!Character.isDigit(peek)) throw SyntaxError.newLexicalError(Character.toString(peek), line);
+            for(;;){
+                getNextChar();
+                if(!Character.isDigit(peek)) break;
+                num+=peek;
+            }
+            return new Real(Float.parseFloat(num));
         }
 
         // TODO 解析标识符和保留字等
         if(Character.isLetter(peek)) {
-
+            String name="";
+            do{
+                if(peek=='_'){
+                    //保留字
+                    if(isKeyWord(name)) return (Word)keyWords.get(name);
+                    name+=peek;
+                    getNextChar();
+                    if(!Character.isDigit(peek)&&!Character.isLetter(peek)&&peek!='_'){
+                        throw SyntaxError.newLexicalError(Character.toString(peek), line);
+                    }
+                }else{
+                    name+=peek;
+                    getNextChar();
+                }
+            }while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_');
+            return new Word(Const.IDENTIFIER,name);
         }
 
         // 无法识别的符号
         throw SyntaxError.newLexicalError(Character.toString(peek), line);
     }
-
-
 }
