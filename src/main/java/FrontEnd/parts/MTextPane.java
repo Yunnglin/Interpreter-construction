@@ -7,12 +7,13 @@ import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class MTextPane {
     private JPopupMenu jPopMenu;
     private JTextPane textPane;
     private JTextPane rowPane;
-    private Font font=new Font("¿¬Ìå",Font.PLAIN,20);//Ä¬ÈÏ×ÖÌå
+    private Font font=new Font("ï¿½ï¿½ï¿½ï¿½",Font.PLAIN,20);//Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     public void setTextPane(JTextPane textPane) {
         this.textPane = textPane;
@@ -32,7 +33,7 @@ public class MTextPane {
         this.rowPane = rowPane;
     }
 
-    public void setTextPane(){
+    public void setTextPane(ArrayList tokens){
         JTextPane jtp = this.textPane;
 
         jtp.setFont(font);
