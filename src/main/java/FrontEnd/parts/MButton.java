@@ -23,7 +23,7 @@ public class MButton {
         setLexerButton(mainWindow.getLexerBtn());
     }
 
-    public void setFileButton(JButton button){
+    private void setFileButton(JButton button){
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -32,7 +32,7 @@ public class MButton {
         });
     }
 
-    public void setEditButton(JButton button){
+    private void setEditButton(JButton button){
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -41,7 +41,7 @@ public class MButton {
         });
     }
 
-    public void setLexerButton(JButton button){
+    private void setLexerButton(JButton button){
         button.addActionListener(e -> {
             //get file path
             String path = mainWindow.getPathLabel().getText();

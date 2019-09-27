@@ -46,10 +46,8 @@ public class MainWindow {
         mSplitPane.setSplitInOut(splitInOut);
         mSplitPane.setSplitTreeEdit(splitTreeEdit);
 
-        MTextPane mTextPane = new MTextPane(editPane,rowPane);
-        mTextPane.setTextPane();
-        mTextPane.setRowPane();
-        editPane.addKeyListener(new MKeyListener(this));
+        MTextPane mTextPane = new MTextPane(this);
+
 
         MScrollPane mScrollPane = new MScrollPane(this);
         mScrollPane.init();
