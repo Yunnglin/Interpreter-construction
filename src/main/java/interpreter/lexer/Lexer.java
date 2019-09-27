@@ -163,7 +163,7 @@ public class Lexer {
             case '-':
                 // TODO 考虑是否和整数与实数的解析同时进行，即词法阶段完成对负数的识别
                 getNextChar();
-                return new Token(Const.SUB);
+              return new Token(Const.SUB);
         }
 
         // TODO 解析整数和实数
