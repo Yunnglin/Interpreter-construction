@@ -7,42 +7,39 @@ import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class MTextPane {
+    private MainWindow mainWindow;
     private JPopupMenu jPopMenu;
-    private JTextPane textPane;
+    private JTextPane editPane;
     private JTextPane rowPane;
-    private Font font=new Font("����",Font.PLAIN,20);//Ĭ������
+    private JTextPane outputPane;
+    private Font font=new Font("宋体",Font.PLAIN,20);
 
-    public void setTextPane(JTextPane textPane) {
-        this.textPane = textPane;
-    }
-
-    public void setRowPane(JTextPane rowPane) {
-        this.rowPane = rowPane;
-    }
 
     public MTextPane(){
 //        this.mainWindow=mainWindow;
         jPopMenu = new MPopMenu().getEditMenu();
     }
-    public MTextPane(JTextPane textPane,JTextPane rowPane){
+    public MTextPane(MainWindow mainWindow){
         this();
-        this.textPane = textPane;
-        this.rowPane = rowPane;
+        this.mainWindow = mainWindow;
+        this.editPane = mainWindow.getEditPane();
+        this.rowPane = mainWindow.getRowPane();
+        this.outputPane = mainWindow.getOutputPane();
+        setRowPane();
+        setTextPane();
+        setOutputPane();
     }
 
-    public void setTextPane(ArrayList tokens){
-        JTextPane jtp = this.textPane;
-
-        jtp.setFont(font);
-        jtp.add(jPopMenu);
-        jtp.addMouseListener(new MyMouseListener());
+    private void setTextPane(){
+        editPane.addKeyListener(new MKeyListener(this.mainWindow));
+        editPane.setFont(font);
+        editPane.add(jPopMenu);
+        editPane.addMouseListener(new MyMouseListener());
     }
 
-    public void setRowPane(){
-        JTextPane rowPane= this.rowPane;
+    private void setRowPane(){
         rowPane.setFont(font);
         rowPane.setText("1");
         rowPane.setPreferredSize(new Dimension(50, 100));
@@ -50,10 +47,14 @@ public class MTextPane {
         rowPane.setEditable(false);
     }
 
+    private void setOutputPane(){
+        outputPane.setEditable(false);
+    }
+
     public void setRowContent()
     {
         StringBuilder rowContent=new StringBuilder();
-        Element map = textPane.getDocument().getDefaultRootElement();
+        Element map = editPane.getDocument().getDefaultRootElement();
         int count=map.getElementCount();
         rowPane.setText("");
         for(int i=0;i<count;i++)
@@ -64,12 +65,20 @@ public class MTextPane {
 
     }
 
+    public void setEditPaneContent(){
+
+    }
+
+    public void setOutputPaneContent(){
+
+    }
+
     private class MyMouseListener extends MouseAdapter
     {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON3) {
-                jPopMenu.show(textPane,e.getX(),e.getY());
+                jPopMenu.show(editPane,e.getX(),e.getY());
             }
         }
     }

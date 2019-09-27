@@ -106,16 +106,21 @@ public class Lexer {
             switch (peek) {
                 case '=':
                     if(getNextChar('=')) {
+                        getNextChar();
                         return new Word(Const.EQ, "==");
                     } else {
                         return new Token(Const.ASSIGN);
                     }
                 case '<':
                     if(getNextChar('>')) {
+                        getNextChar();
                         return new Word(Const.NEQ, "<>");
                     } else {
                         return new Token(Const.LESS_THAN);
                     }
+                case '>':
+                    getNextChar();
+                    return new Token(Const.GREATER_THAN);
                 case '/':
                     if(getNextChar('*')) {
                         // 进入注释
