@@ -27,7 +27,7 @@ public class Lexer {
     }
 
     public Lexer() {
-        this.line = 0;
+        this.line = 1;
         this.peek = ' ';
         this.keyWords = new Hashtable();
         this.reader = null;

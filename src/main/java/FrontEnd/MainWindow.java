@@ -31,6 +31,12 @@ public class MainWindow {
     private JSplitPane splitInOut;
 
 
+    private MTextPane mTextPane;
+
+    public MTextPane getmTextPane() {
+        return mTextPane;
+    }
+
     public JButton getEditButton() {
         return editButton;
     }
@@ -46,8 +52,8 @@ public class MainWindow {
         mSplitPane.setSplitInOut(splitInOut);
         mSplitPane.setSplitTreeEdit(splitTreeEdit);
 
-        MTextPane mTextPane = new MTextPane(this);
-
+        mTextPane = new MTextPane(this);
+        mTextPane.init();
 
         MScrollPane mScrollPane = new MScrollPane(this);
         mScrollPane.init();

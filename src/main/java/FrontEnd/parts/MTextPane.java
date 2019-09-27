@@ -7,6 +7,10 @@ import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class MTextPane {
     private MainWindow mainWindow;
@@ -27,6 +31,9 @@ public class MTextPane {
         this.editPane = mainWindow.getEditPane();
         this.rowPane = mainWindow.getRowPane();
         this.outputPane = mainWindow.getOutputPane();
+
+    }
+    public void init(){
         setRowPane();
         setTextPane();
         setOutputPane();
@@ -65,7 +72,19 @@ public class MTextPane {
 
     }
 
-    public void setEditPaneContent(){
+    public void setEditPaneContent(String path){
+        File file = new File(path);
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuilder stringBuilder = new StringBuilder();
+            String strLine = null;
+            while(null != (strLine = reader.readLine())){
+                stringBuilder.append(strLine);
+            }
+            editPane.setText(stringBuilder.toString());
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
 
     }
 
