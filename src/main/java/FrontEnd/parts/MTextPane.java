@@ -29,23 +29,26 @@ public class MTextPane {
         this.outputPane = mainWindow.getOutputPane();
         setRowPane();
         setTextPane();
+        setOutputPane();
     }
 
     private void setTextPane(){
-        JTextPane jtp = this.editPane;
-        jtp.addKeyListener(new MKeyListener(this.mainWindow));
-        jtp.setFont(font);
-        jtp.add(jPopMenu);
-        jtp.addMouseListener(new MyMouseListener());
+        editPane.addKeyListener(new MKeyListener(this.mainWindow));
+        editPane.setFont(font);
+        editPane.add(jPopMenu);
+        editPane.addMouseListener(new MyMouseListener());
     }
 
     private void setRowPane(){
-        JTextPane rowPane= this.rowPane;
         rowPane.setFont(font);
         rowPane.setText("1");
         rowPane.setPreferredSize(new Dimension(50, 100));
         setRowContent();
         rowPane.setEditable(false);
+    }
+
+    private void setOutputPane(){
+        outputPane.setEditable(false);
     }
 
     public void setRowContent()
