@@ -27,7 +27,7 @@ public class Lexer {
     }
 
     public Lexer() {
-        this.line = 0;
+        this.line = 1;
         this.peek = ' ';
         this.keyWords = new Hashtable();
         this.reader = null;
@@ -106,16 +106,21 @@ public class Lexer {
             switch (peek) {
                 case '=':
                     if(getNextChar('=')) {
+                        getNextChar();
                         return new Word(Const.EQ, "==");
                     } else {
                         return new Token(Const.ASSIGN);
                     }
                 case '<':
                     if(getNextChar('>')) {
+                        getNextChar();
                         return new Word(Const.NEQ, "<>");
                     } else {
                         return new Token(Const.LESS_THAN);
                     }
+                case '>':
+                    getNextChar();
+                    return new Token(Const.GREATER_THAN);
                 case '/':
                     if(getNextChar('*')) {
                         // 进入注释
