@@ -13,7 +13,7 @@ public class MTextPane {
     private JPopupMenu jPopMenu;
     private JTextPane textPane;
     private JTextPane rowPane;
-    private Font font=new Font("����",Font.PLAIN,20);//Ĭ������
+    private Font font=new Font("宋体",Font.PLAIN,20);
 
     public void setTextPane(JTextPane textPane) {
         this.textPane = textPane;
@@ -33,7 +33,7 @@ public class MTextPane {
         this.rowPane = rowPane;
     }
 
-    public void setTextPane(ArrayList tokens){
+    public void setTextPane(){
         JTextPane jtp = this.textPane;
 
         jtp.setFont(font);
