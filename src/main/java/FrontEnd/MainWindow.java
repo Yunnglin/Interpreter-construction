@@ -30,7 +30,7 @@ public class MainWindow {
     private JSplitPane splitTreeEdit;
     private JSplitPane splitInOut;
 
-    // ¹¹Ôìº¯Êý
+    // æž„é€ å‡½æ•°
     private MainWindow() {
         MToolBar mToolBar = new MToolBar();
         mToolBar.setToolBar(funcToolBar);
