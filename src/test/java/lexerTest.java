@@ -46,7 +46,7 @@ public class lexerTest {
 
     @Test
     public void lexer() {
-        String filepath = "D://test.cmm";
+        String filepath = "/Users/asteriachiang/Desktop/13.cmm";
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(filepath));
