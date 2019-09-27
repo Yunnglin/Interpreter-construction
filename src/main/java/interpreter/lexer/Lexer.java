@@ -128,9 +128,11 @@ public class Lexer {
                             }
                         }
                     }
+                    getNextChar();
                 } else {
                     return new Token(Const.DIVIDE);
                 }
+                break;
             case '*':
                 getNextChar();
                 return new Token(Const.MULTIPLY);
@@ -175,8 +177,8 @@ public class Lexer {
             if(peek!='.') return new IntNum(Integer.parseInt(num));
             num+=peek;
             getNextChar();
-            //记录行数 报错退出？？？？？？
-            if(!Character.isDigit(peek)) throw SyntaxError.newLexicalError(Character.toString(peek), line);
+            //记录行数 报错退出
+            if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num, line);
             for(;;){
                 getNextChar();
                 if(!Character.isDigit(peek)) break;
@@ -195,7 +197,7 @@ public class Lexer {
                     name+=peek;
                     getNextChar();
                     if(!Character.isDigit(peek)&&!Character.isLetter(peek)&&peek!='_'){
-                        throw SyntaxError.newLexicalError(Character.toString(peek), line);
+                        throw SyntaxError.newIdentifierError(name, line);
                     }
                 }else{
                     name+=peek;

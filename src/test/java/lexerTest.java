@@ -53,7 +53,9 @@ public class lexerTest {
             Lexer myLexer = new Lexer(reader);
             try {
                 ArrayList<Token> tokens = myLexer.getAllToken();
-                System.out.println(tokens);
+                for(Token token : tokens){
+                    System.out.println(token);
+                }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
