@@ -9,9 +9,9 @@ public class Real extends Token {
 
     @Override
     public String toString() {
-        return "Real{" +
-                "value=" + value +
-                '}';
+        return "Real{tag=" + getTag()
+                + ", value=" + value
+                + '}';
     }
 
     public void setValue(double value) {

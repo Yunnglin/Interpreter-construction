@@ -21,8 +21,8 @@ public class IntNum extends Token {
 
     @Override
     public String toString() {
-        return "IntNum{" +
-                "value=" + value +
-                '}';
+        return "IntNum{tag=" + getTag()
+                + ", value=" + value
+                + '}';
     }
 }

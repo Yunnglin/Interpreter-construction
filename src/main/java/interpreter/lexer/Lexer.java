@@ -9,7 +9,9 @@ import interpreter.lexer.token.Word;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class Lexer {
     private int line;
@@ -74,6 +76,15 @@ public class Lexer {
         return c == peek;
     }
 
+    public ArrayList<Token> getAllToken() throws IOException, SyntaxError {
+        ArrayList<Token> tokens = new ArrayList<Token>();
+        Token token = null;
+        while((token = this.getNextToken())!=null) {
+            tokens.add(token);
+        }
+        return tokens;
+    }
+
     public Token getNextToken() throws SyntaxError, IOException {
         // 核心代码，解析得到新的token
         String whitespaces = " \t\r\n";
@@ -117,9 +128,11 @@ public class Lexer {
                             }
                         }
                     }
+                    getNextChar();
                 } else {
                     return new Token(Const.DIVIDE);
                 }
+                break;
             case '*':
                 getNextChar();
                 return new Token(Const.MULTIPLY);
@@ -164,8 +177,8 @@ public class Lexer {
             if(peek!='.') return new IntNum(Integer.parseInt(num));
             num+=peek;
             getNextChar();
-            //记录行数 报错退出？？？？？？
-            if(!Character.isDigit(peek)) throw SyntaxError.newLexicalError(Character.toString(peek), line);
+            //记录行数 报错退出
+            if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num, line);
             for(;;){
                 getNextChar();
                 if(!Character.isDigit(peek)) break;
@@ -184,7 +197,7 @@ public class Lexer {
                     name+=peek;
                     getNextChar();
                     if(!Character.isDigit(peek)&&!Character.isLetter(peek)&&peek!='_'){
-                        throw SyntaxError.newLexicalError(Character.toString(peek), line);
+                        throw SyntaxError.newIdentifierError(name, line);
                     }
                 }else{
                     name+=peek;

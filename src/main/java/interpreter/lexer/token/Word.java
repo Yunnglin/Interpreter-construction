@@ -13,9 +13,9 @@ public class Word extends Token {
 
     @Override
     public String toString() {
-        return "Word{" +
-                "lexeme='" + lexeme + '\'' +
-                '}';
+        return "Word{tag=" + getTag()
+                + ", lexeme='" + lexeme + '\''
+                + '}';
     }
 
     // TODO

@@ -14,6 +14,14 @@ public class MTextPane {
     private JTextPane rowPane;
     private Font font=new Font("¿¬Ìå",Font.PLAIN,20);//Ä¬ÈÏ×ÖÌå
 
+    public void setTextPane(JTextPane textPane) {
+        this.textPane = textPane;
+    }
+
+    public void setRowPane(JTextPane rowPane) {
+        this.rowPane = rowPane;
+    }
+
     public MTextPane(){
 //        this.mainWindow=mainWindow;
         jPopMenu = new MPopMenu().getEditMenu();
@@ -26,6 +34,7 @@ public class MTextPane {
 
     public void setTextPane(){
         JTextPane jtp = this.textPane;
+
         jtp.setFont(font);
         jtp.add(jPopMenu);
         jtp.addMouseListener(new MyMouseListener());
@@ -34,12 +43,13 @@ public class MTextPane {
     public void setRowPane(){
         JTextPane rowPane= this.rowPane;
         rowPane.setFont(font);
-        rowPane.setText("1   ");
+        rowPane.setText("1");
+        rowPane.setPreferredSize(new Dimension(50, 100));
         setRowContent();
         rowPane.setEditable(false);
     }
 
-    private void setRowContent()
+    public void setRowContent()
     {
         StringBuilder rowContent=new StringBuilder();
         Element map = textPane.getDocument().getDefaultRootElement();

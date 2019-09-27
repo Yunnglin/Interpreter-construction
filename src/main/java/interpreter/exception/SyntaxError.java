@@ -16,6 +16,14 @@ public class SyntaxError extends InterpError {
     }
 
     public static SyntaxError newLexicalError(String lex, int line) {
-        return new SyntaxError("BAD CHARACTER "+lex, line);
+        return new SyntaxError("BAD CHARACTER '"+lex+"'", line);
+    }
+
+    public static SyntaxError newIdentifierError(String name, int line) {
+        return new SyntaxError("BAD IDENTIFIER '"+name+"'", line);
+    }
+
+    public static SyntaxError newConstantError(String num, int line) {
+        return new SyntaxError("BAD CONSTANT '"+num+"'", line);
     }
 }

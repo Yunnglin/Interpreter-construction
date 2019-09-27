@@ -1,10 +1,10 @@
+import interpreter.lexer.Lexer;
+import interpreter.lexer.token.Token;
 import org.junit.Test;
 import interpreter.exception.*;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class lexerTest {
@@ -42,5 +42,31 @@ public class lexerTest {
     public void general() {
         String whitespaces = " \t\r\n";
         System.out.println(whitespaces.indexOf('\0'));
+    }
+
+    @Test
+    public void lexer() {
+        String filepath = "D://test.cmm";
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(filepath));
+            Lexer myLexer = new Lexer(reader);
+            try {
+                ArrayList<Token> tokens = myLexer.getAllToken();
+                for(Token token : tokens){
+                    System.out.println(token);
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            } catch (SyntaxError syntaxError) {
+                System.out.println(syntaxError.getMessage());
+                syntaxError.printStackTrace();
+            } finally {
+                reader.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
