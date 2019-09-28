@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.text.Element;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 
 public class MKeyListener implements KeyListener {
     private JTextPane editPane;
@@ -20,7 +21,8 @@ public class MKeyListener implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         char key = e.getKeyChar();//当前键入值
-        setRowContent();
+        if(key == '\n' || key == '\b')
+            mainWindow.getmTextPane().setRowContent();
 
     }
 
@@ -34,17 +36,4 @@ public class MKeyListener implements KeyListener {
 
     }
 
-    public void setRowContent()
-    {
-        StringBuilder rowContent=new StringBuilder();
-        Element map = editPane.getDocument().getDefaultRootElement();
-        int count=map.getElementCount();
-        rowPane.setText("");
-        for(int i=0;i<count;i++)
-        {
-            rowContent.append(i + 1).append("\n");
-        }
-        rowPane.setText(rowContent.toString());
-
-    }
 }

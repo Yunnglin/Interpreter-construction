@@ -207,11 +207,11 @@ public class Lexer {
                 //记录行数 报错退出
                 if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num, line);
                 for(;;){
+                    num+=peek;
                     getNextChar();
                     if(!Character.isDigit(peek)) break;
-                    num+=peek;
                 }
-                return new Real(Float.parseFloat(num));
+                return new Real(Double.valueOf(num));
             }
 
             // 解析标识符和保留字等
@@ -219,8 +219,6 @@ public class Lexer {
                 String name="";
                 do{
                     if(peek=='_'){
-                        //保留字
-                        if(isKeyWord(name)) return (Word)keyWords.get(name);
                         name+=peek;
                         getNextChar();
                         if(!Character.isDigit(peek)&&!Character.isLetter(peek)&&peek!='_'){
@@ -231,6 +229,7 @@ public class Lexer {
                         getNextChar();
                     }
                 }while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_');
+                if(isKeyWord(name)) return (Word)keyWords.get(name);
                 return new Word(Const.IDENTIFIER,name);
             }
 

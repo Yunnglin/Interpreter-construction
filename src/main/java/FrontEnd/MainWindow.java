@@ -31,22 +31,35 @@ public class MainWindow {
     private JSplitPane splitInOut;
 
 
+    private MTextPane mTextPane;
+    private MPopMenu mPopMenu;
+
+    public MPopMenu getmPopMenu() {
+        return mPopMenu;
+    }
+
+    public MTextPane getmTextPane() {
+        return mTextPane;
+    }
+
     public JButton getEditButton() {
         return editButton;
     }
 
     private MainWindow() {
-        MToolBar mToolBar = new MToolBar();
-        mToolBar.setToolBar(funcToolBar);
-
-        MButton mButton = new MButton(this);
-        mButton.init();
+        //≥ı ºªØ”–À≥–Ú
+        mPopMenu = new MPopMenu(this);
+        mPopMenu.init();
 
         MSplitPane mSplitPane = new MSplitPane();
         mSplitPane.setSplitInOut(splitInOut);
         mSplitPane.setSplitTreeEdit(splitTreeEdit);
 
-        MTextPane mTextPane = new MTextPane(this);
+        MButton mButton = new MButton(this);
+        mButton.init();
+
+        mTextPane = new MTextPane(this);
+        mTextPane.init();
 
 
         MScrollPane mScrollPane = new MScrollPane(this);
