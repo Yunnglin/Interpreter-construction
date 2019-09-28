@@ -1,41 +1,48 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
+import FrontEnd.parts.conf.MColor;
+import FrontEnd.parts.conf.MFont;
+import FrontEnd.parts.conf.MSize;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
 
 public class MScrollPane {
     private MainWindow mainWindow;
-    private JScrollPane rowScroll;
     private JScrollPane editScroll;
-    private BoundedRangeModel editScrollModel;
+    private DefaultListModel lineList;
+
     public MScrollPane(MainWindow mainWindow){
         this.mainWindow = mainWindow;
     }
     public void init(){
-        this.setRowScroll();
         this.setEditScroll();
     }
-    public void setRowScroll(){
-        rowScroll = mainWindow.getRowScrollPane();
-        rowScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        rowScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+
+    private void setEditScroll(){
+        editScroll = mainWindow.getEditScrollPane();
+        lineList = new DefaultListModel();
+        JList lineNumList = new JList(lineList);
+        lineNumList.setFixedCellWidth(MSize.lineCellWidth);
+        lineNumList.setFixedCellHeight(MSize.lineCellHeight);
+        lineNumList.setBackground(MColor.lineAreaColor);
+        lineNumList.setFont(MFont.lineNumFont);
+        editScroll.setRowHeaderView(lineNumList);
     }
 
-    public void setEditScroll(){
-        editScroll = mainWindow.getEditScrollPane();
-        editScrollModel = editScroll.getVerticalScrollBar().getModel();
-        editScrollModel.addChangeListener(e -> {
-            if(e.getSource()==editScrollModel)
-            {
-                JScrollBar sBar = editScroll.getVerticalScrollBar();
-                int x=sBar.getValue();
-                JScrollBar sBar2 = rowScroll.getVerticalScrollBar();
-                sBar2.setValue(x);
-                rowScroll.setVerticalScrollBar(sBar2);
-            }
-        });
+    //ÐÐºÅ¸üÐÂ
+    public void updateLineNum() {
+        int line = mainWindow.getEditPane().getDocument().getDefaultRootElement().getElementCount();
+        if (line == this.lineList.getSize()) {
+            return;
+        } else if (line > this.lineList.getSize()) {
+            for (int i = this.lineList.getSize() + 1; i <= line; i++)
+                this.lineList.addElement(i);
+        } else {
+            for (int i = this.lineList.getSize(); i > line; i--)
+                this.lineList.removeElementAt(i - 1);
+        }
     }
+
 }

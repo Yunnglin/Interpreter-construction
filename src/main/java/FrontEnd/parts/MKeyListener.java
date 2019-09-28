@@ -21,9 +21,9 @@ public class MKeyListener implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         char key = e.getKeyChar();//当前键入值
-        if(key == '\n' || key == '\b')
-            mainWindow.getmTextPane().setRowContent();
-
+        if(key == '\n' || key == '\b'){
+            mainWindow.getmScrollPane().updateLineNum();
+        }
     }
 
     @Override

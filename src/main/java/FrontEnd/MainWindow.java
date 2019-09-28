@@ -33,23 +33,17 @@ public class MainWindow {
 
     private MTextPane mTextPane;
     private MPopMenu mPopMenu;
+    private MScrollPane mScrollPane;
 
-    public MPopMenu getmPopMenu() {
-        return mPopMenu;
-    }
-
-    public MTextPane getmTextPane() {
-        return mTextPane;
-    }
-
-    public JButton getEditButton() {
-        return editButton;
+    public MScrollPane getmScrollPane() {
+        return mScrollPane;
     }
 
     private MainWindow() {
         //≥ı ºªØ”–À≥–Ú
         mPopMenu = new MPopMenu(this);
         mPopMenu.init();
+
 
         MSplitPane mSplitPane = new MSplitPane();
         mSplitPane.setSplitInOut(splitInOut);
@@ -62,27 +56,9 @@ public class MainWindow {
         mTextPane.init();
 
 
-        MScrollPane mScrollPane = new MScrollPane(this);
+        mScrollPane = new MScrollPane(this);
         mScrollPane.init();
 
-//        fileButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                JFileChooser fd = new JFileChooser();
-//                fd.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
-//                fd.showOpenDialog(null);
-//                File f = fd.getSelectedFile();
-//                if (f != null) {
-//                    System.out.println(f.getPath());
-//                }
-//            }
-//        });
-//        editButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
     }
 
     public JPanel getMainPanel() {
@@ -133,6 +109,17 @@ public class MainWindow {
         return complainBtn;
     }
 
+    public MPopMenu getmPopMenu() {
+        return mPopMenu;
+    }
+
+    public MTextPane getmTextPane() {
+        return mTextPane;
+    }
+
+    public JButton getEditButton() {
+        return editButton;
+    }
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
