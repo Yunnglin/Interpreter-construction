@@ -21,17 +21,13 @@ public class MTextPane {
     private Font font=new Font("宋体",Font.PLAIN,20);
 
 
-    public MTextPane(){
-//        this.mainWindow=mainWindow;
-        jPopMenu = new MPopMenu().getEditMenu();
-    }
+
     public MTextPane(MainWindow mainWindow){
-        this();
         this.mainWindow = mainWindow;
         this.editPane = mainWindow.getEditPane();
         this.rowPane = mainWindow.getRowPane();
         this.outputPane = mainWindow.getOutputPane();
-
+        this.jPopMenu = mainWindow.getmPopMenu().getEditMenu();
     }
     public void init(){
         setRowPane();

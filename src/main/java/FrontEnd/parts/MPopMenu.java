@@ -9,37 +9,48 @@ import java.io.*;
 import FrontEnd.MainWindow;
 
 public class MPopMenu {
-    JFileChooser jfc = new JFileChooser();
-    String path;
-    String filename;
-
+    private JFileChooser jfc = new JFileChooser();
+    private String path;
+    private String filename;
     private MainWindow mainWindow;
-    public JPopupMenu getEditMenu(){
-        JPopupMenu jPopMenu = new JPopupMenu();//你的弹出菜单
+    private JPopupMenu editMenu;
+    private JPopupMenu fileMenu;
+
+    public MPopMenu(MainWindow mainWindow){
+        this.mainWindow = mainWindow;
+
+    }
+
+    public void init(){
+        this.editMenu = new JPopupMenu();//你的弹出菜单
         JMenuItem cut=new JMenuItem("剪切(X)");
         setShortcut(cut, KeyEvent.VK_X);
         JMenuItem copy=new JMenuItem("复制(C)");
         setShortcut(copy, KeyEvent.VK_C);
         JMenuItem paste=new JMenuItem("粘贴(V)");
         setShortcut(paste, KeyEvent.VK_V);
-        jPopMenu.add(cut);
-        jPopMenu.add(copy);
-        jPopMenu.add(paste);
-        return jPopMenu;
-    }
+        editMenu.add(cut);
+        editMenu.add(copy);
+        editMenu.add(paste);
 
-    public JPopupMenu getFileMenu(){
-        JPopupMenu jPopMenu = new JPopupMenu();
+        this.fileMenu = new JPopupMenu();
         JMenuItem open=new JMenuItem("打开(O)");
         setShortcut(open, KeyEvent.VK_O);
         JMenuItem newFile=new JMenuItem("新建(N)");
         setShortcut(newFile, KeyEvent.VK_N);
         JMenuItem saveFile=new JMenuItem("保存(S)");
         setShortcut(saveFile, KeyEvent.VK_S);
-        jPopMenu.add(open);
-        jPopMenu.add(newFile);
-        jPopMenu.add(saveFile);
-        return jPopMenu;
+        fileMenu.add(open);
+        fileMenu.add(newFile);
+        fileMenu.add(saveFile);
+    }
+
+    public JPopupMenu getEditMenu(){
+        return editMenu;
+    }
+
+    public JPopupMenu getFileMenu(){
+        return fileMenu;
     }
 
 
