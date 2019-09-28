@@ -42,7 +42,8 @@ public class MPopMenu {
         return jPopMenu;
     }
 
-    public boolean open()
+
+    public boolean open()//open file
     {
         if (JFileChooser.APPROVE_OPTION == jfc.showOpenDialog(mainWindow.getEditPane())) {
             File newFile;
