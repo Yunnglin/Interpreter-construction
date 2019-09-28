@@ -22,24 +22,24 @@ public class MPopMenu extends JPopupMenu implements ActionListener {
 
     public void init(){
         this.editMenu = new JPopupMenu();//你的弹出菜单
-        JMenuItem cut=new JMenuItem("剪切");
+        JMenuItem cut=new JMenuItem("Cut");
         setShortcut(cut, KeyEvent.VK_X);
-        JMenuItem copy=new JMenuItem("复制");
+        JMenuItem copy=new JMenuItem("Copy");
         setShortcut(copy, KeyEvent.VK_C);
-        JMenuItem paste=new JMenuItem("粘贴");
+        JMenuItem paste=new JMenuItem("Paste");
         setShortcut(paste, KeyEvent.VK_V);
         editMenu.add(cut);
         editMenu.add(copy);
         editMenu.add(paste);
 
         this.fileMenu = new JPopupMenu();
-        JMenuItem open=new JMenuItem("打开");
+        JMenuItem open=new JMenuItem("Open");
         setShortcut(open, KeyEvent.VK_O);
         open.addActionListener(this);
-        JMenuItem newFile=new JMenuItem("新建");
+        JMenuItem newFile=new JMenuItem("New");
         setShortcut(newFile, KeyEvent.VK_N);
         newFile.addActionListener(this);
-        JMenuItem saveFile=new JMenuItem("保存");
+        JMenuItem saveFile=new JMenuItem("Save");
         setShortcut(saveFile, KeyEvent.VK_S);
         saveFile.addActionListener(this);
         fileMenu.add(open);
@@ -61,15 +61,15 @@ public class MPopMenu extends JPopupMenu implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("保存"))
+        if(e.getActionCommand().equals("Save"))
         {
             fileOperation.save();
         }
-        if(e.getActionCommand().equals("新建"))
+        if(e.getActionCommand().equals("New"))
         {
             fileOperation.creat();
         }
-        if(e.getActionCommand().equals("打开"))
+        if(e.getActionCommand().equals("Open"))
         {
             fileOperation.open();
         }

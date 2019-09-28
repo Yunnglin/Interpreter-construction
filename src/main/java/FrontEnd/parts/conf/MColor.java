@@ -7,7 +7,7 @@ import java.awt.*;
  */
 public class MColor {
     public static Color editAreaColor = new Color(253, 243, 216);
-    public static Color lineAreaColor = new Color(134, 129, 115);
+    public static Color lineAreaColor = new Color(224, 199, 161);
     public static Color consoleAreaColor = new Color(253, 243, 216);
 
     public static Color symbolColor = new Color(66, 92, 99);

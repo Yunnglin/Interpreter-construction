@@ -53,7 +53,6 @@ public class FileOperation {
             path = newFile.toString();//获取文件路径
             filename = newFile.getName();//获取文件名
             setContent(path, readFile(path));
-
         }
     }
 

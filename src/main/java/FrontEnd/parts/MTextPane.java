@@ -30,45 +30,28 @@ public class MTextPane {
     public void init(){
         setTextPane();
         setOutputPane();
-        setFont(MFont.codeFont);
+
     }
+
     public void setFont(Font font){
         editPane.setFont(font);
         outputPane.setFont(font);
     }
 
     private void setTextPane(){
+        editPane.setFont(MFont.codeFont);
         editPane.addKeyListener(new MKeyListener(this.mainWindow));
         editPane.add(jPopMenu);
         editPane.addMouseListener(new MyMouseListener());
 
     }
 
-//    private void setRowPane(){
-//        rowPane.setText("1");
-//        rowPane.setPreferredSize(new Dimension(50, 100));
-//        setRowContent();
-//        rowPane.setEditable(false);
-//        rowPane.setVisible(false);
-//    }
 
     private void setOutputPane(){
+        outputPane.setFont(MFont.consoleFont);
         outputPane.setEditable(false);
     }
 
-//    public void setRowContent()
-//    {
-//        StringBuilder rowContent=new StringBuilder();
-//        Element map = editPane.getDocument().getDefaultRootElement();
-//        int count=map.getElementCount();
-//        rowPane.setText("");
-//        for(int i=0;i<count;i++)
-//        {
-//            rowContent.append(i + 1).append("\n");
-//        }
-//        rowPane.setText(rowContent.toString());
-//
-//    }
 
     public void setEditPaneContent(String path){
 
