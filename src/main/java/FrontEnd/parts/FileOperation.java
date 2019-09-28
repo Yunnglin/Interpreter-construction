@@ -20,6 +20,7 @@ public class FileOperation {
     private void setContent(String path, String content) {
         mainWindow.getPathLabel().setText(path);
         mainWindow.getEditPane().setText(content);
+        mainWindow.getmScrollPane().updateLineNum();
     }
 
     public String readFile(String path) {

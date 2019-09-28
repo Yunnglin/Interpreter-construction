@@ -40,6 +40,7 @@ public class MTextPane {
 
     private void setTextPane(){
         editPane.setFont(MFont.codeFont);
+        editPane.getDocument().addDocumentListener(new MDocumentListener(this.mainWindow));
         editPane.addKeyListener(new MKeyListener(this.mainWindow));
         editPane.add(jPopMenu);
         editPane.addMouseListener(new MyMouseListener());

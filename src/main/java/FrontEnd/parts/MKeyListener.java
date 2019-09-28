@@ -22,7 +22,7 @@ public class MKeyListener implements KeyListener {
     public void keyTyped(KeyEvent e) {
         char key = e.getKeyChar();//当前键入值
         if(key == '\n' || key == '\b'){
-            mainWindow.getmScrollPane().updateLineNum();
+//            mainWindow.getmScrollPane().updateLineNum();
         }
     }
 
