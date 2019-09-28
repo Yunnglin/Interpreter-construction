@@ -145,6 +145,18 @@ public class Lexer {
                         getNextChar();
                         goon = true;
                         continue;
+                    } else if (peek == '/'){
+                        // 单行注释
+                        getNextChar();
+                        while(peek != '\n' && peek != EOF){
+                            getNextChar();
+                        }
+                        if (peek == EOF) {
+                            return null;
+                        }
+                        getNextChar();
+                        goon = true;
+                        continue;
                     } else {
                         return new Token(Const.DIVIDE);
                     }
@@ -176,12 +188,12 @@ public class Lexer {
                     getNextChar();
                     return new Token(Const.SEMICOLON);
                 case '-':
-                    // TODO 考虑是否和整数与实数的解析同时进行，即词法阶段完成对负数的识别
+                    // 负号和减法在词法阶段相同，负数识别在语法分析阶段完成
                     getNextChar();
                     return new Token(Const.SUB);
             }
 
-            // TODO 解析整数和实数
+            // 解析整数和实数
             if(Character.isDigit(peek)) {
                 String num;
                 num="";
@@ -202,7 +214,7 @@ public class Lexer {
                 return new Real(Float.parseFloat(num));
             }
 
-            // TODO 解析标识符和保留字等
+            // 解析标识符和保留字等
             if(Character.isLetter(peek)) {
                 String name="";
                 do{
