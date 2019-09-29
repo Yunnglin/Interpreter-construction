@@ -34,6 +34,11 @@ public class MainWindow {
     private MTextPane mTextPane;
     private MPopMenu mPopMenu;
     private MScrollPane mScrollPane;
+    private FileOperation fileOperation;
+
+    public FileOperation getFileOperation() {
+        return fileOperation;
+    }
 
     public MScrollPane getmScrollPane() {
         return mScrollPane;
@@ -58,6 +63,8 @@ public class MainWindow {
 
         mScrollPane = new MScrollPane(this);
         mScrollPane.init();
+
+        fileOperation = new FileOperation(this);
 
     }
 

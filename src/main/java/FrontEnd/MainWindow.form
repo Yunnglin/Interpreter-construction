@@ -50,7 +50,7 @@
           <component id="fa73" class="javax.swing.JLabel" binding="pathLabel">
             <constraints/>
             <properties>
-              <text value="path"/>
+              <text value=""/>
             </properties>
           </component>
         </children>
