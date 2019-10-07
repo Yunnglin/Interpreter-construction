@@ -123,14 +123,13 @@ public class FileOperation {
 			{
 				File newFile;
 				File file = jc.getSelectedFile();
-				if(file.getName()==null) return false;
 				BufferedWriter br;
 				MyFileFilter filter = (MyFileFilter) jc.getFileFilter();
 				String ends = filter.getEnds();
-				if (file.toString().indexOf(ends)!=-1) 
+				if (file.toString().contains(ends))
 				{
 					newFile = file;
-				} 
+				}
 				else 
 				{
 					newFile = new File(file.getAbsolutePath() + ends);
@@ -286,7 +285,7 @@ class MyFileFilter extends FileFilter {
 		  public String getDescription() {
 		    return this.description;
 		  }
-		 
+
 		  public String getEnds() {
 		    return this.ends;
 		  }

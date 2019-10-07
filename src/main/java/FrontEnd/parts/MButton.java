@@ -8,6 +8,7 @@ import interpreter.lexer.token.Token;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class MButton {
@@ -44,34 +45,21 @@ public class MButton {
     private void setLexerButton(JButton button) {
         button.addActionListener(e -> {
             //get file path
+            mainWindow.getFileOperation().save();
             String path = mainWindow.getPathLabel().getText();
-            File file = new File(path);
-            //save the text
-            String text = mainWindow.getEditPane().getText();
-            BufferedWriter writer = null;
-            try {
-                writer = new BufferedWriter(new FileWriter(file));
-                writer.write(text);
-                writer.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
             //read the file
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new FileReader(file));
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
                 //initialize a lexer
                 try {
                     Lexer lex = new Lexer(reader);
-                    ArrayList<Token> tokens = null;
                     StringBuilder stringBuilder = new StringBuilder();
-                    tokens = lex.getAllToken();
+                    ArrayList<Token> tokens = lex.getAllToken();
                     for (Token token : tokens) {
                         stringBuilder.append(token.toString()).append('\n');
-                        //show the result
-                        mainWindow.getOutputPane().setText(stringBuilder.toString());
                     }
+                    mainWindow.getOutputPane().setText(stringBuilder.toString());
                 } catch (IOException | SyntaxError e1) {
                     mainWindow.getOutputPane().setText(e1.getMessage());
                     e1.printStackTrace();
