@@ -44,15 +44,12 @@ public class MButton {
 
     private void setLexerButton(JButton button) {
         button.addActionListener(e -> {
-            //get file path
-            mainWindow.getFileOperation().save();
-            String path = mainWindow.getPathLabel().getText();
-            //read the file
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
+            // 新建线程
+            new Thread(() -> {
+                mainWindow.getFileOperation().save();
+                String path = mainWindow.getPathLabel().getText();
                 //initialize a lexer
-                try {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                     Lexer lex = new Lexer(reader);
                     StringBuilder stringBuilder = new StringBuilder();
                     ArrayList<Token> tokens = lex.getAllToken();
@@ -63,13 +60,8 @@ public class MButton {
                 } catch (IOException | SyntaxError e1) {
                     mainWindow.getOutputPane().setText(e1.getMessage());
                     e1.printStackTrace();
-                } finally {
-                    reader.close();
                 }
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-
+            }).start();
         });
     }
 

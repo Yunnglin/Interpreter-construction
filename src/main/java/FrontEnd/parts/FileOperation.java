@@ -28,6 +28,7 @@ public class FileOperation {
     }
 
     private void setContent(String path, String content) {
+        mainWindow.getOutputPane().setText("");
         mainWindow.getPathLabel().setText(path);
         mainWindow.getEditPane().setText(content);
         mainWindow.getmScrollPane().updateLineNum();
@@ -35,6 +36,7 @@ public class FileOperation {
 
     public void setEmpty() {
         mainWindow.getEditPane().setText("");
+        mainWindow.getOutputPane().setText("");
         mainWindow.getPathLabel().setText("");
         mainWindow.getmScrollPane().updateLineNum();
     }
@@ -87,7 +89,6 @@ public class FileOperation {
             if (JFileChooser.APPROVE_OPTION == jfc.showSaveDialog(mainWindow.getEditPane())) {
                 File newFile;
                 File file = jfc.getSelectedFile();
-                BufferedWriter br;
                 MFileFilter filter = (MFileFilter) jfc.getFileFilter();
                 String ends = filter.getEnds();
                 if (file.toString().contains(ends)) {

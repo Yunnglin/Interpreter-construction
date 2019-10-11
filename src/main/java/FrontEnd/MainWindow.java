@@ -36,14 +36,6 @@ public class MainWindow {
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
 
-    public FileOperation getFileOperation() {
-        return fileOperation;
-    }
-
-    public MScrollPane getmScrollPane() {
-        return mScrollPane;
-    }
-
     private MainWindow() {
         //≥ı ºªØ”–À≥–Ú
         mPopMenu = new MPopMenu(this);
@@ -127,6 +119,15 @@ public class MainWindow {
     public JButton getEditButton() {
         return editButton;
     }
+
+    public FileOperation getFileOperation() {
+        return fileOperation;
+    }
+
+    public MScrollPane getmScrollPane() {
+        return mScrollPane;
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
