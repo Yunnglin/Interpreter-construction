@@ -40,6 +40,7 @@ public class MTextPane {
 
     private void setTextPane(){
         editPane.setFont(MFont.codeFont);
+        editPane.setBackground(MColor.editAreaColor);
         editPane.getDocument().addDocumentListener(new MDocumentListener(this.mainWindow));
         editPane.addKeyListener(new MKeyListener(this.mainWindow));
         editPane.add(jPopMenu);
@@ -49,6 +50,7 @@ public class MTextPane {
 
 
     private void setOutputPane(){
+        outputPane.setBackground(MColor.consoleAreaColor);
         outputPane.setFont(MFont.consoleFont);
         outputPane.setEditable(false);
     }

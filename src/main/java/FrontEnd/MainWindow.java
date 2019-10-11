@@ -1,6 +1,7 @@
 package FrontEnd;
 
 import FrontEnd.parts.*;
+import FrontEnd.parts.conf.MSize;
 
 import javax.swing.*;
 
@@ -133,7 +134,7 @@ public class MainWindow {
         frame.setContentPane(new MainWindow().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setSize(1400, 1000);
+        frame.setBounds(MSize.frameX, MSize.frameY, MSize.frameWidth, MSize.frameHeight);
         frame.setVisible(true);
 
     }

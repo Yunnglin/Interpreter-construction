@@ -3,13 +3,15 @@ package FrontEnd.parts.conf;
 import java.awt.*;
 
 /**
- * 控件颜色信息
+ * 颜色信息
  */
 public class MColor {
-    public static Color editAreaColor = new Color(253, 243, 216);
+    //控件颜色
+    public static Color editAreaColor = new Color(222,233,207);
     public static Color lineAreaColor = new Color(224, 199, 161);
     public static Color consoleAreaColor = new Color(253, 243, 216);
 
+    //标识符颜色
     public static Color symbolColor = new Color(66, 92, 99);
     public static Color basicTypeColor = new Color(175, 134, 59);
     public static Color defineWordsColor = new Color(109, 141, 0);
