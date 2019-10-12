@@ -5,8 +5,8 @@ import java.io.File;
 
 public class MFileFilter extends FileFilter {
 
-    String ends; // 文件后缀
-    String description; // 文件描述
+    private String ends; // 文件后缀
+    private String description; // 文件描述
 
     public MFileFilter(String description, String ends) {
         this.ends = ends; // 设置文件后缀

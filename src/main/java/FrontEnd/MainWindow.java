@@ -1,6 +1,7 @@
 package FrontEnd;
 
 import FrontEnd.parts.*;
+import FrontEnd.parts.conf.MSize;
 
 import javax.swing.*;
 
@@ -35,14 +36,6 @@ public class MainWindow {
     private MPopMenu mPopMenu;
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
-
-    public FileOperation getFileOperation() {
-        return fileOperation;
-    }
-
-    public MScrollPane getmScrollPane() {
-        return mScrollPane;
-    }
 
     private MainWindow() {
         //≥ı ºªØ”–À≥–Ú
@@ -127,12 +120,21 @@ public class MainWindow {
     public JButton getEditButton() {
         return editButton;
     }
+
+    public FileOperation getFileOperation() {
+        return fileOperation;
+    }
+
+    public MScrollPane getmScrollPane() {
+        return mScrollPane;
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setSize(1400, 1000);
+        frame.setBounds(MSize.frameX, MSize.frameY, MSize.frameWidth, MSize.frameHeight);
         frame.setVisible(true);
 
     }
