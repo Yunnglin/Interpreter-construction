@@ -1,6 +1,7 @@
 package interpreter.lexer;
 
 import interpreter.Const;
+import interpreter.Const.TokenTag;
 import interpreter.exception.SyntaxError;
 import interpreter.lexer.token.IntNum;
 import interpreter.lexer.token.Real;
@@ -41,13 +42,9 @@ public class Lexer {
 
     private void initKeyWords() {
         // 初始化保留字
-        reserve(new Word(Const.IF, "if"));
-        reserve(new Word(Const.ELSE, "else"));
-        reserve(new Word(Const.WHILE, "while"));
-        reserve(new Word(Const.READ, "read"));
-        reserve(new Word(Const.WRITE, "write"));
-        reserve(new Word(Const.INT, "int"));
-        reserve(new Word(Const.REAL, "real"));
+        for (TokenTag t : TokenTag.RESERVED_WORDS.values()) {
+            reserve(new Word(t));
+        }
     }
 
     public boolean isKeyWord(Word w) {
@@ -86,12 +83,13 @@ public class Lexer {
     }
 
     public Token getNextToken() throws SyntaxError, IOException {
-        boolean goon = true;
+        boolean goon = true;                    // 一遍扫描后是否还需要继续扫描
         while(goon){
             goon = false;
             // 核心代码，解析得到新的token
-            String whitespaces = " \t\r\n";
-            int comments = 0;
+
+            String whitespaces = " \t\r\n";     // 空白字符
+            int comments = 0;                   // 注释层级
             // 读取新的非空字符
             while(whitespaces.indexOf(peek) != -1) {
                 if(peek == '\n') {
@@ -107,20 +105,20 @@ public class Lexer {
                 case '=':
                     if(getNextChar('=')) {
                         getNextChar();
-                        return new Word(Const.EQ, "==");
+                        return new Token(TokenTag.EQ);
                     } else {
-                        return new Token(Const.ASSIGN);
+                        return new Token(TokenTag.ASSIGN);
                     }
                 case '<':
                     if(getNextChar('>')) {
                         getNextChar();
-                        return new Word(Const.NEQ, "<>");
+                        return new Token(TokenTag.NEQ);
                     } else {
-                        return new Token(Const.LESS_THAN);
+                        return new Token(TokenTag.LESS_THAN);
                     }
                 case '>':
                     getNextChar();
-                    return new Token(Const.GREATER_THAN);
+                    return new Token(TokenTag.GREATER_THAN);
                 case '/':
                     if(getNextChar('*')) {
                         // 进入注释
@@ -158,79 +156,90 @@ public class Lexer {
                         goon = true;
                         continue;
                     } else {
-                        return new Token(Const.DIVIDE);
+                        return new Token(TokenTag.DIVIDE);
                     }
                 case '*':
                     getNextChar();
-                    return new Token(Const.MULTIPLY);
+                    return new Token(TokenTag.MULTIPLY);
                 case '+':
                     getNextChar();
-                    return new Token(Const.SUM);
+                    return new Token(TokenTag.SUM);
                 case '(':
                     getNextChar();
-                    return new Token(Const.L_PARENTHESES);
+                    return new Token(TokenTag.L_PARENTHESES);
                 case ')':
                     getNextChar();
-                    return new Token(Const.R_PARENTHESES);
+                    return new Token(TokenTag.R_PARENTHESES);
                 case '{':
                     getNextChar();
-                    return new Token(Const.L_BRACES);
+                    return new Token(TokenTag.L_BRACES);
                 case '}':
                     getNextChar();
-                    return new Token(Const.R_BRACES);
+                    return new Token(TokenTag.R_BRACES);
                 case '[':
                     getNextChar();
-                    return new Token(Const.L_SQUARE_BRACKETS);
+                    return new Token(TokenTag.L_SQUARE_BRACKETS);
                 case ']':
                     getNextChar();
-                    return new Token(Const.R_SQUARE_BRACKETS);
+                    return new Token(TokenTag.R_SQUARE_BRACKETS);
                 case ';':
                     getNextChar();
-                    return new Token(Const.SEMICOLON);
+                    return new Token(TokenTag.SEMICOLON);
                 case '-':
                     // 负号和减法在词法阶段相同，负数识别在语法分析阶段完成
                     getNextChar();
-                    return new Token(Const.SUB);
+                    return new Token(TokenTag.SUB);
             }
 
             // 解析整数和实数
             if(Character.isDigit(peek)) {
-                String num;
-                num="";
+                StringBuilder num = new StringBuilder();
                 do{
-                    num+=peek;
+                    num.append(peek);
                     getNextChar();
                 }while (Character.isDigit(peek));
-                if(peek!='.') return new IntNum(Integer.parseInt(num));
-                num+=peek;
+                if(peek!='.') {
+                    try {
+                        int val = Integer.parseInt(num.toString());
+                        return new IntNum(val);
+                    } catch (NumberFormatException e) {
+                        throw SyntaxError.newConstantError(num.toString(), line);
+                    }
+                }
+                num.append(peek);
                 getNextChar();
                 //记录行数 报错退出
-                if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num, line);
+                if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num.toString(), line);
                 for(;;){
-                    num+=peek;
+                    num.append(peek);
                     getNextChar();
                     if(!Character.isDigit(peek)) break;
                 }
-                return new Real(Double.valueOf(num));
+                try {
+                    double val = Double.valueOf(num.toString());
+                    return new Real(val);
+                } catch (NumberFormatException e) {
+                    throw SyntaxError.newConstantError(num.toString(), line);
+                }
             }
 
             // 解析标识符和保留字等
             if(Character.isLetter(peek)) {
-                String name="";
+                StringBuilder name = new StringBuilder();
                 do{
                     if(peek=='_'){
-                        name+=peek;
+                        name.append(peek);
                         getNextChar();
                         if(!Character.isDigit(peek)&&!Character.isLetter(peek)&&peek!='_'){
-                            throw SyntaxError.newIdentifierError(name, line);
+                            throw SyntaxError.newIdentifierError(name.toString(), line);
                         }
                     }else{
-                        name+=peek;
+                        name.append(peek);
                         getNextChar();
                     }
                 }while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_');
-                if(isKeyWord(name)) return (Word)keyWords.get(name);
-                return new Word(Const.IDENTIFIER,name);
+                if(isKeyWord(name.toString())) return (Word)keyWords.get(name.toString());
+                return new Word(TokenTag.IDENTIFIER, name.toString());
             }
 
             // 无法识别的符号
