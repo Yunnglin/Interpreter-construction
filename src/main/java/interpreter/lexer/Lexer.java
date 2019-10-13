@@ -185,6 +185,9 @@ public class Lexer {
                 case ';':
                     getNextChar();
                     return new Token(TokenTag.SEMICOLON);
+                case ',':
+                    getNextChar();
+                    return new Token(TokenTag.COMMA);
                 case '-':
                     // 负号和减法在词法阶段相同，负数识别在语法分析阶段完成
                     getNextChar();

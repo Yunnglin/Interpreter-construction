@@ -1,6 +1,7 @@
 package interpreter;
 
-import java.util.HashSet;
+import interpreter.utils.lalr.TerminalSymbol;
+
 import java.util.Hashtable;
 
 public final class Const {
@@ -11,7 +12,7 @@ public final class Const {
             L_PARENTHESES = 17, R_PARENTHESES = 18, SEMICOLON = 19, L_BRACES = 20, R_BRACES = 21, L_NOTES = 22,
             R_NOTES = 23, L_SQUARE_BRACKETS = 24, R_SQUARE_BRACKETS = 25, REAL_NUMBER = 48,INTEGER = 49, IDENTIFIER = 50;
 
-    public enum TokenTag {
+    public enum TokenTag implements TerminalSymbol {
 
         // Reserved Words
         IF(1), ELSE(2), INT(3), WHILE(4), READ(5), WRITE(6), REAL(7),
@@ -22,6 +23,7 @@ public final class Const {
         EQ(15, "=="), NEQ(16, "<>"), L_PARENTHESES(17, "("),
         R_PARENTHESES(18, ")"), SEMICOLON(19, ";"), L_BRACES(20, "{"),
         R_BRACES(21, ")"), L_SQUARE_BRACKETS(24, "["), R_SQUARE_BRACKETS(25, "]"),
+        COMMA(26, ","),
 
         // Others
         REAL_NUMBER(48), INTEGER(49), IDENTIFIER(50);
