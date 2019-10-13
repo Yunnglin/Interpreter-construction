@@ -1,28 +1,26 @@
 package interpreter.lexer.token;
 
-import interpreter.Const;
+import interpreter.Const.TokenTag;
 
 public class Real extends Token {
-    public double getValue() {
-        return value;
-    }
 
-    @Override
-    public String toString() {
-        return "Real{tag=" + getTag()
-                + ", value=" + value
-                + '}';
+    private double value;
+
+    public Real(double val) {
+        super(TokenTag.REAL_NUMBER);
+        value = val;
     }
 
     public void setValue(double value) {
         this.value = value;
     }
 
-    // TODO
-    private double value;
+    public double getValue() {
+        return value;
+    }
 
-    public Real(double val) {
-        super(Const.REAL_NUMBER);
-        value = val;
+    @Override
+    public String toString() {
+        return super.toString() + String.format(" (Real, value=%f)", value);
     }
 }
