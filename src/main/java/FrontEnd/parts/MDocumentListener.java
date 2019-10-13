@@ -9,13 +9,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MDocumentListener implements DocumentListener {
 
     private MainWindow mainWindow;
     private JTextPane editPane;
 
-    private Hashtable<String, Style> styleHashtable=new Hashtable<>();
+    private Hashtable<String, Style> styleHashtable = new Hashtable<>();
     private Style symbolStyle;
     private Style basicTypeStyle;
     private Style definedWordsStyle;
@@ -25,7 +27,7 @@ public class MDocumentListener implements DocumentListener {
     private Style normalStyle;
     private Style errorStyle;
 
-    public MDocumentListener(MainWindow mainWindow){
+    public MDocumentListener(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         this.editPane = mainWindow.getEditPane();
         init();
@@ -40,7 +42,7 @@ public class MDocumentListener implements DocumentListener {
    (5) ID: identifiers
    (6) annotation
 */
-    private void init(){
+    private void init() {
         symbolStyle = ((StyledDocument) editPane.getDocument()).addStyle("symbolStyle", null);
         basicTypeStyle = ((StyledDocument) editPane.getDocument()).addStyle("basicTypeStyle", null);
         definedWordsStyle = ((StyledDocument) editPane.getDocument()).addStyle("definedWordsStyle", null);
@@ -67,29 +69,32 @@ public class MDocumentListener implements DocumentListener {
         StyleConstants.FontConstants.setBold(definedWordsStyle, true);
         StyleConstants.FontConstants.setBold(basicTypeStyle, true);
         StyleConstants.FontConstants.setBold(constantsStyle, true);
+        StyleConstants.FontConstants.setBold(symbolStyle,true);
+        StyleConstants.FontConstants.setBold(normalStyle,true);
 
         //Symbol
-        mAddStyle(MWord.symbols,symbolStyle);
+        mAddStyle(MWord.symbols, symbolStyle);
 
         //BasicType
-        mAddStyle(MWord.basicType,basicTypeStyle);
+        mAddStyle(MWord.basicType, basicTypeStyle);
 
         //Reserve Words
-        mAddStyle(MWord.reservedWords,definedWordsStyle);
+        mAddStyle(MWord.reservedWords, definedWordsStyle);
 
         //Constant
-        mAddStyle(MWord.constants,constantsStyle);
+        mAddStyle(MWord.constants, constantsStyle);
     }
 
-    private void mAddStyle(String[] words,Style style){
-        for (String word:words) {
-            styleHashtable.put(word,style);
+    private void mAddStyle(String[] words, Style style) {
+        for (String word : words) {
+            styleHashtable.put(word, style);
         }
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
         try {
+//            System.out.println(e.getOffset() + " " + e.getLength());
             colouring((StyledDocument) e.getDocument(), e.getOffset(), e.getLength());
         } catch (BadLocationException ex) {
             ex.printStackTrace();
@@ -126,26 +131,22 @@ public class MDocumentListener implements DocumentListener {
                 // 如果是以字母或者下划线开头, 说明是单词
                 // pos为处理后的最后一个下标
 
-                //TODO: 标识符的定义
                 start = colouringWord(doc, start);
 
             } else if (Character.isDigit(ch)) {      //处理数字
                 start = colouringNum(doc, start);
-            } else {
+            }
+            else if (isSpecialChar(Character.toString(ch))) {
+                start = colouringSpecialChar(doc, start);
+            }
+            else {
                 SwingUtilities.invokeLater(new ColouringTask(doc, start, 1, normalStyle));
                 ++start;
             }
         }
     }
 
-    /**
-     * 对单词进行着色, 并返回单词结束的下标.
-     *
-     * @param doc
-     * @param pos
-     * @return
-     * @throws BadLocationException
-     */
+    // 对单词进行着色, 并返回单词结束的下标.
     public int colouringWord(StyledDocument doc, int pos) throws BadLocationException {
         int wordEnd = indexOfWordEnd(doc, pos);
         String word = doc.getText(pos, wordEnd - pos);
@@ -163,7 +164,7 @@ public class MDocumentListener implements DocumentListener {
         return wordEnd;
     }
 
-    //TODO: 处理数字
+    //对数字进行着色，包括整数和小数
     public int colouringNum(StyledDocument doc, int pos) throws BadLocationException {
         int numEnd = indexOfWordEnd(doc, pos);
         if (getCharAt(doc, numEnd) == '.') {
@@ -202,6 +203,12 @@ public class MDocumentListener implements DocumentListener {
         return numEnd;
     }
 
+    //对特殊字符上色
+    public int colouringSpecialChar(StyledDocument doc,int pos) throws BadLocationException{
+        SwingUtilities.invokeLater(new ColouringTask(doc,pos,1,symbolStyle));
+        return pos+1;
+    }
+
     //取得在文档中下标在pos处的字符.
     public char getCharAt(Document doc, int pos) throws BadLocationException {
         return doc.getText(pos, 1).charAt(0);
@@ -212,6 +219,15 @@ public class MDocumentListener implements DocumentListener {
         char ch = getCharAt(doc, pos);
         return Character.isLetter(ch) || Character.isDigit(ch) || ch == '_';
     }
+
+    //用正则表达式判断一个字符是不是特殊字符
+    public static boolean isSpecialChar(String str) {
+        String regEx = "[`~!@#$%^&*()+=|{}':;,\\[\\].<>/?]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return m.find();
+    }
+
 
     //获取pos所在位置单词的开始位置
     public int indexOfWordStart(Document doc, int pos) throws BadLocationException {
