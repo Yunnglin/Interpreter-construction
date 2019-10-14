@@ -9,13 +9,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MDocumentListener implements DocumentListener {
 
     private MainWindow mainWindow;
     private JTextPane editPane;
 
-    private Hashtable<String, Style> styleHashtable=new Hashtable<>();
+    private Hashtable<String, Style> styleHashtable = new Hashtable<>();
     private Style symbolStyle;
     private Style basicTypeStyle;
     private Style definedWordsStyle;
@@ -25,14 +27,14 @@ public class MDocumentListener implements DocumentListener {
     private Style normalStyle;
     private Style errorStyle;
 
-    public MDocumentListener(MainWindow mainWindow){
+    public MDocumentListener(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         this.editPane = mainWindow.getEditPane();
         init();
     }
 
     /*
-   Tokenï¿½ï¿½
+   Token£º
    (1) Symbol: ||, &&, ==, !=, >=, <=, +, -, *, /, ;
    (2) Type: int, float, char, long
    (3) Reserved Words: break, do, else, if, while, read, write
@@ -40,7 +42,7 @@ public class MDocumentListener implements DocumentListener {
    (5) ID: identifiers
    (6) annotation
 */
-    private void init(){
+    private void init() {
         symbolStyle = ((StyledDocument) editPane.getDocument()).addStyle("symbolStyle", null);
         basicTypeStyle = ((StyledDocument) editPane.getDocument()).addStyle("basicTypeStyle", null);
         definedWordsStyle = ((StyledDocument) editPane.getDocument()).addStyle("definedWordsStyle", null);
@@ -50,7 +52,7 @@ public class MDocumentListener implements DocumentListener {
         normalStyle = ((StyledDocument) editPane.getDocument()).addStyle("normalStyle", null);
         errorStyle = ((StyledDocument) editPane.getDocument()).addStyle("errorStyle", null);
 
-        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
+        //ÉèÖÃÑÕÉ«
         StyleConstants.setForeground(symbolStyle, MColor.symbolColor);
         StyleConstants.setForeground(basicTypeStyle, MColor.basicTypeColor);
         StyleConstants.setForeground(definedWordsStyle, MColor.defineWordsColor);
@@ -60,36 +62,39 @@ public class MDocumentListener implements DocumentListener {
         StyleConstants.setForeground(normalStyle, MColor.normalColor);
         StyleConstants.setForeground(errorStyle, MColor.errorColor);
 
-        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //ÉèÖÃ×ÖÌå
         StyleConstants.FontConstants.setUnderline(errorStyle, true);
         StyleConstants.FontConstants.setItalic(errorStyle, true);
         StyleConstants.FontConstants.setItalic(annotationStyle, true);
         StyleConstants.FontConstants.setBold(definedWordsStyle, true);
         StyleConstants.FontConstants.setBold(basicTypeStyle, true);
         StyleConstants.FontConstants.setBold(constantsStyle, true);
+        StyleConstants.FontConstants.setBold(symbolStyle,true);
+        StyleConstants.FontConstants.setBold(normalStyle,true);
 
         //Symbol
-        mAddStyle(MWord.symbols,symbolStyle);
+        mAddStyle(MWord.symbols, symbolStyle);
 
         //BasicType
-        mAddStyle(MWord.basicType,basicTypeStyle);
+        mAddStyle(MWord.basicType, basicTypeStyle);
 
         //Reserve Words
-        mAddStyle(MWord.reservedWords,definedWordsStyle);
+        mAddStyle(MWord.reservedWords, definedWordsStyle);
 
         //Constant
-        mAddStyle(MWord.constants,constantsStyle);
+        mAddStyle(MWord.constants, constantsStyle);
     }
 
-    private void mAddStyle(String[] words,Style style){
-        for (String word:words) {
-            styleHashtable.put(word,style);
+    private void mAddStyle(String[] words, Style style) {
+        for (String word : words) {
+            styleHashtable.put(word, style);
         }
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
         try {
+//            System.out.println(e.getOffset() + " " + e.getLength());
             colouring((StyledDocument) e.getDocument(), e.getOffset(), e.getLength());
         } catch (BadLocationException ex) {
             ex.printStackTrace();
@@ -113,48 +118,44 @@ public class MDocumentListener implements DocumentListener {
     }
 
     public void colouring(StyledDocument doc, int pos, int len) throws BadLocationException {
-        // È¡ï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ìµ½ï¿½Äµï¿½ï¿½ï¿½.
-        // ï¿½ï¿½ï¿½ï¿½"public"ï¿½ï¿½bï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Õ¸ï¿½, ï¿½Í±ï¿½ï¿½ï¿½ï¿½:"pub lic", ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½:"pub"ï¿½ï¿½"lic"
-        // ï¿½ï¿½Ê±ÒªÈ¡ï¿½ÃµÄ·ï¿½Î§ï¿½ï¿½pubï¿½ï¿½pÇ°ï¿½ï¿½ï¿½Î»ï¿½Ãºï¿½licï¿½ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
+        // È¡µÃ²åÈë»òÕßÉ¾³ýºóÓ°Ïìµ½µÄµ¥´Ê.
+        // ÀýÈç"public"ÔÚbºó²åÈëÒ»¸ö¿Õ¸ñ, ¾Í±ä³ÉÁË:"pub lic", ÕâÊ±¾ÍÓÐÁ½¸öµ¥´ÊÒª´¦Àí:"pub"ºÍ"lic"
+        // ÕâÊ±ÒªÈ¡µÃµÄ·¶Î§ÊÇpubÖÐpÇ°ÃæµÄÎ»ÖÃºÍlicÖÐcºóÃæµÄÎ»ÖÃ
         int start = indexOfWordStart(doc, pos);
         int end = indexOfWordEnd(doc, pos + len);
 
         char ch;
         while (start < end) {
             ch = getCharAt(doc, start);
-            if (Character.isLetter(ch) || ch == '_') {      //ï¿½ï¿½ï¿½ï¿½Word
-                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½ß¿ï¿½Í·, Ëµï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½
-                // posÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Â±ï¿½
+            if (Character.isLetter(ch) || ch == '_') {      //´¦ÀíWord
+                // Èç¹ûÊÇÒÔ×ÖÄ¸»òÕßÏÂ»®Ïß¿ªÍ·, ËµÃ÷ÊÇµ¥´Ê
+                // posÎª´¦ÀíºóµÄ×îºóÒ»¸öÏÂ±ê
 
-                //TODO: ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½
                 start = colouringWord(doc, start);
 
-            } else if (Character.isDigit(ch)) {      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            } else if (Character.isDigit(ch)) {      //´¦ÀíÊý×Ö
                 start = colouringNum(doc, start);
-            } else {
+            }
+            else if (isSpecialChar(Character.toString(ch))) {
+                start = colouringSpecialChar(doc, start);
+            }
+            else {
                 SwingUtilities.invokeLater(new ColouringTask(doc, start, 1, normalStyle));
                 ++start;
             }
         }
     }
 
-    /**
-     * ï¿½Ôµï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½É«, ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½.
-     *
-     * @param doc
-     * @param pos
-     * @return
-     * @throws BadLocationException
-     */
+    // ¶Ôµ¥´Ê½øÐÐ×ÅÉ«, ²¢·µ»Øµ¥´Ê½áÊøµÄÏÂ±ê.
     public int colouringWord(StyledDocument doc, int pos) throws BadLocationException {
         int wordEnd = indexOfWordEnd(doc, pos);
         String word = doc.getText(pos, wordEnd - pos);
 
         if (styleHashtable.containsKey(word)) {
-            // ï¿½ï¿½ï¿½ï¿½Ç¹Ø¼ï¿½ï¿½ï¿½, ï¿½Í½ï¿½ï¿½Ð¹Ø¼ï¿½ï¿½Öµï¿½ï¿½ï¿½É«, ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½É«.
-            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Òª×¢ï¿½ï¿½, ï¿½ï¿½insertUpdateï¿½ï¿½removeUpdateï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÄ¹ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½docï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
-            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ïµ½ï¿½Ü¹ï¿½ï¿½Þ¸ï¿½docï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô°Ñ´ï¿½ï¿½ï¿½ï¿½ï¿½Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥Ö´ï¿½ï¿½.
-            // Êµï¿½ï¿½ï¿½ï¿½Ò»Ä¿ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½, ï¿½ï¿½ï¿½Åµï¿½swingï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½.
+            // Èç¹ûÊÇ¹Ø¼ü×Ö, ¾Í½øÐÐ¹Ø¼ü×ÖµÄ×ÅÉ«, ·ñÔòÊ¹ÓÃÆÕÍ¨µÄ×ÅÉ«.
+            // ÕâÀïÓÐÒ»µãÒª×¢Òâ, ÔÚinsertUpdateºÍremoveUpdateµÄ·½·¨µ÷ÓÃµÄ¹ý³ÌÖÐ, ²»ÄÜÐÞ¸ÄdocµÄÊôÐÔ.
+            // µ«ÎÒÃÇÓÖÒª´ïµ½ÄÜ¹»ÐÞ¸ÄdocµÄÊôÐÔ, ËùÒÔ°Ñ´ËÈÎÎñ·Åµ½Õâ¸ö·½·¨µÄÍâÃæÈ¥Ö´ÐÐ.
+            // ÊµÏÖÕâÒ»Ä¿µÄ, ¿ÉÒÔÊ¹ÓÃÐÂÏß³Ì, µ«·Åµ½swingµÄÊÂ¼þ¶ÓÁÐÀïÈ¥´¦Àí¸üÇá±ãÒ»µã.
             SwingUtilities.invokeLater(new ColouringTask(doc, pos, wordEnd - pos, styleHashtable.get(word)));
         } else {
             SwingUtilities.invokeLater(new ColouringTask(doc, pos, wordEnd - pos, normalStyle));
@@ -163,7 +164,7 @@ public class MDocumentListener implements DocumentListener {
         return wordEnd;
     }
 
-    //TODO: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    //¶ÔÊý×Ö½øÐÐ×ÅÉ«£¬°üÀ¨ÕûÊýºÍÐ¡Êý
     public int colouringNum(StyledDocument doc, int pos) throws BadLocationException {
         int numEnd = indexOfWordEnd(doc, pos);
         if (getCharAt(doc, numEnd) == '.') {
@@ -202,18 +203,33 @@ public class MDocumentListener implements DocumentListener {
         return numEnd;
     }
 
-    //È¡ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½Â±ï¿½ï¿½ï¿½posï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½.
+    //¶ÔÌØÊâ×Ö·ûÉÏÉ«
+    public int colouringSpecialChar(StyledDocument doc,int pos) throws BadLocationException{
+        SwingUtilities.invokeLater(new ColouringTask(doc,pos,1,symbolStyle));
+        return pos+1;
+    }
+
+    //È¡µÃÔÚÎÄµµÖÐÏÂ±êÔÚpos´¦µÄ×Ö·û.
     public char getCharAt(Document doc, int pos) throws BadLocationException {
         return doc.getText(pos, 1).charAt(0);
     }
 
-    //ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸, ï¿½ï¿½ï¿½ï¿½, ï¿½Â»ï¿½ï¿½ï¿½, ï¿½ò·µ»ï¿½true.
+    //Èç¹ûÒ»¸ö×Ö·ûÊÇ×ÖÄ¸, Êý×Ö, ÏÂ»®Ïß, Ôò·µ»Øtrue.
     public boolean isWordCharacter(Document doc, int pos) throws BadLocationException {
         char ch = getCharAt(doc, pos);
         return Character.isLetter(ch) || Character.isDigit(ch) || ch == '_';
     }
 
-    //ï¿½ï¿½È¡posï¿½ï¿½ï¿½ï¿½Î»ï¿½Ãµï¿½ï¿½ÊµÄ¿ï¿½Ê¼Î»ï¿½ï¿½
+    //ÓÃÕýÔò±í´ïÊ½ÅÐ¶ÏÒ»¸ö×Ö·ûÊÇ²»ÊÇÌØÊâ×Ö·û
+    public static boolean isSpecialChar(String str) {
+        String regEx = "[`~!@#$%^&*()+=|{}':;,\\[\\].<>/?]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return m.find();
+    }
+
+
+    //»ñÈ¡posËùÔÚÎ»ÖÃµ¥´ÊµÄ¿ªÊ¼Î»ÖÃ
     public int indexOfWordStart(Document doc, int pos) throws BadLocationException {
         while (pos > 0 && isWordCharacter(doc, pos - 1)) {
             --pos;
@@ -222,7 +238,7 @@ public class MDocumentListener implements DocumentListener {
         return pos;
     }
 
-    //ï¿½ï¿½È¡posï¿½ï¿½ï¿½ï¿½Î»ï¿½Ãµï¿½ï¿½ÊµÄ½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
+    //»ñÈ¡posËùÔÚÎ»ÖÃµ¥´ÊµÄ½áÊøÎ»ÖÃ
     public int indexOfWordEnd(Document doc, int pos) throws BadLocationException {
         while (isWordCharacter(doc, pos)) {
             ++pos;

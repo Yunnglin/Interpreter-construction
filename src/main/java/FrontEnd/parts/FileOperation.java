@@ -31,7 +31,7 @@ public class FileOperation {
         mainWindow.getOutputPane().setText("");
         mainWindow.getPathLabel().setText(path);
         mainWindow.getEditPane().setText(content);
-        mainWindow.getmScrollPane().updateLineNum();
+//        mainWindow.getmScrollPane().updateLineNum();
     }
 
     public void setEmpty() {
