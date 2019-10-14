@@ -76,7 +76,7 @@ public class Lexer {
     public ArrayList<Token> getAllToken() throws IOException, SyntaxError {
         ArrayList<Token> tokens = new ArrayList<Token>();
         Token token = null;
-        while((token = this.getNextToken())!=null) {
+        while((token = this.getNextToken()).getTag() != TokenTag.PROG_END) {
             tokens.add(token);
         }
         return tokens;
@@ -98,7 +98,7 @@ public class Lexer {
                 getNextChar();
             }
             if(peek == EOF) {
-                return null;
+                return new Token(TokenTag.PROG_END);
             }
             // 解析操作符、注释等
             switch (peek) {
@@ -248,6 +248,6 @@ public class Lexer {
             // 无法识别的符号
             throw SyntaxError.newLexicalError(Character.toString(peek), line);
         }
-        return null;
+        return new Token(TokenTag.PROG_END);
     }
 }

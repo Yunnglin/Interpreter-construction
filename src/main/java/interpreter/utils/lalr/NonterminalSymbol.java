@@ -1,5 +1,5 @@
 package interpreter.utils.lalr;
 
-public interface UnterminalSymbol extends GrammarSymbol {
+public interface NonterminalSymbol extends GrammarSymbol {
     public String getText();
 }

@@ -12,6 +12,7 @@ public final class Const {
             L_PARENTHESES = 17, R_PARENTHESES = 18, SEMICOLON = 19, L_BRACES = 20, R_BRACES = 21, L_NOTES = 22,
             R_NOTES = 23, L_SQUARE_BRACKETS = 24, R_SQUARE_BRACKETS = 25, REAL_NUMBER = 48,INTEGER = 49, IDENTIFIER = 50;
 
+    // The type of token, also a kind of terminal symbol for parsing stage
     public enum TokenTag implements TerminalSymbol {
 
         // Reserved Words
@@ -22,11 +23,14 @@ public final class Const {
         ASSIGN(12, "="), LESS_THAN(13, "<"), GREATER_THAN(14, ">"),
         EQ(15, "=="), NEQ(16, "<>"), L_PARENTHESES(17, "("),
         R_PARENTHESES(18, ")"), SEMICOLON(19, ";"), L_BRACES(20, "{"),
-        R_BRACES(21, ")"), L_SQUARE_BRACKETS(24, "["), R_SQUARE_BRACKETS(25, "]"),
-        COMMA(26, ","),
+        R_BRACES(21, ")"), LEQ(22, "<="), GEQ(23, ">="),
+        L_SQUARE_BRACKETS(24, "["), R_SQUARE_BRACKETS(25, "]"), COMMA(26, ","),
 
         // Others
-        REAL_NUMBER(48), INTEGER(49), IDENTIFIER(50);
+        REAL_NUMBER(48), INTEGER(49), IDENTIFIER(50),
+
+        // End
+        PROG_END(200);
 
         private String text;    // token text
         private int code;       // token tag(type code)
@@ -35,7 +39,7 @@ public final class Const {
         private static final int LAST_RESERVED_INDEX = REAL.ordinal();
 
         private static final int FIRST_SYMBOL_INDEX = SUM.ordinal();
-        private static final int LAST_SYMBOL_INDEX = R_SQUARE_BRACKETS.ordinal();
+        private static final int LAST_SYMBOL_INDEX = COMMA.ordinal();
 
         /**
          * Constructor, the default text of the type is the lowercase of the enum value.
@@ -56,6 +60,10 @@ public final class Const {
             this.code = code;
         }
 
+        /**
+         * get the code which identifies a specific symbol
+         * @return a int value that represents the code
+         */
         public int getCode() {
             return this.code;
         }

@@ -1,0 +1,272 @@
+E:
+  -
+    - PROG
+PROG:
+  -
+    - EXTERN_DECLARATION
+  -
+    - EXTERN_DECLARATION
+    - PROG
+EXTERN_DECLARATION:
+  -
+    - DECLARE_STMT
+  -
+    - FUNC_DEFINITION
+FUNC_DEFINITION:
+  -
+    - TYPE
+    - FUNC_DECLARATOR
+    - COMPOUND_STMT
+FUNC_DECLARATOR:
+  -
+    - IDENTIFIER
+    - L_PARENTHESES
+    - R_PARENTHESES
+  -
+    - IDENTIFIER
+    - L_PARENTHESES
+    - PARAM_LIST
+    - R_PARENTHESES
+PARAM_LIST:
+  -
+    - PARAM_DECLARATION
+    - COMMA
+    - PARAM_LIST
+  -
+    - PARAM_DECLARATION
+PARAM_DECLARATION:
+  -
+    - TYPE
+    - IDENTIFIER
+  -
+    - TYPE
+    - IDENTIFIER
+    - L_SQUARE_BRACKETS
+    - EXPR
+    - R_SQUARE_BRACKETS
+STMT_LIST:
+  -
+    - STMT
+    - STMT_LIST
+  -
+    - STMT
+STMT:
+  -
+    - IF_STMT
+  -
+    - WHILE_STMT
+  -
+    - READ_STMT
+  -
+    - WRITE_STMT
+  -
+    - ASSIGN_STMT
+  -
+    - DECLARE_STMT
+  -
+    - COMPOUND_STMT
+COMPOUND_STMT:
+  -
+    - L_BRACES
+    - STMT_LIST
+    - R_BRACES
+  -
+    - L_BRACES
+    - R_BRACES
+DECLARE_STMT:
+  -
+    - TYPE
+    - DECLARATOR_LIST
+    - SEMICOLON
+DECLARATOR_LIST:
+  -
+    - DECLARATOR
+    - COMMA
+    - DECLARATOR_LIST
+  -
+    - DECLARATOR
+TYPE:
+  -
+    - INT
+  -
+    - REAL
+DECLARATOR:
+  -
+    - IDENTIFIER
+  -
+    - IDENTIFIER
+    - L_SQUARE_BRACKETS
+    - EXPR
+    - R_SQUARE_BRACKETS
+  -
+    - IDENTIFIER
+    - INITIALIZER
+  -
+    - IDENTIFIER
+    - L_SQUARE_BRACKETS
+    - EXPR
+    - R_SQUARE_BRACKETS
+  -
+    - IDENTIFIER
+    - L_SQUARE_BRACKETS
+    - R_SQUARE_BRACKETS
+    - INITIALIZER
+INITIALIZER:
+  -
+    - ASSIGN
+    - EXPR
+  -
+    - ASSIGN
+    - L_BRACES
+    - INITIALIZER_LIST
+    - R_BRACES
+  -
+    - ASSIGN
+    - L_BRACES
+    - INITIALIZER_LIST
+    - COMMA
+    - R_BRACES
+INITIALIZER_LIST:
+  -
+    - EXPR
+  -
+    - EXPR
+    - COMMA
+    - INITIALIZER_LIST
+IF_STMT:
+  -
+    - IF
+    - L_PARENTHESES
+    - EXPR
+    - R_PARENTHESES
+    - COMPOUND_STMT
+    - MORE_IF_ELSE
+MORE_IF_ELSE:
+  -
+    - NIL
+  -
+    - ELSE
+    - ELSE_STMT
+ELSE_STMT:
+  -
+    - IF
+    - COMPOUND_STMT
+    - MORE_IF_ELSE
+  -
+    - COMPOUND_STMT
+WHILE_STMT:
+  -
+    - WHILE
+    - L_PARENTHESES
+    - EXPR
+    - R_PARENTHESES
+    - COMPOUND_STMT
+READ_STMT:
+  -
+    - READ
+    - IDENTIFIER
+    - SEMICOLON
+WRITE_STMT:
+  -
+    - WRITE
+    - EXPR
+    - SEMICOLON
+ASSIGN_STMT:
+  -
+    - IDENTIFIER
+    - OTHER_ASSIGN
+OTHER_ASSIGN:
+  -
+    - ASSIGN
+    - EXPR
+    - SEMICOLON
+  -
+    - L_SQUARE_BRACKETS
+    - INTEGER
+    - R_SQUARE_BRACKETS
+    - ASSIGN
+    - EXPR
+    - SEMICOLON
+EXPR:
+  -
+    - RELATIONAL_EXPR
+RELATIONAL_EXPR:
+  -
+    - SIMPLE_EXPR
+    - RELATIONAL_EXPR_MORE
+RELATIONAL_EXPR_MORE:
+  -
+    - NIL
+  -
+    - COMPARISON_OP
+    - RELATIONAL_EXPR
+COMPARISON_OP:
+  -
+    - LESS_THAN
+  -
+    - EQ
+  -
+    - NEQ
+  -
+    - GREATER_THAN
+  -
+    - LEQ
+  -
+    - GEQ
+SIMPLE_EXPR:
+  -
+    - TERM
+    - MORE_TERM
+MORE_TERM:
+  -
+    - NIL
+  -
+    - ADD_OP
+    - TERM
+    - MORE_TERM
+ADD_OP:
+  -
+    - SUM
+  -
+    - SUB
+TERM:
+  -
+    - FACTOR
+    - MORE_FACTOR
+MORE_FACTOR:
+  -
+    - NIL
+  -
+    - MUL_OP
+    - FACTOR
+    - MORE_FACTOR
+MUL_OP:
+  -
+    - MULTIPLY
+  -
+    - DIVIDE
+FACTOR:
+  -
+    - NUMBER
+  -
+    - SUB
+    - NUMBER
+  -
+    - IDENTIFIER
+    - MORE_IDENTIFIER
+  -
+    - L_PARENTHESES
+    - EXPR
+    - R_PARENTHESES
+MORE_IDENTIFIER:
+  -
+    - NIL
+  -
+    - L_SQUARE_BRACKETS
+    - INTEGER
+    - R_SQUARE_BRACKETS
+NUMBER:
+  -
+    - INTEGER
+    - REAL_NUMBER
+
