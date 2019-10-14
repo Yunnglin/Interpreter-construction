@@ -12,4 +12,13 @@ public class Production {
         this.left = left;
         this.rightSymbols = right;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Production production = (Production) obj;
+        if (!left.equals(production)) {
+
+        }
+        return super.equals(obj);
+    }
 }

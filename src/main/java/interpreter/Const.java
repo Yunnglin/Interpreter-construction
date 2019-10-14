@@ -75,6 +75,9 @@ public final class Const {
         public String getText() {
             return this.text;
         }
+        public String getSelfText() {
+            return this.toString();
+        }
 
         // Hashtable of lowercase of reserved words in CMM.
         public static Hashtable<String, TokenTag> RESERVED_WORDS = new Hashtable<>();
@@ -83,10 +86,10 @@ public final class Const {
         static {
             TokenTag[] values = TokenTag.values();
             for (int i=FIRST_RESERVED_INDEX; i<=LAST_RESERVED_INDEX; ++i) {
-                RESERVED_WORDS.put(values[i].getText(), values[i]);
+                RESERVED_WORDS.put(values[i].getSelfText(), values[i]);
             }
             for (int i=FIRST_SYMBOL_INDEX; i<=LAST_SYMBOL_INDEX; ++i) {
-                SYMBOLS.put(values[i].getText(), values[i]);
+                SYMBOLS.put(values[i].getSelfText(), values[i]);
             }
         }
     }

@@ -12,10 +12,8 @@ public class LALRGrammar {
     public enum Nil implements GrammarSymbol {
         NIL;
 
-        private String text;
-
         @Override
-        public String getText() {
+        public String getSelfText() {
             return this.toString();
         }
     }
@@ -37,7 +35,7 @@ public class LALRGrammar {
         }
 
         @Override
-        public String getText() {
+        public String getSelfText() {
             return text;
         }
     }
@@ -84,7 +82,7 @@ public class LALRGrammar {
                 ArrayList<GrammarSymbol> right = new ArrayList<>();
                 for (Object symbol : produceArr) {
                     String symbolStr = (String) symbol;
-                    if (symbolStr.equals(NIL.getText())) {
+                    if (symbolStr.equals(NIL.getSelfText())) {
                         right.add(NIL);
                     } else if (isTerminalSymbol(symbolStr)) {
                         right.add(Const.TokenTag.valueOf(symbolStr));
@@ -127,14 +125,14 @@ public class LALRGrammar {
      */
     private HashSet<String> firstSetOf(String name) {
         HashSet<String> set = new HashSet<String>();
-        if (name.equals(NIL.getText()) || isTerminalSymbol(name)) {
+        if (name.equals(NIL.getSelfText()) || isTerminalSymbol(name)) {
             set.add(name);
         } else {
             HashSet<String> nonterminalSet = new HashSet<String>();
             ArrayList produceList = (ArrayList) this.strProductions.get(name);
             for (Object produce : produceList) {
                 String firstSymbol = (String) ((ArrayList) produce).get(0);
-                if (firstSymbol.equals(NIL.getText()) || isTerminalSymbol(firstSymbol)) {
+                if (firstSymbol.equals(NIL.getSelfText()) || isTerminalSymbol(firstSymbol)) {
                     set.add(firstSymbol);
                 } else {
                     nonterminalSet.add(firstSymbol);
@@ -176,7 +174,7 @@ public class LALRGrammar {
                 for (int i=0; i<produceArr.size(); ++i) {
                     // scan the production sequentially
                     String currentSym = (String) produceArr.get(i);
-                    if (currentSym.equals(NIL.getText()) || isTerminalSymbol(currentSym)) {
+                    if (currentSym.equals(NIL.getSelfText()) || isTerminalSymbol(currentSym)) {
                         continue;
                     }
                     for (int j=i+1; j<produceArr.size(); ++j) {
@@ -189,10 +187,10 @@ public class LALRGrammar {
                         } else {
                             HashSet<String> followFirstSet = this.firstSet.get(followSym);
                             this.followSet.get(currentSym).addAll(followFirstSet);
-                            if (followFirstSet.contains(NIL.getText())) {
+                            if (followFirstSet.contains(NIL.getSelfText())) {
                                 // the following non-terminal symbol can produce nil
                                 // continue the loop, consider symbols that follow the current follow symbol
-                                this.followSet.get(currentSym).remove(NIL.getText());
+                                this.followSet.get(currentSym).remove(NIL.getSelfText());
                             } else {
                                 // the following non-terminal symbol cannot produce nil
                                 // only add its first set to the follow set
@@ -204,13 +202,13 @@ public class LALRGrammar {
                 for (int i=produceArr.size()-1; i>=0; i--) {
                     // scan the production reversely
                     String currentSym = (String) produceArr.get(i);
-                    if (!currentSym.equals(NIL.getText()) && !isTerminalSymbol(currentSym)) {
+                    if (!currentSym.equals(NIL.getSelfText()) && !isTerminalSymbol(currentSym)) {
                         // the symbol is non-terminal,
                         // its follow set contains the follow set of the symbol on the left of the production
                         this.followSet.get(currentSym).addAll(curFollowSet);
                         // if the symbol can produce nil, the follow set of the symbol before it also contains
                         // the follow set of the symbol on the left of the production
-                        if (!this.firstSet.get(currentSym).contains(NIL.getText())) {
+                        if (!this.firstSet.get(currentSym).contains(NIL.getSelfText())) {
                             break;
                         }
                     } else {
