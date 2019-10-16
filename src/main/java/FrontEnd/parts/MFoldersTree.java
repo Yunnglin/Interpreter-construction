@@ -26,7 +26,16 @@ public class MFoldersTree implements TreeSelectionListener {
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                System.out.println("asd");
+                if(e.getSource()==tree)
+                {
+                    DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+                    if(node.isLeaf())
+                    {
+                        String s=node.toString();
+                        mainWindow.getFileOperation().treeOpen(s);
+
+                    }
+                }
             }
         });
     }
@@ -63,19 +72,7 @@ public class MFoldersTree implements TreeSelectionListener {
         this.data=data;
     }
 
-    @Override
-    public void valueChanged(TreeSelectionEvent e) {
-        if(e.getSource()==tree)
-        {
-            DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-            if(node.isLeaf())
-            {
-                String s=node.toString();
-                mainWindow.getFileOperation().treeOpen(s);
 
-            }
-        }
-    }
 
     class FileTree{
         DefaultMutableTreeNode r;
