@@ -1,7 +1,6 @@
 package FrontEnd;
 
 import FrontEnd.parts.*;
-import FrontEnd.parts.conf.MSize;
 
 import javax.swing.*;
 
@@ -36,6 +35,8 @@ public class MainWindow {
     private MPopMenu mPopMenu;
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
+    private MFoldersTree mFoldersTree;
+
 
     private MainWindow() {
         //≥ı ºªØ”–À≥–Ú
@@ -59,6 +60,9 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
+        mFoldersTree= new MFoldersTree(this);
+        foldersTree = mFoldersTree.getTree();
+        splitTreeEdit.setLeftComponent(foldersTree);
     }
 
     public JPanel getMainPanel() {
@@ -129,12 +133,19 @@ public class MainWindow {
         return mScrollPane;
     }
 
+    public JSplitPane getSplitTreeEdit() {
+        return splitTreeEdit;
+    }
+
+    public MFoldersTree getmFoldersTree() {
+        return mFoldersTree;
+    }
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setBounds(MSize.frameX, MSize.frameY, MSize.frameWidth, MSize.frameHeight);
+        frame.setSize(1400, 1000);
         frame.setVisible(true);
 
     }
