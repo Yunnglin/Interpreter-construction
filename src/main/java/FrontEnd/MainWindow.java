@@ -35,14 +35,8 @@ public class MainWindow {
     private MPopMenu mPopMenu;
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
+    private MFoldersTree mFoldersTree;
 
-    public FileOperation getFileOperation() {
-        return fileOperation;
-    }
-
-    public MScrollPane getmScrollPane() {
-        return mScrollPane;
-    }
 
     private MainWindow() {
         //≥ı ºªØ”–À≥–Ú
@@ -66,7 +60,7 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
-        MFoldersTree mFoldersTree= new MFoldersTree(this);
+        mFoldersTree= new MFoldersTree(this);
         foldersTree = mFoldersTree.getTree();
         splitTreeEdit.setLeftComponent(foldersTree);
     }
@@ -129,6 +123,22 @@ public class MainWindow {
 
     public JButton getEditButton() {
         return editButton;
+    }
+
+    public FileOperation getFileOperation() {
+        return fileOperation;
+    }
+
+    public MScrollPane getmScrollPane() {
+        return mScrollPane;
+    }
+
+    public JSplitPane getSplitTreeEdit() {
+        return splitTreeEdit;
+    }
+
+    public MFoldersTree getmFoldersTree() {
+        return mFoldersTree;
     }
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");

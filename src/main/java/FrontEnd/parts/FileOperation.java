@@ -83,11 +83,13 @@ public class FileOperation {
             String path = newFile.toString();//获取文件路径
             filename = newFile.getName();//获取文件名
             setContent(path, readFile(path));
+            mainWindow.getmFoldersTree().setFoldersTree();
+            mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
         }
         //update tree
-        m = new MFoldersTree(mainWindow);
-        MFoldersTree mFoldersTree = m.setFoldersTree();
-        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
+//        m = new MFoldersTree(mainWindow);
+//        MFoldersTree mFoldersTree = m.setFoldersTree();
+//        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
 
     }
 
@@ -131,7 +133,6 @@ public class FileOperation {
                 setEmpty();
                 break;
             case JOptionPane.CANCEL_OPTION:
-                break;
             case JOptionPane.CLOSED_OPTION:
                 break;
         }
@@ -162,9 +163,11 @@ public class FileOperation {
             e1.printStackTrace();
         }
         //update tree
-        MFoldersTree m = new MFoldersTree(mainWindow);
-        MFoldersTree mFoldersTree = m.setFoldersTree();
-        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
+//        MFoldersTree m = new MFoldersTree(mainWindow);
+//        MFoldersTree mFoldersTree = m.setFoldersTree();
+//        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
+        mainWindow.getmFoldersTree().setFoldersTree();
+        mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
 
     }
 

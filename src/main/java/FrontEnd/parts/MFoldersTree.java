@@ -23,18 +23,15 @@ public class MFoldersTree implements TreeSelectionListener {
         data=new String[30];
         data[0]="Î´ÃüÃû";
         setTree();
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                if(e.getSource()==tree)
+        tree.addTreeSelectionListener(e -> {
+            if(e.getSource()==tree)
+            {
+                DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+                if(node.isLeaf())
                 {
-                    DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-                    if(node.isLeaf())
-                    {
-                        String s=node.toString();
-                        mainWindow.getFileOperation().treeOpen(s);
+                    String s=node.toString();
+                    mainWindow.getFileOperation().treeOpen(s);
 
-                    }
                 }
             }
         });
@@ -101,10 +98,10 @@ public class MFoldersTree implements TreeSelectionListener {
     }
 
 
-    public MFoldersTree setFoldersTree()
+    public void setFoldersTree()
     {
 
-        MFoldersTree mFoldersTree=new MFoldersTree(mainWindow);;
+       // MFoldersTree mFoldersTree=new MFoldersTree(mainWindow);
         String[] list=new String[30];
         String rootName;
         String path=mainWindow.getPathLabel().getText() ;
@@ -134,9 +131,9 @@ public class MFoldersTree implements TreeSelectionListener {
             }
         }
 
-        mFoldersTree.setData(list);
-        mFoldersTree.setTree();
-        return mFoldersTree;
+        this.setData(list);
+        this.setTree();
+//        return mFoldersTree;
 
     }
 
