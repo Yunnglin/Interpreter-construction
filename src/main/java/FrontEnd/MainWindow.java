@@ -66,6 +66,9 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
+        MFoldersTree mFoldersTree= new MFoldersTree(this);
+        foldersTree = mFoldersTree.getTree();
+        splitTreeEdit.setLeftComponent(foldersTree);
     }
 
     public JPanel getMainPanel() {
