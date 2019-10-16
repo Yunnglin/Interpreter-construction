@@ -28,7 +28,7 @@ public class MPopMenu extends JPanel implements ActionListener {
     }
 
     public void init() {
-        this.editMenu = new JPopupMenu();//ÄãµÄµ¯³ö²Ëµ¥
+        this.editMenu = new JPopupMenu();
 
         cut = new JMenuItem("Cut");
         setShortcut(cut, KeyEvent.VK_X);
@@ -81,6 +81,7 @@ public class MPopMenu extends JPanel implements ActionListener {
         }
         if (e.getActionCommand().equals("Open")) {
             fileOperation.open();
+
         }
     }
 

@@ -18,10 +18,12 @@ public class FileList{
 		data[0]="未命名";
 		setTree();
 	}
+
 	public JTree getTree()
 	{
 		return tree;
 	}
+
 	public void setTree()
 	{
 		root=new DefaultMutableTreeNode("文件目录");
@@ -43,6 +45,7 @@ public class FileList{
 	{
 		this.data=data;
 	}
+
 	class FileTree{
 		DefaultMutableTreeNode r;
 		public FileTree(String[] data)

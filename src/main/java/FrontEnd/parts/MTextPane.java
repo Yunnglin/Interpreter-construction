@@ -19,8 +19,6 @@ public class MTextPane {
     private JTextPane outputPane;
 
 
-
-
     public MTextPane(MainWindow mainWindow){
         this.mainWindow = mainWindow;
         this.editPane = mainWindow.getEditPane();
@@ -44,7 +42,6 @@ public class MTextPane {
         editPane.addKeyListener(new MKeyListener(this.mainWindow));
         editPane.add(jPopMenu);
         editPane.addMouseListener(new MyMouseListener());
-
     }
 
 

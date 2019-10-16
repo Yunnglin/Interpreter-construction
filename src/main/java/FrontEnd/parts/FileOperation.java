@@ -1,6 +1,8 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
+import  FrontEnd.parts.MFoldersTree;
+import FrontEnd.parts.conf.MFont;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -12,6 +14,8 @@ public class FileOperation {
     private JFileChooser jfc = new JFileChooser();
     private String filename;
     private MainWindow mainWindow;
+    private MFoldersTree mfoldersTree;
+    private MFoldersTree m;
 
     public FileOperation(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -78,6 +82,11 @@ public class FileOperation {
             filename = newFile.getName();//获取文件名
             setContent(path, readFile(path));
         }
+        //update tree
+        m = new MFoldersTree(mainWindow);
+        MFoldersTree mFoldersTree = m.setFoldersTree();
+        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
+
     }
 
     public void save() {
@@ -125,6 +134,37 @@ public class FileOperation {
             case JOptionPane.CLOSED_OPTION:
                 break;
         }
+    }
+
+    public void treeOpen(String fileName)
+    {
+        File newFile;
+        BufferedReader br;
+        newFile=jfc.getSelectedFile();
+        mainWindow.getEditPane().setFont(MFont.codeFont);//设置编辑区的文本格式
+        mainWindow.getEditPane().setText("");//清空编辑区
+        try
+        {
+            String s;
+            StringBuffer sbf=new StringBuffer();
+            br=new BufferedReader(new FileReader(newFile));
+            while((s=br.readLine())!=null)
+            {
+                sbf.append(s+"\r\n");
+            }
+            br.close();
+            if(sbf.length()>2)
+                sbf=new StringBuffer(sbf.substring(0, sbf.length()-2));
+            String content=sbf.toString().replaceAll("\\t", "   ");
+            mainWindow.getEditPane().setText(content);
+        }catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        //update tree
+        MFoldersTree m = new MFoldersTree(mainWindow);
+        MFoldersTree mFoldersTree = m.setFoldersTree();
+        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
+
     }
 
 }
