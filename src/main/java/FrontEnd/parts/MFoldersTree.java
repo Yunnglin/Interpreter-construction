@@ -40,10 +40,6 @@ public class MFoldersTree implements TreeSelectionListener {
         });
     }
 
-    public void init()
-    {
-
-    }
 
     public JTree getTree()
     {
@@ -72,6 +68,19 @@ public class MFoldersTree implements TreeSelectionListener {
         this.data=data;
     }
 
+    @Override
+    public void valueChanged(TreeSelectionEvent e) {
+        if(e.getSource()==tree)
+        {
+            DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+            if(node.isLeaf())
+            {
+                String s=node.toString();
+                mainWindow.getFileOperation().treeOpen(s);
+
+            }
+        }
+    }
 
 
     class FileTree{
