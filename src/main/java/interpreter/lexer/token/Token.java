@@ -1,24 +1,34 @@
 package interpreter.lexer.token;
 
+import interpreter.Const.TokenTag;
+
 public class Token {
-    public int getTag() {
-        return tag;
-    }
 
-    public void setTag(int tag) {
-        this.tag = tag;
-    }
+    protected TokenTag tag;     // token tag (specify the type of token)
 
-    // TODO
-    protected int tag;
-    public Token(int t) {
+    public Token(TokenTag t) {
         tag = t;
+    }
+
+    public TokenTag getTag() {
+        return this.tag;
+    }
+
+    public int getTagValue() {
+        return tag.getCode();
+    }
+
+    public String getTagText() {
+        return tag.getSelfText();
+    }
+
+    public void setTag(TokenTag tag) {
+        this.tag = tag;
     }
 
     @Override
     public String toString() {
-        return "Token{" +
-                "tag=" + tag +
-                '}';
+        return "Token{" + "tag=" + tag.getCode()
+                + ", " + tag.getText() + ")";
     }
 }

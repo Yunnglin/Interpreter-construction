@@ -20,9 +20,6 @@ public class MSize {
     public static int lineCellHeight = (int)(MFont.codeFont.getSize()*1.2);
     public static int lineCellWidth = 40;
 
-    //component
-    public static Dimension editPaneDimension = new Dimension(800, 250);
-
     static {
         //frame
         Toolkit toolkit = Toolkit.getDefaultToolkit();

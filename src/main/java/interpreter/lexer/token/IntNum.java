@@ -1,14 +1,14 @@
 package interpreter.lexer.token;
 
 
-import interpreter.Const;
+import interpreter.Const.TokenTag;
 
 public class IntNum extends Token {
-    // TODO
+
     private int value;
 
     public IntNum(int val) {
-        super(Const.INTEGER);
+        super(TokenTag.INTEGER);
         value = val;
     }
     public int getValue() {
@@ -21,8 +21,6 @@ public class IntNum extends Token {
 
     @Override
     public String toString() {
-        return "IntNum{tag=" + getTag()
-                + ", value=" + value
-                + '}';
+        return super.toString() + String.format(" (Integer, value=%d)", value);
     }
 }

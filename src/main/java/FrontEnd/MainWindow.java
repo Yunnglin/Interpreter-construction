@@ -2,12 +2,7 @@ package FrontEnd;
 
 import FrontEnd.parts.*;
 
-
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
 
 public class MainWindow {
     private JPanel mainPanel;
@@ -41,8 +36,6 @@ public class MainWindow {
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
 
-    private MFoldersTree mFoldersTree;
-
     public FileOperation getFileOperation() {
         return fileOperation;
     }
@@ -64,7 +57,7 @@ public class MainWindow {
         MButton mButton = new MButton(this);
         mButton.init();
 
-        MTextPane mTextPane = new MTextPane(this);
+        mTextPane = new MTextPane(this);
         mTextPane.init();
 
 
@@ -73,15 +66,6 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
-
-        mFoldersTree = new MFoldersTree(this);
-        foldersTree=mFoldersTree.getTree();
-        splitTreeEdit.setLeftComponent(foldersTree);
-
-    }
-
-    public JSplitPane getSplitTreeEdit() {
-        return splitTreeEdit;
     }
 
     public JPanel getMainPanel() {
@@ -143,8 +127,6 @@ public class MainWindow {
     public JButton getEditButton() {
         return editButton;
     }
-
-
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
@@ -154,8 +136,5 @@ public class MainWindow {
         frame.setVisible(true);
 
     }
-
-
-
 
 }
