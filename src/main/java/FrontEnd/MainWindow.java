@@ -39,7 +39,7 @@ public class MainWindow {
 
 
     private MainWindow() {
-        //≥ı ºªØ”–À≥–Ú
+        //Êõ¥Êñ∞È°∫Â∫è
         mPopMenu = new MPopMenu(this);
         mPopMenu.init();
 
@@ -60,9 +60,9 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
-        mFoldersTree= new MFoldersTree(this);
-        foldersTree = mFoldersTree.getTree();
-        splitTreeEdit.setLeftComponent(foldersTree);
+//        mFoldersTree= new MFoldersTree(this);
+//        foldersTree = mFoldersTree.getTree();
+//        splitTreeEdit.setLeftComponent(foldersTree);
     }
 
     public JPanel getMainPanel() {

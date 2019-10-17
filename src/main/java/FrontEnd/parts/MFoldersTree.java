@@ -21,7 +21,7 @@ public class MFoldersTree implements TreeSelectionListener {
     {
         this.mainWindow = mainWindow;
         data=new String[30];
-        data[0]="Î´ÃüÃû";
+        data[0]="Unnamed";
         setTree();
         tree.addTreeSelectionListener(e -> {
             if(e.getSource()==tree)
@@ -45,7 +45,7 @@ public class MFoldersTree implements TreeSelectionListener {
 
     public void setTree()
     {
-        root=new DefaultMutableTreeNode("ÎÄ¼þÄ¿Â¼");
+        root=new DefaultMutableTreeNode("File Directory");
         tree=new JTree(root);
         model=(DefaultTreeModel)tree.getModel();
         child=new FileTree(data).node();
@@ -53,7 +53,7 @@ public class MFoldersTree implements TreeSelectionListener {
         if(parent==null)parent=root;
         model.insertNodeInto(child, parent, 0);
 
-        for(int i=0; i<tree.getRowCount(); i++)//Ê¹Ê÷Ä¬ÈÏÕ¹¿ª
+        for(int i=0; i<tree.getRowCount(); i++)//æ‰“å¼€å­èŠ‚ç‚¹
         {
             tree.expandRow(i);
         }
@@ -108,7 +108,7 @@ public class MFoldersTree implements TreeSelectionListener {
         int x=path.lastIndexOf('\\', path.length()-2);
         if(x==-1)
         {
-            rootName=path.charAt(0)+"ÅÌ";
+            rootName=path.charAt(0)+":";
         }
         else{
             rootName=path.substring(x+1,path.length()-1);
@@ -122,12 +122,11 @@ public class MFoldersTree implements TreeSelectionListener {
         File file=new File(path);
         String fileName=file.getName();
         int point=fileName.indexOf('.');
-        String end=fileName.substring(point, fileName.length());
-        for(int i=0;i<s.length;i++)
-        {
-            if(s[i].indexOf(end)!=-1)
-            {
-                list[p++]=s[i];
+        String end=fileName.substring(point);
+//        assert s != null;
+        for (String value : s) {
+            if (value.contains(end)) {
+                list[p++] = value;
             }
         }
 

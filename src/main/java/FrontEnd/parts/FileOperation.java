@@ -21,14 +21,14 @@ public class FileOperation {
         this.mainWindow = mainWindow;
         jfc.setAcceptAllFileFilterUsed(false);
         jfc.addChoosableFileFilter(new MFileFilter("C--", ".cmm"));
-        jfc.addChoosableFileFilter(new MFileFilter("Java", ".java"));//Ìí¼ÓÎÄ¼þ¹ýÂËÆ÷
+        jfc.addChoosableFileFilter(new MFileFilter("Java", ".java"));//ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         jfc.addChoosableFileFilter(new MFileFilter("C", ".c"));
         jfc.addChoosableFileFilter(new MFileFilter("python", ".py"));
         jfc.addChoosableFileFilter(new MFileFilter("C++", ".cpp"));
         jfc.addChoosableFileFilter(new MFileFilter("txt", ".txt"));
         jfc.addChoosableFileFilter(new MFileFilter("HTML", ".html"));
         FileSystemView fsv = FileSystemView.getFileSystemView();
-        jfc.setCurrentDirectory(fsv.getHomeDirectory());//ÉèÖÃÄ¬ÈÏÂ·¾¶Îª×ÀÃæÂ·¾¶
+        jfc.setCurrentDirectory(fsv.getHomeDirectory());//ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½Â·ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
     }
 
     private void setContent(String path, String content) {
@@ -80,8 +80,8 @@ public class FileOperation {
     {
         if (JFileChooser.APPROVE_OPTION == jfc.showOpenDialog(mainWindow.getEditPane())) {
             File newFile = jfc.getSelectedFile();
-            String path = newFile.toString();//»ñÈ¡ÎÄ¼þÂ·¾¶
-            filename = newFile.getName();//»ñÈ¡ÎÄ¼þÃû
+            String path = newFile.toString();//ï¿½ï¿½È¡ï¿½Ä¼ï¿½Â·ï¿½ï¿½
+            filename = newFile.getName();//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½
             setContent(path, readFile(path));
             mainWindow.getmFoldersTree().setFoldersTree();
             mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
@@ -94,7 +94,7 @@ public class FileOperation {
     }
 
     public void save() {
-        // Î´´ò¿ªÎÄ¼þ
+        // Î´ï¿½ï¿½ï¿½Ä¼ï¿½
         String path = mainWindow.getPathLabel().getText();
         if (path.equals("")) {
             if (JFileChooser.APPROVE_OPTION == jfc.showSaveDialog(mainWindow.getEditPane())) {
@@ -111,7 +111,7 @@ public class FileOperation {
                 writeFile(newPath);
                 mainWindow.getPathLabel().setText(newPath);
             }
-        } else {//ÒÑ´ò¿ªÎÄ¼þ
+        } else {//ï¿½Ñ´ï¿½ï¿½Ä¼ï¿½
             writeFile(path);
         }
 
@@ -143,8 +143,8 @@ public class FileOperation {
         File newFile;
         BufferedReader br;
         newFile=jfc.getSelectedFile();
-        mainWindow.getEditPane().setFont(MFont.codeFont);//ÉèÖÃ±à¼­ÇøµÄÎÄ±¾¸ñÊ½
-        mainWindow.getEditPane().setText("");//Çå¿Õ±à¼­Çø
+        mainWindow.getEditPane().setFont(MFont.codeFont);//
+        mainWindow.getEditPane().setText("");//
         try
         {
             String s;

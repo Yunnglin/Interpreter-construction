@@ -5,12 +5,12 @@ import java.io.File;
 
 public class MFileFilter extends FileFilter {
 
-    private String ends; // 文件后缀
-    private String description; // 文件描述
+    private String ends;
+    private String description;
 
     public MFileFilter(String description, String ends) {
-        this.ends = ends; // 设置文件后缀
-        this.description = description; // 设置文件描述文字
+        this.ends = ends;
+        this.description = description;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class MFileFilter extends FileFilter {
         if (f.isDirectory())
             return true;
         String fileName = f.getName();
-        return fileName.toUpperCase().endsWith(this.ends.toUpperCase());//判断文件名后缀
+        return fileName.toUpperCase().endsWith(this.ends.toUpperCase());
     }
 
     @Override
