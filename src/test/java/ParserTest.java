@@ -3,6 +3,7 @@ import interpreter.utils.lalr.GrammarSymbol;
 import interpreter.utils.lalr.LALRGrammar;
 import interpreter.utils.lalr.Production;
 import interpreter.utils.lalr.state.LALRParseManager;
+import interpreter.utils.lalr.state.LALRStateMachine;
 import interpreter.utils.lalr.state.LRItem;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -87,5 +88,7 @@ public class ParserTest {
 //        System.out.println(System.getProperty("user.dir"));
         LALRParseManager parseManager = LALRParseManager.getInstance();
         parseManager.runStateMachine();
+        LALRStateMachine stateMachine = parseManager.getStateMachine();
+        System.out.println(stateMachine.getStates().size());
     }
 }

@@ -86,10 +86,10 @@ public final class Const {
         static {
             TokenTag[] values = TokenTag.values();
             for (int i=FIRST_RESERVED_INDEX; i<=LAST_RESERVED_INDEX; ++i) {
-                RESERVED_WORDS.put(values[i].getSelfText(), values[i]);
+                RESERVED_WORDS.put(values[i].getText(), values[i]);
             }
             for (int i=FIRST_SYMBOL_INDEX; i<=LAST_SYMBOL_INDEX; ++i) {
-                SYMBOLS.put(values[i].getSelfText(), values[i]);
+                SYMBOLS.put(values[i].getText(), values[i]);
             }
         }
     }

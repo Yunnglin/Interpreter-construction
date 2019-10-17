@@ -142,4 +142,12 @@ public class LALRStateMachine {
                 " -> " + oldAction + " " + oldActionCode +
                 " | " + newAction + " " + newActionCode);
     }
+
+    public ArrayList<LALRState> getStates() {
+        return states;
+    }
+
+    public ArrayList<HashMap<GrammarSymbol, Integer>> getTransitionTable() {
+        return transitionTable;
+    }
 }
