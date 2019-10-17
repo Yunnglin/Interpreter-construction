@@ -111,6 +111,10 @@ public class Parser implements MessageProducer {
 
                 // generate a new node
                 INode newNode = new INode(symbol);
+                curChildren.add(newNode);
+
+                // set attribute
+//                switch ()
             } else {
                 // reduce
                 Integer targetId = Math.abs(action) - 1;

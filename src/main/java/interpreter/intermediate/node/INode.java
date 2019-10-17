@@ -32,7 +32,7 @@ public class INode {
         return values.get(key);
     }
 
-    public Object setAtrribute(INodeKey key, Object value) {
+    public Object setAttribute(INodeKey key, Object value) {
         return values.put(key, value);
     }
 
