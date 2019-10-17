@@ -60,9 +60,10 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
-//        mFoldersTree= new MFoldersTree(this);
-//        foldersTree = mFoldersTree.getTree();
-//        splitTreeEdit.setLeftComponent(foldersTree);
+        mFoldersTree= new MFoldersTree(this);
+//        pathLabel.setText(System.getProperty("user.home"));
+        foldersTree = mFoldersTree.getTree();
+        splitTreeEdit.setLeftComponent(foldersTree);
     }
 
     public JPanel getMainPanel() {
@@ -140,6 +141,7 @@ public class MainWindow {
     public MFoldersTree getmFoldersTree() {
         return mFoldersTree;
     }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
