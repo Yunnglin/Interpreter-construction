@@ -44,7 +44,7 @@ public class MButton {
 
     private void setLexerButton(JButton button) {
         button.addActionListener(e -> {
-            // ÐÂ½¨Ïß³Ì
+            // å¤šçº¿ç¨‹
             new Thread(() -> {
                 mainWindow.getFileOperation().save();
                 String path = mainWindow.getPathLabel().getText();

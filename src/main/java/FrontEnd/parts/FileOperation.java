@@ -1,7 +1,7 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
-import  FrontEnd.parts.MFoldersTree;
+import FrontEnd.parts.MFoldersTree;
 import FrontEnd.parts.conf.MFont;
 
 import javax.swing.*;
@@ -17,46 +17,49 @@ public class FileOperation {
     private MFoldersTree mfoldersTree;
     private MFoldersTree m;
 
+
     public FileOperation(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         jfc.setAcceptAllFileFilterUsed(false);
         jfc.addChoosableFileFilter(new MFileFilter("C--", ".cmm"));
-        jfc.addChoosableFileFilter(new MFileFilter("Java", ".java"));//Ìí¼ÓÎÄ¼þ¹ýÂËÆ÷
+        jfc.addChoosableFileFilter(new MFileFilter("Java", ".java"));
         jfc.addChoosableFileFilter(new MFileFilter("C", ".c"));
         jfc.addChoosableFileFilter(new MFileFilter("python", ".py"));
         jfc.addChoosableFileFilter(new MFileFilter("C++", ".cpp"));
         jfc.addChoosableFileFilter(new MFileFilter("txt", ".txt"));
         jfc.addChoosableFileFilter(new MFileFilter("HTML", ".html"));
         FileSystemView fsv = FileSystemView.getFileSystemView();
-        jfc.setCurrentDirectory(fsv.getHomeDirectory());//ÉèÖÃÄ¬ÈÏÂ·¾¶Îª×ÀÃæÂ·¾¶
+        jfc.setCurrentDirectory(fsv.getHomeDirectory());
     }
 
     private void setContent(String path, String content) {
-        mainWindow.getOutputPane().setText("");
-        mainWindow.getPathLabel().setText(path);
-        mainWindow.getEditPane().setText(content);
-//        mainWindow.getmScrollPane().updateLineNum();
+        new Thread(()->{
+            mainWindow.getOutputPane().setText("");
+            mainWindow.getPathLabel().setText(path);
+            mainWindow.getEditPane().setText(content);
+        }).start();
+
     }
 
     public void setEmpty() {
-        mainWindow.getEditPane().setText("");
-        mainWindow.getOutputPane().setText("");
-        mainWindow.getPathLabel().setText("");
-        mainWindow.getmScrollPane().updateLineNum();
+        new Thread(()->{
+            mainWindow.getEditPane().setText("");
+            mainWindow.getOutputPane().setText("");
+            mainWindow.getPathLabel().setText("");
+            mainWindow.getmScrollPane().updateLineNum();
+        }).start();
+
     }
 
     public String readFile(String path) {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
             String temp;
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
 
             while ((temp = bufferedReader.readLine()) != null) {
                 stringBuffer.append(temp).append("\r\n");
             }
-
-            if (stringBuffer.length() > 2)
-                stringBuffer = new StringBuffer(stringBuffer.substring(0, stringBuffer.length() - 2));
-            return stringBuffer.toString().replaceAll("\\t", "   ");
+            return stringBuffer.toString();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -80,21 +83,19 @@ public class FileOperation {
     {
         if (JFileChooser.APPROVE_OPTION == jfc.showOpenDialog(mainWindow.getEditPane())) {
             File newFile = jfc.getSelectedFile();
-            String path = newFile.toString();//»ñÈ¡ÎÄ¼þÂ·¾¶
-            filename = newFile.getName();//»ñÈ¡ÎÄ¼þÃû
+            String path = newFile.toString();//è·¯å¾„
+            filename = newFile.getName();//æ–‡ä»¶å
             setContent(path, readFile(path));
-            mainWindow.getmFoldersTree().setFoldersTree();
-            mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
+
+            //è®¾ç½®æ–‡ä»¶æ ‘
+            mainWindow.getmFoldersTree().setFoldersTree(newFile);
+            mainWindow.getSplitTreeEdit().setLeftComponent(new JScrollPane(mainWindow.getmFoldersTree().getTree()));
+            mainWindow.getSplitTreeEdit().setDividerLocation(150);
         }
-        //update tree
-//        m = new MFoldersTree(mainWindow);
-//        MFoldersTree mFoldersTree = m.setFoldersTree();
-//        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
 
     }
 
     public void save() {
-        // Î´´ò¿ªÎÄ¼þ
         String path = mainWindow.getPathLabel().getText();
         if (path.equals("")) {
             if (JFileChooser.APPROVE_OPTION == jfc.showSaveDialog(mainWindow.getEditPane())) {
@@ -111,7 +112,7 @@ public class FileOperation {
                 writeFile(newPath);
                 mainWindow.getPathLabel().setText(newPath);
             }
-        } else {//ÒÑ´ò¿ªÎÄ¼þ
+        } else {//ç›´æŽ¥è¦†ç›–
             writeFile(path);
         }
 
@@ -138,36 +139,11 @@ public class FileOperation {
         }
     }
 
-    public void treeOpen(String fileName)
-    {
-        File newFile;
-        BufferedReader br;
-        newFile=jfc.getSelectedFile();
-        mainWindow.getEditPane().setFont(MFont.codeFont);//ÉèÖÃ±à¼­ÇøµÄÎÄ±¾¸ñÊ½
-        mainWindow.getEditPane().setText("");//Çå¿Õ±à¼­Çø
-        try
-        {
-            String s;
-            StringBuffer sbf=new StringBuffer();
-            br=new BufferedReader(new FileReader(newFile));
-            while((s=br.readLine())!=null)
-            {
-                sbf.append(s+"\r\n");
-            }
-            br.close();
-            if(sbf.length()>2)
-                sbf=new StringBuffer(sbf.substring(0, sbf.length()-2));
-            String content=sbf.toString().replaceAll("\\t", "   ");
-            mainWindow.getEditPane().setText(content);
-        }catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        //update tree
-//        MFoldersTree m = new MFoldersTree(mainWindow);
-//        MFoldersTree mFoldersTree = m.setFoldersTree();
-//        mainWindow.getSplitTreeEdit().setLeftComponent(m.setFoldersTree().getTree());
-        mainWindow.getmFoldersTree().setFoldersTree();
-        mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
+    public void treeOpenFile(String path) {
+        setContent(path, readFile(path));
+//        // update tree
+//        mainWindow.getmFoldersTree().setFoldersTree(new File(path));
+//        mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
 
     }
 

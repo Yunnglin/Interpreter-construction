@@ -34,7 +34,7 @@ public class MDocumentListener implements DocumentListener {
     }
 
     /*
-   Token£º
+   Tokenï¿½ï¿½
    (1) Symbol: ||, &&, ==, !=, >=, <=, +, -, *, /, ;
    (2) Type: int, float, char, long
    (3) Reserved Words: break, do, else, if, while, read, write
@@ -52,7 +52,7 @@ public class MDocumentListener implements DocumentListener {
         normalStyle = ((StyledDocument) editPane.getDocument()).addStyle("normalStyle", null);
         errorStyle = ((StyledDocument) editPane.getDocument()).addStyle("errorStyle", null);
 
-        //ÉèÖÃÑÕÉ«
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
         StyleConstants.setForeground(symbolStyle, MColor.symbolColor);
         StyleConstants.setForeground(basicTypeStyle, MColor.basicTypeColor);
         StyleConstants.setForeground(definedWordsStyle, MColor.defineWordsColor);
@@ -62,7 +62,7 @@ public class MDocumentListener implements DocumentListener {
         StyleConstants.setForeground(normalStyle, MColor.normalColor);
         StyleConstants.setForeground(errorStyle, MColor.errorColor);
 
-        //ÉèÖÃ×ÖÌå
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         StyleConstants.FontConstants.setUnderline(errorStyle, true);
         StyleConstants.FontConstants.setItalic(errorStyle, true);
         StyleConstants.FontConstants.setItalic(annotationStyle, true);
@@ -118,22 +118,17 @@ public class MDocumentListener implements DocumentListener {
     }
 
     public void colouring(StyledDocument doc, int pos, int len) throws BadLocationException {
-        // È¡µÃ²åÈë»òÕßÉ¾³ıºóÓ°Ïìµ½µÄµ¥´Ê.
-        // ÀıÈç"public"ÔÚbºó²åÈëÒ»¸ö¿Õ¸ñ, ¾Í±ä³ÉÁË:"pub lic", ÕâÊ±¾ÍÓĞÁ½¸öµ¥´ÊÒª´¦Àí:"pub"ºÍ"lic"
-        // ÕâÊ±ÒªÈ¡µÃµÄ·¶Î§ÊÇpubÖĞpÇ°ÃæµÄÎ»ÖÃºÍlicÖĞcºóÃæµÄÎ»ÖÃ
         int start = indexOfWordStart(doc, pos);
         int end = indexOfWordEnd(doc, pos + len);
 
         char ch;
         while (start < end) {
             ch = getCharAt(doc, start);
-            if (Character.isLetter(ch) || ch == '_') {      //´¦ÀíWord
-                // Èç¹ûÊÇÒÔ×ÖÄ¸»òÕßÏÂ»®Ïß¿ªÍ·, ËµÃ÷ÊÇµ¥´Ê
-                // posÎª´¦ÀíºóµÄ×îºóÒ»¸öÏÂ±ê
+            if (Character.isLetter(ch) || ch == '_') {
 
                 start = colouringWord(doc, start);
 
-            } else if (Character.isDigit(ch)) {      //´¦ÀíÊı×Ö
+            } else if (Character.isDigit(ch)) {
                 start = colouringNum(doc, start);
             }
             else if (isSpecialChar(Character.toString(ch))) {
@@ -146,16 +141,12 @@ public class MDocumentListener implements DocumentListener {
         }
     }
 
-    // ¶Ôµ¥´Ê½øĞĞ×ÅÉ«, ²¢·µ»Øµ¥´Ê½áÊøµÄÏÂ±ê.
+
     public int colouringWord(StyledDocument doc, int pos) throws BadLocationException {
         int wordEnd = indexOfWordEnd(doc, pos);
         String word = doc.getText(pos, wordEnd - pos);
 
         if (styleHashtable.containsKey(word)) {
-            // Èç¹ûÊÇ¹Ø¼ü×Ö, ¾Í½øĞĞ¹Ø¼ü×ÖµÄ×ÅÉ«, ·ñÔòÊ¹ÓÃÆÕÍ¨µÄ×ÅÉ«.
-            // ÕâÀïÓĞÒ»µãÒª×¢Òâ, ÔÚinsertUpdateºÍremoveUpdateµÄ·½·¨µ÷ÓÃµÄ¹ı³ÌÖĞ, ²»ÄÜĞŞ¸ÄdocµÄÊôĞÔ.
-            // µ«ÎÒÃÇÓÖÒª´ïµ½ÄÜ¹»ĞŞ¸ÄdocµÄÊôĞÔ, ËùÒÔ°Ñ´ËÈÎÎñ·Åµ½Õâ¸ö·½·¨µÄÍâÃæÈ¥Ö´ĞĞ.
-            // ÊµÏÖÕâÒ»Ä¿µÄ, ¿ÉÒÔÊ¹ÓÃĞÂÏß³Ì, µ«·Åµ½swingµÄÊÂ¼ş¶ÓÁĞÀïÈ¥´¦Àí¸üÇá±ãÒ»µã.
             SwingUtilities.invokeLater(new ColouringTask(doc, pos, wordEnd - pos, styleHashtable.get(word)));
         } else {
             SwingUtilities.invokeLater(new ColouringTask(doc, pos, wordEnd - pos, normalStyle));
@@ -164,7 +155,7 @@ public class MDocumentListener implements DocumentListener {
         return wordEnd;
     }
 
-    //¶ÔÊı×Ö½øĞĞ×ÅÉ«£¬°üÀ¨ÕûÊıºÍĞ¡Êı
+    //æ•°å­—
     public int colouringNum(StyledDocument doc, int pos) throws BadLocationException {
         int numEnd = indexOfWordEnd(doc, pos);
         if (getCharAt(doc, numEnd) == '.') {
@@ -203,24 +194,24 @@ public class MDocumentListener implements DocumentListener {
         return numEnd;
     }
 
-    //¶ÔÌØÊâ×Ö·ûÉÏÉ«
+    //ç‰¹æ®Šå­—ç¬¦
     public int colouringSpecialChar(StyledDocument doc,int pos) throws BadLocationException{
         SwingUtilities.invokeLater(new ColouringTask(doc,pos,1,symbolStyle));
         return pos+1;
     }
 
-    //È¡µÃÔÚÎÄµµÖĞÏÂ±êÔÚpos´¦µÄ×Ö·û.
+    //è·å–ä½ç½®çš„å­—ç¬¦
     public char getCharAt(Document doc, int pos) throws BadLocationException {
         return doc.getText(pos, 1).charAt(0);
     }
 
-    //Èç¹ûÒ»¸ö×Ö·ûÊÇ×ÖÄ¸, Êı×Ö, ÏÂ»®Ïß, Ôò·µ»Øtrue.
+    //word
     public boolean isWordCharacter(Document doc, int pos) throws BadLocationException {
         char ch = getCharAt(doc, pos);
         return Character.isLetter(ch) || Character.isDigit(ch) || ch == '_';
     }
 
-    //ÓÃÕıÔò±í´ïÊ½ÅĞ¶ÏÒ»¸ö×Ö·ûÊÇ²»ÊÇÌØÊâ×Ö·û
+    //ç‰¹æ®Šå­—ç¬¦
     public static boolean isSpecialChar(String str) {
         String regEx = "[`~!@#$%^&*()+=|{}':;,\\[\\].<>/?]";
         Pattern p = Pattern.compile(regEx);
@@ -229,7 +220,7 @@ public class MDocumentListener implements DocumentListener {
     }
 
 
-    //»ñÈ¡posËùÔÚÎ»ÖÃµ¥´ÊµÄ¿ªÊ¼Î»ÖÃ
+    //è·å–è¯çš„å¼€å¤´ä½ç½®
     public int indexOfWordStart(Document doc, int pos) throws BadLocationException {
         while (pos > 0 && isWordCharacter(doc, pos - 1)) {
             --pos;
@@ -238,7 +229,7 @@ public class MDocumentListener implements DocumentListener {
         return pos;
     }
 
-    //»ñÈ¡posËùÔÚÎ»ÖÃµ¥´ÊµÄ½áÊøÎ»ÖÃ
+    //è·å–è¯çš„ç»“æŸä½ç½®
     public int indexOfWordEnd(Document doc, int pos) throws BadLocationException {
         while (isWordCharacter(doc, pos)) {
             ++pos;

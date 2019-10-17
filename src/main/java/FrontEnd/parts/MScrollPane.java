@@ -31,7 +31,6 @@ public class MScrollPane {
         editScroll.setRowHeaderView(lineNumList);
     }
 
-    //ÐÐºÅ¸üÐÂ
     public void updateLineNum() {
         int line = mainWindow.getEditPane().getDocument().getDefaultRootElement().getElementCount();
         if (line == this.lineList.getSize()) {
