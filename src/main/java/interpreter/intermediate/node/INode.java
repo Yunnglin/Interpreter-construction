@@ -7,7 +7,7 @@ package interpreter.intermediate.node;
 
 public class INode {
     public enum INodeKey {
-        ID, VALUE, LINE
+        ID, VALUE, LINE, NAME
     }
 
     private GrammarSymbol symbol;
@@ -30,6 +30,10 @@ public class INode {
 
     public Object getAttribute(INodeKey key) {
         return values.get(key);
+    }
+
+    public Object setAtrribute(INodeKey key, Object value) {
+        return values.put(key, value);
     }
 
     public void addChild(INode child) {

@@ -18,13 +18,13 @@ public class Word extends Token {
         return super.toString() + String.format(" (Word, lexeme='%s')", this.lexeme);
     }
 
-    public Word(TokenTag t, String s) {
-        super(t);
+    public Word(TokenTag t, int line, String s) {
+        super(t, line);
         lexeme = s;
     }
 
-    public Word(TokenTag t) {
-        super(t);
+    public Word(TokenTag t, int line) {
+        super(t, line);
         lexeme = t.getText();
     }
 }

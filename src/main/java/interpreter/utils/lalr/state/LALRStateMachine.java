@@ -150,4 +150,8 @@ public class LALRStateMachine {
     public ArrayList<HashMap<GrammarSymbol, Integer>> getTransitionTable() {
         return transitionTable;
     }
+
+    public Integer getAction(Integer stateId, GrammarSymbol symbol) {
+        return transitionTable.get(stateId).get(symbol);
+    }
 }

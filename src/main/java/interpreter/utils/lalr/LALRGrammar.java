@@ -333,4 +333,8 @@ public class LALRGrammar {
 
         return newProductions;
     }
+
+    public Production getProduction(Integer productionId) {
+        return productions.get(productionId);
+    }
 }

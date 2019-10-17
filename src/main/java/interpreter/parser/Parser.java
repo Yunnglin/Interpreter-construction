@@ -5,7 +5,7 @@ import interpreter.exception.SyntaxError;
 import interpreter.intermediate.node.INode;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
-import interpreter.utils.lalr.GrammarSymbol;
+import interpreter.utils.lalr.*;
 import interpreter.utils.lalr.state.LALRParseManager;
 import message.Message;
 import message.MessageListener;
@@ -66,20 +66,76 @@ public class Parser implements MessageProducer {
         }
     }
 
-    private INode parseTokens(ArrayList<Token> tokens) {
-        INode root = new INode();
+    private INode parseTokens(ArrayList<Token> tokens) throws SyntaxError {
+        LALRGrammar grammar = parseManager.getGrammar();
+        INode root = null;
 
         // prepare two stacks, one for symbols and the other for states
-        ArrayList<GrammarSymbol> symbolStack = new ArrayList<>();
-        ArrayList<Integer> stateStack = new ArrayList<>();
+        // use the number of tokens as initial capacity
+        ArrayList<GrammarSymbol> symbolStack = new ArrayList<>(tokens.size());
+        ArrayList<Integer> stateStack = new ArrayList<>(tokens.size());
         symbolStack.add(TokenTag.PROG_END);
         stateStack.add(0);
         int symbolTop = 0;
         int tokenTop = 0;
 
-        while(true) {
+        ArrayList<INode> curChildren = new ArrayList<>();
+        while(tokenTop < tokens.size()) {
+            Token token = tokens.get(tokenTop);
+            TerminalSymbol symbol = token.getTag();
+            Integer action = parseManager.getAction(stateStack.get(symbolTop), symbol);
+
+            if (action == null) {
+                // the action is error
+                throw SyntaxError.newUnexpectedTokenError(token);
+            }
+
+            if (action == 0) {
+                // accept
+                NonterminalSymbol startSymbol = grammar.getStartSymbol();
+                root = new INode(startSymbol);
+                for (INode child : curChildren) {
+                    root.addChild(child);
+                }
+            } else if (action > 0) {
+                // shift
+                Integer targetId = action - 1;
+                ++symbolTop;
+                if (symbolTop >= symbolStack.size()) {
+                    symbolStack.add(symbol);
+                    stateStack.add(targetId);
+                } else {
+                    symbolStack.set(symbolTop, symbol);
+                    stateStack.set(symbolTop, targetId);
+                }
+
+                // generate a new node
+                INode newNode = new INode(symbol);
+            } else {
+                // reduce
+                Integer targetId = Math.abs(action) - 1;
+                Production production = grammar.getProduction(targetId);
+                ArrayList<GrammarSymbol> right = production.getRightSymbols();
+                GrammarSymbol left = production.getLeft();
+
+            }
+
+            // the token stack pops
+            ++tokenTop;
+        }
+
+        if (root == null) {
+            System.out.println("An error escaped the check of transition table");
+            throw SyntaxError.newMissingTokenError( tokens.get(tokenTop-1),
+                    getExpectedTokenTag(stateStack.get(symbolTop)));
         }
 
         return root;
+    }
+
+    private ArrayList<TokenTag> getExpectedTokenTag(Integer curState) {
+        ArrayList<TokenTag> expected = new ArrayList<TokenTag>();
+
+        return expected;
     }
 }
