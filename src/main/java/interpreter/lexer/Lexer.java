@@ -1,6 +1,5 @@
 package interpreter.lexer;
 
-import interpreter.Const;
 import interpreter.Const.TokenTag;
 import interpreter.exception.SyntaxError;
 import interpreter.lexer.token.IntNum;
@@ -12,10 +11,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
 public class Lexer {
-    private int line;
+    private int curLine;
     private char peek;
     private Hashtable keyWords;
     private Token curToken;
@@ -28,7 +26,7 @@ public class Lexer {
     }
 
     public Lexer() {
-        this.line = 1;
+        this.curLine = 1;
         this.peek = ' ';
         this.keyWords = new Hashtable();
         this.reader = null;
@@ -93,7 +91,7 @@ public class Lexer {
             // 读取新的非空字符
             while(whitespaces.indexOf(peek) != -1) {
                 if(peek == '\n') {
-                    ++line;
+                    ++curLine;
                 }
                 getNextChar();
             }
@@ -206,13 +204,13 @@ public class Lexer {
                         int val = Integer.parseInt(num.toString());
                         return new IntNum(val);
                     } catch (NumberFormatException e) {
-                        throw SyntaxError.newConstantError(num.toString(), line);
+                        throw SyntaxError.newConstantError(num.toString(), curLine);
                     }
                 }
                 num.append(peek);
                 getNextChar();
                 //记录行数 报错退出
-                if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num.toString(), line);
+                if(!Character.isDigit(peek)) throw SyntaxError.newConstantError(num.toString(), curLine);
                 for(;;){
                     num.append(peek);
                     getNextChar();
@@ -222,7 +220,7 @@ public class Lexer {
                     double val = Double.valueOf(num.toString());
                     return new Real(val);
                 } catch (NumberFormatException e) {
-                    throw SyntaxError.newConstantError(num.toString(), line);
+                    throw SyntaxError.newConstantError(num.toString(), curLine);
                 }
             }
 
@@ -234,7 +232,7 @@ public class Lexer {
                         name.append(peek);
                         getNextChar();
                         if(!Character.isDigit(peek)&&!Character.isLetter(peek)&&peek!='_'){
-                            throw SyntaxError.newIdentifierError(name.toString(), line);
+                            throw SyntaxError.newIdentifierError(name.toString(), curLine);
                         }
                     }else{
                         name.append(peek);
@@ -246,7 +244,7 @@ public class Lexer {
             }
 
             // 无法识别的符号
-            throw SyntaxError.newLexicalError(Character.toString(peek), line);
+            throw SyntaxError.newLexicalError(Character.toString(peek), curLine);
         }
         return new Token(TokenTag.PROG_END);
     }

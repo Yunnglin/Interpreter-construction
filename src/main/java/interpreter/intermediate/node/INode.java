@@ -13,4 +13,26 @@ public class INode {
     private GrammarSymbol symbol;
     private HashMap<INodeKey, Object> values;
     private ArrayList<INode> children;
+
+    public INode(GrammarSymbol symbol) {
+        this.symbol = symbol;
+        this.values = new HashMap<>();
+        this.children = new ArrayList<>();
+    }
+
+    public ArrayList<INode> getChildren() {
+        return children;
+    }
+
+    public GrammarSymbol getSymbol() {
+        return symbol;
+    }
+
+    public Object getAttribute(INodeKey key) {
+        return values.get(key);
+    }
+
+    public void addChild(INode child) {
+        this.children.add(child);
+    }
 }

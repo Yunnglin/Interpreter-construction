@@ -28,4 +28,11 @@ public class LALRParseManager {
     public void runStateMachine() {
         stateMachine = new LALRStateMachine();
     }
+
+    public LALRStateMachine getStateMachine() {
+        if (stateMachine == null) {
+            runStateMachine();
+        }
+        return stateMachine;
+    }
 }
