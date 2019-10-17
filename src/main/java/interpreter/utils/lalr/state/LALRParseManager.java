@@ -4,7 +4,9 @@ import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 import interpreter.utils.lalr.GrammarSymbol;
 import interpreter.utils.lalr.LALRGrammar;
 
-public class LALRParseManager {
+import java.io.Serializable;
+
+public class LALRParseManager implements Serializable {
     private static LALRParseManager instance = null;
     public static String grammarFilePath = "src/main/res/grammar.yaml";
 
@@ -43,5 +45,9 @@ public class LALRParseManager {
             runStateMachine();
         }
         return stateMachine.getAction(stateId, symbol);
+    }
+
+    public LALRState getState(Integer stateId) {
+        return stateMachine.getState(stateId);
     }
 }

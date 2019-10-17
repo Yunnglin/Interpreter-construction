@@ -3,6 +3,7 @@ package interpreter.utils.lalr.state;
 import interpreter.Const;
 import interpreter.utils.lalr.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Set;
 import static interpreter.utils.lalr.LALRGrammar.NIL;
 import static interpreter.utils.lalr.LALRGrammar.Nil;
 
-public class LRItem {
+public class LRItem implements Serializable {
     private HashSet<TerminalSymbol> lookAheadSet;
     private int productionId;
     private int dotPos;

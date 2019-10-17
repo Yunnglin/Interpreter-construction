@@ -269,5 +269,6 @@ MORE_IDENTIFIER:
 NUMBER:
   -
     - INTEGER
+  -
     - REAL_NUMBER
 

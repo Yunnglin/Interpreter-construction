@@ -2,10 +2,11 @@ package interpreter.utils.lalr;
 
 import interpreter.utils.lalr.GrammarSymbol;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Production {
+public class Production implements Serializable {
     private GrammarSymbol left;
     private ArrayList<GrammarSymbol> rightSymbols;
 

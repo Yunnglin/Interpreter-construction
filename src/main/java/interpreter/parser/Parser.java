@@ -17,11 +17,12 @@ import message.MessageListener;
 import message.MessageProducer;
 import message.MessageHandler;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Parser implements MessageProducer {
+    private static boolean update = false;
 
     private MessageHandler handler;
     private LALRParseManager parseManager;
@@ -45,7 +46,22 @@ public class Parser implements MessageProducer {
     public Parser(Lexer lexer) {
         this.lexer = lexer;
         this.handler = new MessageHandler();
-        this.parseManager = LALRParseManager.getInstance();
+        if (update) {
+            this.parseManager = LALRParseManager.getInstance();
+            this.parseManager.runStateMachine();
+        } else {
+            File file = new File("src/main/res/LALRParserManagerInstance");
+            try {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+                this.parseManager = (LALRParseManager) ois.readObject();
+            } catch (IOException e) {
+                System.out.println(e);
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                System.out.println(e);
+                e.printStackTrace();
+            }
+        }
     }
 
     public void parse() {
@@ -99,6 +115,8 @@ public class Parser implements MessageProducer {
 
             if (action == null) {
                 // the action is error
+                System.out.println("symbol: " + symbol);
+                System.out.println("" + stateStack.get(symbolTop) + parseManager.getState(stateStack.get(symbolTop)));
                 throw SyntaxError.newUnexpectedTokenError(token);
             }
 
@@ -123,7 +141,7 @@ public class Parser implements MessageProducer {
                 } else {
                     symbolStack.set(symbolTop, symbol);
                     stateStack.set(symbolTop, targetId);
-                    curChildren.set(symbolTop, newNode);
+                    curChildren.set(symbolTop-1, newNode);
                 }
 
                 // set attribute
@@ -131,13 +149,14 @@ public class Parser implements MessageProducer {
                     newNode.setAttribute(INodeKey.VALUE, ((IntNum)token).getValue());
                 } else if (symbol.equals(TokenTag.REAL_NUMBER)) {
                     newNode.setAttribute(INodeKey.VALUE, ((Real) token).getValue());
-                } else if (symbol.equals(TokenTag.IDENTIFIER) ||
-                        lexer.isKeyWord(((Word) token))) {
+                } else if (token instanceof Word && (symbol.equals(TokenTag.IDENTIFIER) ||
+                        lexer.isKeyWord(((Word) token)))) {
                     newNode.setAttribute(INodeKey.NAME, ((Word) token).getLexeme());
                 }
 
                 newNode.setAttribute(INodeKey.LINE, token.getLineNum());
             } else {
+                --tokenTop;
                 // reduce
                 Integer targetId = Math.abs(action) - 1;
                 Production production = grammar.getProduction(targetId);
@@ -148,16 +167,16 @@ public class Parser implements MessageProducer {
                 // stack pops items
                 for (int i=right.size()-1; i>=0; --i) {
                     if (!right.get(i).equals(LALRGrammar.Nil.NIL)) {
-                        if (symbolStack.get(symbolTop).equals(right.get(i))) {
+                        if (!symbolStack.get(symbolTop).equals(right.get(i))) {
                             // there are some problems in the transition table
-                            System.out.println("An error escaped the check of transition table");
+                            System.out.println("reduce: " + "An error escaped the check of transition table");
                         }
                         --symbolTop;
                     }
                 }
                 // add children to new node
-                for (int i=symbolTop+1; i<=oldSymbolTop; ++i) {
-                    newNode.addChild(curChildren.get(i));
+                for (int i=(symbolTop+1); i<=oldSymbolTop; ++i) {
+                    newNode.addChild(curChildren.get(i-1));
                 }
                 // push the symbol into stack
                 Integer curState = stateStack.get(symbolTop);
@@ -171,7 +190,7 @@ public class Parser implements MessageProducer {
                 } else {
                     symbolStack.set(symbolTop, left);
                     stateStack.set(symbolTop, gotoId);
-                    curChildren.add(newNode);
+                    curChildren.set(symbolTop-1, newNode);
                 }
             }
 
@@ -180,7 +199,7 @@ public class Parser implements MessageProducer {
         }
 
         if (root == null) {
-            System.out.println("An error escaped the check of transition table");
+            System.out.println("missing tokens: " + "An error escaped the check of transition table");
             throw SyntaxError.newMissingTokenError( tokens.get(tokenTop-1),
                     getExpectedTokenTag(stateStack.get(symbolTop)));
         }

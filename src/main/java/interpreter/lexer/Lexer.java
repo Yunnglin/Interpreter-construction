@@ -66,6 +66,7 @@ public class Lexer {
         while((token = this.getNextToken()).getTag() != TokenTag.PROG_END) {
             tokens.add(token);
         }
+        tokens.add(token);
         return tokens;
     }
 

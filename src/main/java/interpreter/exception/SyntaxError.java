@@ -57,7 +57,7 @@ public class SyntaxError extends InterpError {
         int line = token.getLineNum();
         String desc = getTokenDescription(token);
 
-        return new SyntaxError(desc, line);
+        return new SyntaxError("UNEXPECTED " + desc, line);
     }
 
     public static SyntaxError newMissingTokenError(Token token, ArrayList<TokenTag> expected) {

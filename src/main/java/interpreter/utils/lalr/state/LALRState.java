@@ -5,9 +5,10 @@ import interpreter.utils.lalr.LALRGrammar;
 import static interpreter.utils.lalr.LALRGrammar.NIL;
 import interpreter.utils.lalr.TerminalSymbol;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class LALRState {
+public class LALRState implements Serializable {
     private HashSet<LRItem> basicSet;
     private HashSet<LRItem> extendSet;
 

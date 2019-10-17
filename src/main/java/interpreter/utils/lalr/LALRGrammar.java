@@ -6,9 +6,10 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.*;
 
-public class LALRGrammar {
+public class LALRGrammar implements Serializable {
     public enum Nil implements GrammarSymbol {
         NIL;
 

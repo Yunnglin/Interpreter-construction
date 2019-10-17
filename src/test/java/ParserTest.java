@@ -91,7 +91,7 @@ public class ParserTest {
         LALRParseManager parseManager = LALRParseManager.getInstance();
         parseManager.runStateMachine();
         LALRStateMachine stateMachine = parseManager.getStateMachine();
-        System.out.println(stateMachine.getStates().size());
+        System.out.println(stateMachine.getTransitionTable().get(24));
     }
 
     @Test
@@ -103,6 +103,20 @@ public class ParserTest {
             Lexer myLexer = new Lexer(reader);
             Parser myParser = new Parser(myLexer);
             myParser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void serializeManageer() {
+        LALRParseManager manager = LALRParseManager.getInstance();
+        manager.runStateMachine();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(
+                    new FileOutputStream("src/main/res/LALRParserManagerInstance"));
+            oos.writeObject(manager);
+            oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

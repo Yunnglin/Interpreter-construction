@@ -7,12 +7,13 @@ import interpreter.utils.lalr.TerminalSymbol;
 
 import static interpreter.utils.lalr.LALRGrammar.NIL;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LALRStateMachine {
+public class LALRStateMachine implements Serializable {
     private ArrayList<LALRState> states;
     private ArrayList<HashMap<GrammarSymbol, Integer>> transitionTable;
 
@@ -145,6 +146,10 @@ public class LALRStateMachine {
 
     public ArrayList<LALRState> getStates() {
         return states;
+    }
+
+    public LALRState getState(Integer stateId) {
+        return this.states.get(stateId);
     }
 
     public ArrayList<HashMap<GrammarSymbol, Integer>> getTransitionTable() {
