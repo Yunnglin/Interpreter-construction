@@ -15,17 +15,16 @@ public class MWord {
             "float",
             "real",
             "long",
-            "char"
+            "char",
+            "void",
+            "string"
     };
 
     public static final String[] reservedWords={
-            "break",
-            "if",
-            "else",
-            "while",
-            "do",
-            "continue",
-            "for"
+            "include","new","this","NULL",
+            "switch","case","default","do","while","for","break","continue",
+            "return","try","catch","private","protected","public","static","class","define",
+            "const","using","namespace"
     };
 
     public static final String[] constants ={
