@@ -109,7 +109,7 @@ public class ParserTest {
     }
 
     @Test
-    public void serializeManageer() {
+    public void serializeManager() {
         LALRParseManager manager = LALRParseManager.getInstance();
         manager.runStateMachine();
         try {
