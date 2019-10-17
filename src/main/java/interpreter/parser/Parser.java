@@ -124,7 +124,8 @@ public class Parser implements MessageProducer {
                 // accept
                 NonterminalSymbol startSymbol = grammar.getStartSymbol();
                 root = new INode(startSymbol);
-                for (INode child : curChildren) {
+                for (int i=0; i<=symbolTop-1; ++i) {
+                    INode child = curChildren.get(i);
                     root.addChild(child);
                 }
             } else if (action > 0) {

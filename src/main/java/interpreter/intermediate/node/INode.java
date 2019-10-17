@@ -10,6 +10,7 @@ public class INode {
         ID, VALUE, LINE, NAME
     }
 
+    private int level;
     private GrammarSymbol symbol;
     private HashMap<INodeKey, Object> values;
     private ArrayList<INode> children;
@@ -18,6 +19,7 @@ public class INode {
         this.symbol = symbol;
         this.values = new HashMap<>();
         this.children = new ArrayList<>();
+        this.level = 0;
     }
 
     public ArrayList<INode> getChildren() {
@@ -38,5 +40,18 @@ public class INode {
 
     public void addChild(INode child) {
         this.children.add(child);
+        // bottom-up method (recursive way)
+        treeLevelInc(child);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    private void treeLevelInc(INode root) {
+        root.level = root.level + 1;
+        for (INode child : root.getChildren()) {
+            treeLevelInc(child);
+        }
     }
 }
