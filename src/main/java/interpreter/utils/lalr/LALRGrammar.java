@@ -42,11 +42,13 @@ public class LALRGrammar {
 
     public static Nil NIL = Nil.NIL;
 
-    private GrammarSymbol startSymbol;
+    private NonterminalSymbol startSymbol;
+    private TerminalSymbol endSymbol;
     private LinkedHashMap strProductions;
     private ArrayList<Production> productions;
     private HashMap<String, HashSet<String>> firstSet;
     private HashMap<String, HashSet<String>> followSet;
+    private LinkedHashMap<String, ArrayList<Integer>> productionStartPosAndLength;
 
     /**
      * Constructor
@@ -54,6 +56,7 @@ public class LALRGrammar {
      */
     public LALRGrammar(String filepath) {
         this.startSymbol = LALRNonterminalSymbol.E;
+        this.endSymbol = Const.TokenTag.PROG_END;
         try {
             initProductions(filepath);
             generateFirstFollowSets();
@@ -75,8 +78,17 @@ public class LALRGrammar {
         this.strProductions = yaml.load(new FileInputStream(f));
         // convert the string to grammar symbols
         this.productions = new ArrayList<Production>();
+        // used to search the first id and number of the production of a non-terminal symbol
+        this.productionStartPosAndLength = new LinkedHashMap<>();
         for (Object key : this.strProductions.keySet()) {
+            // the production list of the symbol
             ArrayList produceList = (ArrayList) this.strProductions.get(key);
+            // set the start position and length of its productions
+            ArrayList<Integer> newStartPosAndLen = new ArrayList<>(2);
+            newStartPosAndLen.add(this.productions.size());
+            newStartPosAndLen.add(produceList.size());
+            this.productionStartPosAndLength.put((String)key, newStartPosAndLen);
+
             for (Object produce : produceList) {
                 ArrayList produceArr = (ArrayList) produce;
                 ArrayList<GrammarSymbol> right = new ArrayList<>();
@@ -138,14 +150,11 @@ public class LALRGrammar {
                     nonterminalSet.add(firstSymbol);
                     set.addAll(firstSetOf(firstSymbol));
                 }
-                try {
-                    Const.TokenTag tokenTag = Const.TokenTag.valueOf(firstSymbol);
+                if(isTerminalSymbol(firstSymbol)) {
                     set.add(firstSymbol);
-                } catch (IllegalArgumentException e) {
-                    if (!nonterminalSet.contains(firstSymbol)) {
-                        nonterminalSet.add(firstSymbol);
-                        set.addAll(firstSetOf(firstSymbol));
-                    }
+                } else if (!nonterminalSet.contains(firstSymbol)) {
+                    nonterminalSet.add(firstSymbol);
+                    set.addAll(firstSetOf(firstSymbol));
                 }
             }
         }
@@ -237,6 +246,14 @@ public class LALRGrammar {
         return totalSize;
     }
 
+    public NonterminalSymbol getStartSymbol() {
+        return startSymbol;
+    }
+
+    public TerminalSymbol getEndSymbol() {
+        return endSymbol;
+    }
+
     /**
      * get the total number of strProductions
      * @return the total number of strProductions
@@ -264,11 +281,56 @@ public class LALRGrammar {
         }
     }
 
+    /**
+     * get the start position and length of the productions in
+     * all productions of the specific non-terminal symbol
+     * @param nonterminal the selfText of a non-terminal symbol
+     * @return
+     */
+    public ArrayList<Integer> getStartPosAndLen(String nonterminal) {
+        return productionStartPosAndLength.get(nonterminal);
+    }
+
     public HashMap<String, HashSet<String>> getFirstSets() {
         return this.firstSet;
     }
 
     public HashMap<String, HashSet<String>> getFollowSets() {
         return this.followSet;
+    }
+
+    public HashSet<String> getFirstSet(GrammarSymbol symbol) {
+        HashSet<String> set;
+
+        if (symbol.equals(NIL) || isTerminalSymbol(symbol.getSelfText())) {
+            set = new HashSet<>();
+            set.add(symbol.getSelfText());
+            return set;
+        }
+
+        set = firstSet.get(symbol.getSelfText());
+        return set;
+    }
+
+    public HashSet<String> getFollowSet(GrammarSymbol symbol) {
+        return followSet.get(symbol.getSelfText());
+    }
+
+    public ArrayList<Production> getProductions() {
+        return productions;
+    }
+
+    public ArrayList<Production> getProductions(GrammarSymbol symbol) {
+        if (symbol.equals(NIL) || isTerminalSymbol(symbol.getSelfText())) {
+            return null;
+        }
+
+        ArrayList<Integer> startAndLen = getStartPosAndLen(symbol.getSelfText());
+        ArrayList<Production> newProductions = new ArrayList<Production>();
+        for (int i=startAndLen.get(0); i<startAndLen.get(0)+startAndLen.get(1); ++i) {
+            newProductions.add(this.productions.get(i));
+        }
+
+        return newProductions;
     }
 }
