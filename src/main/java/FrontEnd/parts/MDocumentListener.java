@@ -69,8 +69,8 @@ public class MDocumentListener implements DocumentListener {
         StyleConstants.FontConstants.setBold(definedWordsStyle, true);
         StyleConstants.FontConstants.setBold(basicTypeStyle, true);
         StyleConstants.FontConstants.setBold(constantsStyle, true);
-        StyleConstants.FontConstants.setBold(symbolStyle,true);
-        StyleConstants.FontConstants.setBold(normalStyle,true);
+        StyleConstants.FontConstants.setBold(symbolStyle, true);
+        StyleConstants.FontConstants.setBold(normalStyle, true);
 
         //Symbol
         mAddStyle(MWord.symbols, symbolStyle);
@@ -130,11 +130,9 @@ public class MDocumentListener implements DocumentListener {
 
             } else if (Character.isDigit(ch)) {
                 start = colouringNum(doc, start);
-            }
-            else if (isSpecialChar(Character.toString(ch))) {
+            } else if (isSpecialChar(Character.toString(ch))) {
                 start = colouringSpecialChar(doc, start);
-            }
-            else {
+            } else {
                 SwingUtilities.invokeLater(new ColouringTask(doc, start, 1, normalStyle));
                 ++start;
             }
@@ -195,9 +193,9 @@ public class MDocumentListener implements DocumentListener {
     }
 
     //特殊字符
-    public int colouringSpecialChar(StyledDocument doc,int pos) throws BadLocationException{
-        SwingUtilities.invokeLater(new ColouringTask(doc,pos,1,symbolStyle));
-        return pos+1;
+    public int colouringSpecialChar(StyledDocument doc, int pos) {
+        SwingUtilities.invokeLater(new ColouringTask(doc, pos, 1, symbolStyle));
+        return pos + 1;
     }
 
     //获取位置的字符

@@ -14,26 +14,24 @@ public class MFoldersTree implements TreeSelectionListener {
     private MainWindow mainWindow;
     private JTree tree;
     String[] data;
-    DefaultMutableTreeNode root,child,parent;
+    DefaultMutableTreeNode root, child, parent;
     DefaultTreeModel model;
-    public  MFoldersTree(MainWindow mainWindow)
-    {
+
+    public MFoldersTree(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
     }
 
 
-    public JTree getTree()
-    {
+    public JTree getTree() {
         return tree;
     }
 
-    public void setTree()
-    {
+    public void setTree() {
         File[] roots = File.listRoots();
         FileTreePanel.FileTreeNode rootTreeNode = new FileTreePanel.FileTreeNode(roots);
-        this.tree=new JTree(rootTreeNode);
+        this.tree = new JTree(rootTreeNode);
         this.tree.setCellRenderer(new FileTreePanel.FileTreeCellRenderer());
-        this.tree.setRootVisible(true);
+        this.tree.setRootVisible(false);
         this.tree.addTreeSelectionListener(this);
         this.tree.expandRow(0);
         // old
@@ -51,15 +49,16 @@ public class MFoldersTree implements TreeSelectionListener {
 //        }
 
     }
-    public void setFoldersTree(File file){
-        File[] roots=new File[]{
+
+    public void setFoldersTree(File file) {
+        File[] roots = new File[]{
                 new File(file.getParent())
         };
         FileTreePanel.FileTreeNode rootTreeNode = new FileTreePanel.FileTreeNode(roots);
 //        mainWindow.getTreePane().remove(this.tree);
-        this.tree=new JTree(rootTreeNode);
+        this.tree = new JTree(rootTreeNode);
         this.tree.setCellRenderer(new FileTreePanel.FileTreeCellRenderer());
-        this.tree.setRootVisible(true);
+        this.tree.setRootVisible(false);
         this.tree.addTreeSelectionListener(this);
         this.tree.expandRow(1);
 //        mainWindow.getTreePane().add(this.tree);
@@ -68,11 +67,9 @@ public class MFoldersTree implements TreeSelectionListener {
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-        if(e.getSource()==tree)
-        {
-            FileTreePanel.FileTreeNode node=(FileTreePanel.FileTreeNode)tree.getLastSelectedPathComponent();
-            if(node.isLeaf())
-            {
+        if (e.getSource() == tree) {
+            FileTreePanel.FileTreeNode node = (FileTreePanel.FileTreeNode) tree.getLastSelectedPathComponent();
+            if (node.isLeaf()) {
                 mainWindow.getFileOperation().treeOpenFile(node.getPath());
 
             }
