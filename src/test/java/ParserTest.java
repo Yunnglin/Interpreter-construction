@@ -1,4 +1,8 @@
 import interpreter.Const;
+import interpreter.exception.SyntaxError;
+import interpreter.lexer.Lexer;
+import interpreter.lexer.token.Token;
+import interpreter.parser.Parser;
 import interpreter.utils.lalr.GrammarSymbol;
 import interpreter.utils.lalr.LALRGrammar;
 import interpreter.utils.lalr.Production;
@@ -8,9 +12,7 @@ import interpreter.utils.lalr.state.LRItem;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 public class ParserTest {
@@ -90,5 +92,19 @@ public class ParserTest {
         parseManager.runStateMachine();
         LALRStateMachine stateMachine = parseManager.getStateMachine();
         System.out.println(stateMachine.getStates().size());
+    }
+
+    @Test
+    public void parserTest() {
+        String filepath = "src/test/res/test.cmm";
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(filepath));
+            Lexer myLexer = new Lexer(reader);
+            Parser myParser = new Parser(myLexer);
+            myParser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

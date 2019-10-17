@@ -39,6 +39,9 @@ public class LALRParseManager {
     }
 
     public Integer getAction(Integer stateId, GrammarSymbol symbol) {
+        if (stateMachine == null) {
+            runStateMachine();
+        }
         return stateMachine.getAction(stateId, symbol);
     }
 }
