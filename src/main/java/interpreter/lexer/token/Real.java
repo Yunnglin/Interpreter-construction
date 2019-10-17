@@ -6,8 +6,8 @@ public class Real extends Token {
 
     private double value;
 
-    public Real(double val) {
-        super(TokenTag.REAL_NUMBER);
+    public Real(double val, int line) {
+        super(TokenTag.REAL_NUMBER, line);
         value = val;
     }
 

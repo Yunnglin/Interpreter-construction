@@ -10,27 +10,23 @@ import interpreter.lexer.token.Word;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class Lexer {
     private int curLine;
     private char peek;
-    private Hashtable keyWords;
     private Token curToken;
     private BufferedReader reader;
 
     private static final char EOF = 0;
 
-    private void reserve(Word w){
-        keyWords.put(w.getLexeme(), w);
+    private void reserve(TokenTag tag){
+        TokenTag.RESERVED_WORDS.put(tag.getText(), tag);
     }
 
     public Lexer() {
         this.curLine = 1;
         this.peek = ' ';
-        this.keyWords = new Hashtable();
         this.reader = null;
-        this.initKeyWords();
     }
 
     public Lexer(BufferedReader reader) {
@@ -38,19 +34,12 @@ public class Lexer {
         this.reader = reader;
     }
 
-    private void initKeyWords() {
-        // 初始化保留字
-        for (TokenTag t : TokenTag.RESERVED_WORDS.values()) {
-            reserve(new Word(t));
-        }
-    }
-
     public boolean isKeyWord(Word w) {
-        return this.keyWords.containsKey(w.getLexeme());
+        return TokenTag.RESERVED_WORDS.containsKey(w.getLexeme());
     }
 
     public boolean isKeyWord(String s) {
-        return this.keyWords.containsKey(s);
+        return TokenTag.RESERVED_WORDS.containsKey(s);
     }
 
     public void getNextChar() throws IOException {
@@ -96,27 +85,27 @@ public class Lexer {
                 getNextChar();
             }
             if(peek == EOF) {
-                return new Token(TokenTag.PROG_END);
+                return new Token(TokenTag.PROG_END, curLine);
             }
             // 解析操作符、注释等
             switch (peek) {
                 case '=':
                     if(getNextChar('=')) {
                         getNextChar();
-                        return new Token(TokenTag.EQ);
+                        return new Token(TokenTag.EQ, curLine);
                     } else {
-                        return new Token(TokenTag.ASSIGN);
+                        return new Token(TokenTag.ASSIGN, curLine);
                     }
                 case '<':
                     if(getNextChar('>')) {
                         getNextChar();
-                        return new Token(TokenTag.NEQ);
+                        return new Token(TokenTag.NEQ, curLine);
                     } else {
-                        return new Token(TokenTag.LESS_THAN);
+                        return new Token(TokenTag.LESS_THAN, curLine);
                     }
                 case '>':
                     getNextChar();
-                    return new Token(TokenTag.GREATER_THAN);
+                    return new Token(TokenTag.GREATER_THAN, curLine);
                 case '/':
                     if(getNextChar('*')) {
                         // 进入注释
@@ -154,42 +143,42 @@ public class Lexer {
                         goon = true;
                         continue;
                     } else {
-                        return new Token(TokenTag.DIVIDE);
+                        return new Token(TokenTag.DIVIDE, curLine);
                     }
                 case '*':
                     getNextChar();
-                    return new Token(TokenTag.MULTIPLY);
+                    return new Token(TokenTag.MULTIPLY, curLine);
                 case '+':
                     getNextChar();
-                    return new Token(TokenTag.SUM);
+                    return new Token(TokenTag.SUM, curLine);
                 case '(':
                     getNextChar();
-                    return new Token(TokenTag.L_PARENTHESES);
+                    return new Token(TokenTag.L_PARENTHESES, curLine);
                 case ')':
                     getNextChar();
-                    return new Token(TokenTag.R_PARENTHESES);
+                    return new Token(TokenTag.R_PARENTHESES, curLine);
                 case '{':
                     getNextChar();
-                    return new Token(TokenTag.L_BRACES);
+                    return new Token(TokenTag.L_BRACES, curLine);
                 case '}':
                     getNextChar();
-                    return new Token(TokenTag.R_BRACES);
+                    return new Token(TokenTag.R_BRACES, curLine);
                 case '[':
                     getNextChar();
-                    return new Token(TokenTag.L_SQUARE_BRACKETS);
+                    return new Token(TokenTag.L_SQUARE_BRACKETS, curLine);
                 case ']':
                     getNextChar();
-                    return new Token(TokenTag.R_SQUARE_BRACKETS);
+                    return new Token(TokenTag.R_SQUARE_BRACKETS, curLine);
                 case ';':
                     getNextChar();
-                    return new Token(TokenTag.SEMICOLON);
+                    return new Token(TokenTag.SEMICOLON, curLine);
                 case ',':
                     getNextChar();
-                    return new Token(TokenTag.COMMA);
+                    return new Token(TokenTag.COMMA, curLine);
                 case '-':
                     // 负号和减法在词法阶段相同，负数识别在语法分析阶段完成
                     getNextChar();
-                    return new Token(TokenTag.SUB);
+                    return new Token(TokenTag.SUB, curLine);
             }
 
             // 解析整数和实数
@@ -202,7 +191,7 @@ public class Lexer {
                 if(peek!='.') {
                     try {
                         int val = Integer.parseInt(num.toString());
-                        return new IntNum(val);
+                        return new IntNum(val, curLine);
                     } catch (NumberFormatException e) {
                         throw SyntaxError.newConstantError(num.toString(), curLine);
                     }
@@ -218,7 +207,7 @@ public class Lexer {
                 }
                 try {
                     double val = Double.valueOf(num.toString());
-                    return new Real(val);
+                    return new Real(val, curLine);
                 } catch (NumberFormatException e) {
                     throw SyntaxError.newConstantError(num.toString(), curLine);
                 }
@@ -239,13 +228,15 @@ public class Lexer {
                         getNextChar();
                     }
                 }while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_');
-                if(isKeyWord(name.toString())) return (Word)keyWords.get(name.toString());
-                return new Word(TokenTag.IDENTIFIER, name.toString());
+                if(isKeyWord(name.toString())) {
+                    return new Word(TokenTag.RESERVED_WORDS.get(name.toString()), curLine, name.toString());
+                }
+                return new Word(TokenTag.IDENTIFIER, curLine, name.toString());
             }
 
             // 无法识别的符号
             throw SyntaxError.newLexicalError(Character.toString(peek), curLine);
         }
-        return new Token(TokenTag.PROG_END);
+        return new Token(TokenTag.PROG_END, curLine);
     }
 }

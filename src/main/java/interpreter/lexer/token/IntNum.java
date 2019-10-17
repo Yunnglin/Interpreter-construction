@@ -7,8 +7,8 @@ public class IntNum extends Token {
 
     private int value;
 
-    public IntNum(int val) {
-        super(TokenTag.INTEGER);
+    public IntNum(int val, int line) {
+        super(TokenTag.INTEGER, line);
         value = val;
     }
     public int getValue() {

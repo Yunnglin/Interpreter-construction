@@ -5,9 +5,11 @@ import interpreter.Const.TokenTag;
 public class Token {
 
     protected TokenTag tag;     // token tag (specify the type of token)
+    protected int lineNum;
 
-    public Token(TokenTag t) {
+    public Token(TokenTag t, int line) {
         tag = t;
+        lineNum = line;
     }
 
     public TokenTag getTag() {
@@ -24,6 +26,10 @@ public class Token {
 
     public void setTag(TokenTag tag) {
         this.tag = tag;
+    }
+
+    public int getLineNum() {
+        return this.lineNum;
     }
 
     @Override
