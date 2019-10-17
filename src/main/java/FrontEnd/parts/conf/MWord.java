@@ -21,7 +21,7 @@ public class MWord {
     };
 
     public static final String[] reservedWords={
-            "include","new","this","NULL",
+            "include","new","this",
             "switch","case","default","do","while","for","break","continue",
             "return","try","catch","private","protected","public","static","class","define",
             "const","using","namespace"
@@ -30,5 +30,6 @@ public class MWord {
     public static final String[] constants ={
             "true",
             "false",
+            "NULL"
     };
 }

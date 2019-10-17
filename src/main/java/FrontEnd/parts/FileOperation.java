@@ -33,7 +33,7 @@ public class FileOperation {
     }
 
     private void setContent(String path, String content) {
-        new Thread(()->{
+        new Thread(() -> {
             mainWindow.getOutputPane().setText("");
             mainWindow.getPathLabel().setText(path);
             mainWindow.getEditPane().setText(content);
@@ -42,7 +42,7 @@ public class FileOperation {
     }
 
     public void setEmpty() {
-        new Thread(()->{
+        new Thread(() -> {
             mainWindow.getEditPane().setText("");
             mainWindow.getOutputPane().setText("");
             mainWindow.getPathLabel().setText("");
