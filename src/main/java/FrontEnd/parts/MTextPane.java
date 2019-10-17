@@ -53,14 +53,6 @@ public class MTextPane {
     }
 
 
-    public void setEditPaneContent(String path){
-
-    }
-
-    public void setOutputPaneContent(){
-
-    }
-
     private class MyMouseListener extends MouseAdapter
     {
         @Override

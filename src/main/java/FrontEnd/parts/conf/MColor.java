@@ -12,7 +12,7 @@ public class MColor {
     public static Color consoleAreaColor = new Color(253, 243, 216);
 
     //标识符颜色
-    public static Color symbolColor = new Color(66, 92, 99);
+    public static Color symbolColor = new Color(73, 113, 201);
     public static Color basicTypeColor = new Color(175, 134, 59);
     public static Color defineWordsColor = new Color(109, 141, 0);
     public static Color constantsColor = new Color(0, 132, 115);

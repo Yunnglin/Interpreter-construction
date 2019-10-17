@@ -34,7 +34,7 @@ public class MDocumentListener implements DocumentListener {
     }
 
     /*
-   Token��
+   Token
    (1) Symbol: ||, &&, ==, !=, >=, <=, +, -, *, /, ;
    (2) Type: int, float, char, long
    (3) Reserved Words: break, do, else, if, while, read, write
@@ -52,7 +52,7 @@ public class MDocumentListener implements DocumentListener {
         normalStyle = ((StyledDocument) editPane.getDocument()).addStyle("normalStyle", null);
         errorStyle = ((StyledDocument) editPane.getDocument()).addStyle("errorStyle", null);
 
-        //������ɫ
+        //设置颜色
         StyleConstants.setForeground(symbolStyle, MColor.symbolColor);
         StyleConstants.setForeground(basicTypeStyle, MColor.basicTypeColor);
         StyleConstants.setForeground(definedWordsStyle, MColor.defineWordsColor);
@@ -62,7 +62,7 @@ public class MDocumentListener implements DocumentListener {
         StyleConstants.setForeground(normalStyle, MColor.normalColor);
         StyleConstants.setForeground(errorStyle, MColor.errorColor);
 
-        //��������
+        //设置字体
         StyleConstants.FontConstants.setUnderline(errorStyle, true);
         StyleConstants.FontConstants.setItalic(errorStyle, true);
         StyleConstants.FontConstants.setItalic(annotationStyle, true);
@@ -213,7 +213,7 @@ public class MDocumentListener implements DocumentListener {
 
     //特殊字符
     public static boolean isSpecialChar(String str) {
-        String regEx = "[`~!@#$%^&*()+=|{}':;,\\[\\].<>/?]";
+        String regEx = "[`~!@#$%^&*()+\\-=|{}':;,\\[\\].<>/?]";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(str);
         return m.find();

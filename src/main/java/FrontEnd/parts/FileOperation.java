@@ -141,9 +141,6 @@ public class FileOperation {
 
     public void treeOpenFile(String path) {
         setContent(path, readFile(path));
-//        // update tree
-//        mainWindow.getmFoldersTree().setFoldersTree(new File(path));
-//        mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
 
     }
 
