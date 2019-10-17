@@ -95,6 +95,15 @@ public class FileTreePanel extends JPanel {
          */
         private boolean isFileSystemRoot;
         /**
+         * current path
+         */
+        private String path;
+
+        public String getPath() {
+            return this.path;
+        }
+
+        /**
          * Creates a new file tree node.
          *
          * @param file
@@ -106,6 +115,7 @@ public class FileTreePanel extends JPanel {
          */
         public FileTreeNode(File file, boolean isFileSystemRoot, TreeNode parent) {
             this.file = file;
+            this.path = file.toString();
             this.isFileSystemRoot = isFileSystemRoot;
             this.parent = parent;
             this.children = this.file.listFiles();

@@ -70,12 +70,7 @@
             </constraints>
             <properties/>
             <border type="none"/>
-            <children>
-              <component id="144e9" class="javax.swing.JTree" binding="foldersTree">
-                <constraints/>
-                <properties/>
-              </component>
-            </children>
+            <children/>
           </scrollpane>
           <splitpane id="546bb" binding="splitInOut">
             <constraints>

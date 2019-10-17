@@ -16,12 +16,9 @@ public class MFoldersTree implements TreeSelectionListener {
     String[] data;
     DefaultMutableTreeNode root,child,parent;
     DefaultTreeModel model;
-    public MFoldersTree(MainWindow mainWindow)
+    public  MFoldersTree(MainWindow mainWindow)
     {
         this.mainWindow = mainWindow;
-        data=new String[30];
-        data[0]="Unnamed";
-        setTree();
     }
 
 
@@ -59,11 +56,13 @@ public class MFoldersTree implements TreeSelectionListener {
                 new File(file.getParent())
         };
         FileTreePanel.FileTreeNode rootTreeNode = new FileTreePanel.FileTreeNode(roots);
+//        mainWindow.getTreePane().remove(this.tree);
         this.tree=new JTree(rootTreeNode);
         this.tree.setCellRenderer(new FileTreePanel.FileTreeCellRenderer());
         this.tree.setRootVisible(true);
         this.tree.addTreeSelectionListener(this);
         this.tree.expandRow(1);
+//        mainWindow.getTreePane().add(this.tree);
     }
 
 
@@ -71,12 +70,10 @@ public class MFoldersTree implements TreeSelectionListener {
     public void valueChanged(TreeSelectionEvent e) {
         if(e.getSource()==tree)
         {
-            DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+            FileTreePanel.FileTreeNode node=(FileTreePanel.FileTreeNode)tree.getLastSelectedPathComponent();
             if(node.isLeaf())
             {
-                String path=node.toString();
-                System.out.println(path);
-                mainWindow.getFileOperation().treeOpenFile(path);
+                mainWindow.getFileOperation().treeOpenFile(node.getPath());
 
             }
         }

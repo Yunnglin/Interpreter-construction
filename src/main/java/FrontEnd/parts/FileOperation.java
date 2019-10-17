@@ -1,7 +1,7 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
-import  FrontEnd.parts.MFoldersTree;
+import FrontEnd.parts.MFoldersTree;
 import FrontEnd.parts.conf.MFont;
 
 import javax.swing.*;
@@ -33,16 +33,22 @@ public class FileOperation {
     }
 
     private void setContent(String path, String content) {
-        mainWindow.getOutputPane().setText("");
-        mainWindow.getPathLabel().setText(path);
-        mainWindow.getEditPane().setText(content);
+        new Thread(()->{
+            mainWindow.getOutputPane().setText("");
+            mainWindow.getPathLabel().setText(path);
+            mainWindow.getEditPane().setText(content);
+        }).start();
+
     }
 
     public void setEmpty() {
-        mainWindow.getEditPane().setText("");
-        mainWindow.getOutputPane().setText("");
-        mainWindow.getPathLabel().setText("");
-        mainWindow.getmScrollPane().updateLineNum();
+        new Thread(()->{
+            mainWindow.getEditPane().setText("");
+            mainWindow.getOutputPane().setText("");
+            mainWindow.getPathLabel().setText("");
+            mainWindow.getmScrollPane().updateLineNum();
+        }).start();
+
     }
 
     public String readFile(String path) {
@@ -83,7 +89,8 @@ public class FileOperation {
 
             //设置文件树
             mainWindow.getmFoldersTree().setFoldersTree(newFile);
-            mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
+            mainWindow.getSplitTreeEdit().setLeftComponent(new JScrollPane(mainWindow.getmFoldersTree().getTree()));
+            mainWindow.getSplitTreeEdit().setDividerLocation(150);
         }
 
     }
@@ -132,12 +139,11 @@ public class FileOperation {
         }
     }
 
-    public void treeOpenFile(String path)
-    {
+    public void treeOpenFile(String path) {
         setContent(path, readFile(path));
-        // update tree
-        mainWindow.getmFoldersTree().setFoldersTree(new File(path));
-        mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
+//        // update tree
+//        mainWindow.getmFoldersTree().setFoldersTree(new File(path));
+//        mainWindow.getSplitTreeEdit().setLeftComponent(mainWindow.getmFoldersTree().getTree());
 
     }
 

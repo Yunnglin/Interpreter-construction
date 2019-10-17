@@ -3,6 +3,7 @@ package FrontEnd;
 import FrontEnd.parts.*;
 
 import javax.swing.*;
+import java.io.File;
 
 public class MainWindow {
     private JPanel mainPanel;
@@ -60,10 +61,18 @@ public class MainWindow {
 
         fileOperation = new FileOperation(this);
 
+
         mFoldersTree= new MFoldersTree(this);
+//        mFoldersTree.setFoldersTree(new File(System.getProperty("user.home")));
+        mFoldersTree.setTree();
 //        pathLabel.setText(System.getProperty("user.home"));
         foldersTree = mFoldersTree.getTree();
-        splitTreeEdit.setLeftComponent(foldersTree);
+        splitTreeEdit.setLeftComponent(new JScrollPane(foldersTree));
+    }
+
+
+    public JScrollPane getTreePane() {
+        return treePane;
     }
 
     public JPanel getMainPanel() {
