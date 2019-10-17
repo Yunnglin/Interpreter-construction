@@ -79,6 +79,7 @@ public class MButton {
                 Lexer lex = new Lexer(reader);
                 Parser myParser = new Parser(lex);
                 myParser.addMessageListener(new ParserMessageListener());
+                mainWindow.getOutputPane().setText("");
                 myParser.parse();
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
@@ -93,18 +94,18 @@ public class MButton {
         public void onMessageReceived(Message message) {
             //消息种类
             Message.MessageType type = message.getType();
-            //消息体
-            Object[] body = (Object[]) message.getBody();
             //当前输出框内容
             String curContent = mainWindow.getOutputPane().getText();
             String preContent = "";
             switch (type) {
                 case LEXER_SUMMARY: {
-                    float lexElapsedTime = (Integer) body[0];
+                    //消息体
+                    Object[] body = (Object[]) message.getBody();
+                    float lexElapsedTime = (float) body[0];
                     ArrayList<Token> tokens = (ArrayList<Token>) body[1];
 
                     StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("----Lex Elapsed Time: %.2f").append(lexElapsedTime).append("s -----\n\n");
+                    stringBuilder.append("----Lex Elapsed Time: ").append(lexElapsedTime).append("s -----\n");
                     stringBuilder.append("----Tokens----\n\n");
                     for (Token token : tokens) {
                         stringBuilder.append(token.toString()).append('\n');
@@ -113,11 +114,13 @@ public class MButton {
                     break;
                 }
                 case PARSER_SUMMARY: {
+                    //消息体
+                    Object[] body = (Object[]) message.getBody();
                     float parseElapsedTime = (float) body[0];
                     INode root = (INode) body[1];
                     StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("----Parse Elapsed Time: %.2f").append(parseElapsedTime).append("s -----\n");
-                    stringBuilder.append("---- Root: ").append(root.getSymbol().getSelfText()).append("\n");
+                    stringBuilder.append("\n----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
+                    stringBuilder.append("---- Tree----\n ").append(root.getAllChild()).append("\n");
                     preContent = stringBuilder.toString();
                     break;
                 }

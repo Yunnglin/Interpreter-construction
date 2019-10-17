@@ -33,7 +33,6 @@ public class MFoldersTree implements TreeSelectionListener {
         this.tree.setCellRenderer(new FileTreePanel.FileTreeCellRenderer());
         this.tree.setRootVisible(false);
         this.tree.addTreeSelectionListener(this);
-        this.tree.expandRow(0);
         // old
 //        root=new DefaultMutableTreeNode("File Directory");
 //        tree.addTreeSelectionListener(this);
