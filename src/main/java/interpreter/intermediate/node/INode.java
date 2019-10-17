@@ -39,4 +39,25 @@ public class INode {
     public void addChild(INode child) {
         this.children.add(child);
     }
+
+    public String getAllChild(){
+        StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<INode> nodes = new ArrayList<>();
+        nodes.addAll(0,this.getChildren());
+        int depth=1;
+        while (true){
+            if(nodes.isEmpty())
+                break;
+            INode first = nodes.get(0);
+            nodes.remove(0);
+            for (int i = 0; i <depth ; i++) {
+                stringBuilder.append('\t');
+            }
+            stringBuilder.append(first.getSymbol().getSelfText()).append('\n');
+            nodes.addAll(0,first.getChildren());
+            depth++;
+        }
+        return stringBuilder.toString();
+
+    }
 }
