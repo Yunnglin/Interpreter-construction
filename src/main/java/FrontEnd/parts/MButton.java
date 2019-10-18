@@ -122,17 +122,20 @@ public class MButton {
                     stringBuilder.append("\n----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
                     stringBuilder.append("---- Tree----\n ").append(root.getAllChild()).append("\n");
                     preContent = stringBuilder.toString();
+                    mainWindow.getFileOperation().writeFile("src/test/res/GrammarTree.txt",root.getAllChild());
                     break;
                 }
                 case IO_ERROR: {
+                    preContent += "\n-----IO Error----\n";
                     IOException exception = (IOException) message.getBody();
-                    preContent = exception.getMessage();
+                    preContent += exception.getMessage();
 
                     break;
                 }
                 case SYNTAX_ERROR: {
+                    preContent += "\n-----Syntax Error----\n";
                     SyntaxError syntaxError = (SyntaxError) message.getBody();
-                    preContent = syntaxError.getMessage();
+                    preContent += syntaxError.getMessage();
 
                     break;
                 }
