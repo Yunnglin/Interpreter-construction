@@ -4,11 +4,35 @@ int b = 2;
 
 int main()
 {
+    //顺序结构（赋值语句、输入read、输出write）
     int a = 3;
     int b = 4;
+    //int c[3]={1,1,1};
+    read a;
+    write b;
+
+    //选择语句（if-else）
     if (a == 1) {
         write b;
     } else {
         write a;
     }
+
+    //循环结构（while）
+    while(a<0){
+        write a;
+        a=a-1;
+    }
+
+    //关系表达式+算术表达式
+    if(a==b){
+        int addition=a+b;
+    }else if(a<b){
+        int subtraction=b-a;
+    }else if(a>b){
+        int multiplication=a*b;
+    }else{
+        int division=b/a;
+    }
+
 }
