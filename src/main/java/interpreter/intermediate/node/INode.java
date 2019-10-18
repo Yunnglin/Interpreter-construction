@@ -1,6 +1,6 @@
 package interpreter.intermediate.node;
 
-import interpreter.utils.lalr.GrammarSymbol;
+import interpreter.grammar.GrammarSymbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,10 @@
-package interpreter.utils.lalr;
+package interpreter.grammar.lalr;
 
-import interpreter.Const;
+import interpreter.grammar.TokenTag;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.NonterminalSymbol;
+import interpreter.grammar.Production;
+import interpreter.grammar.TerminalSymbol;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -57,7 +61,7 @@ public class LALRGrammar implements Serializable {
      */
     public LALRGrammar(String filepath) {
         this.startSymbol = LALRNonterminalSymbol.E;
-        this.endSymbol = Const.TokenTag.PROG_END;
+        this.endSymbol = TokenTag.PROG_END;
         try {
             initProductions(filepath);
             generateFirstFollowSets();
@@ -98,7 +102,7 @@ public class LALRGrammar implements Serializable {
                     if (symbolStr.equals(NIL.getSelfText())) {
                         right.add(NIL);
                     } else if (isTerminalSymbol(symbolStr)) {
-                        right.add(Const.TokenTag.valueOf(symbolStr));
+                        right.add(TokenTag.valueOf(symbolStr));
                     } else {
                         right.add(LALRNonterminalSymbol.valueOf(symbolStr));
                     }
@@ -175,7 +179,7 @@ public class LALRGrammar implements Serializable {
         for (Object key : keys) {
             HashSet<String> curFollowSet = this.followSet.get((String) key);
             if (((String) key).equals(startSymbol.toString())) {
-                curFollowSet.add(Const.TokenTag.PROG_END.toString());
+                curFollowSet.add(TokenTag.PROG_END.toString());
             }
             ArrayList produceList = (ArrayList) this.strProductions.get(key);
             for (Object produce : produceList) {
@@ -275,7 +279,7 @@ public class LALRGrammar implements Serializable {
      */
     public boolean isTerminalSymbol(String name) {
         try {
-            Const.TokenTag.valueOf(name);
+            TokenTag.valueOf(name);
             return true;
         } catch (IllegalArgumentException e) {
             return false;

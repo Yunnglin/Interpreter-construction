@@ -1,7 +1,11 @@
 package interpreter.parser;
 
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 import interpreter.exception.SyntaxError;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.NonterminalSymbol;
+import interpreter.grammar.Production;
+import interpreter.grammar.TerminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.node.INode.INodeKey;
 import interpreter.lexer.Lexer;
@@ -9,9 +13,9 @@ import interpreter.lexer.token.IntNum;
 import interpreter.lexer.token.Real;
 import interpreter.lexer.token.Token;
 import interpreter.lexer.token.Word;
-import interpreter.utils.lalr.*;
-import interpreter.utils.lalr.state.LALRParseManager;
-import interpreter.utils.lalr.state.LALRStateMachine;
+import interpreter.grammar.lalr.*;
+import interpreter.grammar.lalr.state.LALRParseManager;
+import interpreter.grammar.lalr.state.LALRStateMachine;
 import message.Message;
 import message.MessageListener;
 import message.MessageProducer;

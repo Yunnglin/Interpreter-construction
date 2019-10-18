@@ -1,7 +1,10 @@
-package interpreter.utils.lalr.state;
+package interpreter.grammar.lalr.state;
 
-import interpreter.Const;
-import interpreter.utils.lalr.*;
+import interpreter.grammar.TokenTag;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.Production;
+import interpreter.grammar.TerminalSymbol;
+import interpreter.grammar.lalr.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,8 +12,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static interpreter.utils.lalr.LALRGrammar.NIL;
-import static interpreter.utils.lalr.LALRGrammar.Nil;
+import static interpreter.grammar.lalr.LALRGrammar.NIL;
+import static interpreter.grammar.lalr.LALRGrammar.Nil;
 
 public class LRItem implements Serializable {
     private HashSet<TerminalSymbol> lookAheadSet;
@@ -214,7 +217,7 @@ public class LRItem implements Serializable {
                 if (symbol.equals(NIL.getSelfText())) {
                     nullable = true;
                 } else {
-                    firstSet.add(Const.TokenTag.valueOf(symbol));
+                    firstSet.add(TokenTag.valueOf(symbol));
                 }
             }
 

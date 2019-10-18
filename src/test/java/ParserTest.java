@@ -1,14 +1,11 @@
-import interpreter.Const;
-import interpreter.exception.SyntaxError;
+import interpreter.grammar.TokenTag;
 import interpreter.lexer.Lexer;
-import interpreter.lexer.token.Token;
 import interpreter.parser.Parser;
-import interpreter.utils.lalr.GrammarSymbol;
-import interpreter.utils.lalr.LALRGrammar;
-import interpreter.utils.lalr.Production;
-import interpreter.utils.lalr.state.LALRParseManager;
-import interpreter.utils.lalr.state.LALRStateMachine;
-import interpreter.utils.lalr.state.LRItem;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.lalr.LALRGrammar;
+import interpreter.grammar.lalr.state.LALRParseManager;
+import interpreter.grammar.lalr.state.LALRStateMachine;
+import interpreter.grammar.lalr.state.LRItem;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -67,13 +64,13 @@ public class ParserTest {
 
         arr1.add(LALRGrammar.LALRNonterminalSymbol.PROG);
         arr2.add(LALRGrammar.LALRNonterminalSymbol.PROG);
-        set3.add(Const.TokenTag.PROG_END);
-        set4.add(Const.TokenTag.PROG_END);
+        set3.add(TokenTag.PROG_END);
+        set4.add(TokenTag.PROG_END);
 
         LRItem item1 = new LRItem(0);
         LRItem item2 = new LRItem(0);
-        item1.getLookAheadSet().add(Const.TokenTag.PROG_END);
-        item2.getLookAheadSet().add(Const.TokenTag.PROG_END);
+        item1.getLookAheadSet().add(TokenTag.PROG_END);
+        item2.getLookAheadSet().add(TokenTag.PROG_END);
 
         set1.add(item1);
         set2.add(item2);

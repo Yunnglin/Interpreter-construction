@@ -1,9 +1,9 @@
-package interpreter.utils.lalr.state;
+package interpreter.grammar.lalr.state;
 
-import interpreter.utils.lalr.GrammarSymbol;
-import interpreter.utils.lalr.LALRGrammar;
-import static interpreter.utils.lalr.LALRGrammar.NIL;
-import interpreter.utils.lalr.TerminalSymbol;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.lalr.LALRGrammar;
+import static interpreter.grammar.lalr.LALRGrammar.NIL;
+import interpreter.grammar.TerminalSymbol;
 
 import java.io.Serializable;
 import java.util.*;

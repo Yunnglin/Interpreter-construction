@@ -1,4 +1,4 @@
-import interpreter.Const;
+import interpreter.grammar.TokenTag;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
 import org.junit.Test;
@@ -74,6 +74,6 @@ public class lexerTest {
     @Test
     public void TokenTagTest() {
         String name = "IDENTIFIER";
-        System.out.println(Const.TokenTag.valueOf(name));
+        System.out.println(TokenTag.valueOf(name));
     }
 }

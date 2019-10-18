@@ -1,6 +1,6 @@
 package interpreter.lexer;
 
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 import interpreter.exception.SyntaxError;
 import interpreter.lexer.token.IntNum;
 import interpreter.lexer.token.Real;

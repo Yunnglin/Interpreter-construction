@@ -134,6 +134,9 @@ INITIALIZER_LIST:
     - EXPR
     - COMMA
     - INITIALIZER_LIST
+  -
+    - EXPR
+    - COMMA
 IF_STMT:
   -
     - IF

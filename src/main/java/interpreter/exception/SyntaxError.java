@@ -1,7 +1,7 @@
 package interpreter.exception;
 
 import interpreter.Const;
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 import interpreter.lexer.token.IntNum;
 import interpreter.lexer.token.Real;
 import interpreter.lexer.token.Token;
@@ -31,7 +31,7 @@ public class SyntaxError extends InterpError {
             return "REAL NUMBER " + ((Real) token).getValue();
         } else if (token instanceof Word) {
             Word word = (Word) token;
-            if (Const.TokenTag.RESERVED_WORDS.containsKey(word.getLexeme())) {
+            if (TokenTag.RESERVED_WORDS.containsKey(word.getLexeme())) {
                 return "KEY WORD '" + word.getLexeme() + "'";
             } else {
                 return "IDENTIFIER '" + word.getLexeme() + "'";

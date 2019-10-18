@@ -1,4 +1,4 @@
-package interpreter.utils.lalr;
+package interpreter.grammar;
 
 public interface GrammarSymbol {
     public String getSelfText();
