@@ -121,12 +121,12 @@ INITIALIZER:
     - L_BRACES
     - INITIALIZER_LIST
     - R_BRACES
-  -
-    - ASSIGN
-    - L_BRACES
-    - INITIALIZER_LIST
-    - COMMA
-    - R_BRACES
+#  -
+#    - ASSIGN
+#    - L_BRACES
+#    - INITIALIZER_LIST
+#    - COMMA
+#    - R_BRACES
 INITIALIZER_LIST:
   -
     - EXPR
@@ -150,9 +150,7 @@ MORE_IF_ELSE:
     - ELSE_STMT
 ELSE_STMT:
   -
-    - IF
-    - COMPOUND_STMT
-    - MORE_IF_ELSE
+    - IF_STMT
   -
     - COMPOUND_STMT
 WHILE_STMT:

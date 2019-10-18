@@ -139,6 +139,8 @@ public class Lexer {
                         }
                         if (peek == EOF) {
                             return null;
+                        } else {
+                            ++curLine;
                         }
                         getNextChar();
                         goon = true;
