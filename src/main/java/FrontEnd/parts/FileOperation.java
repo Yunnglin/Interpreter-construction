@@ -67,11 +67,10 @@ public class FileOperation {
 
     }
 
-    public void writeFile(String path) {
+    public void writeFile(String path,String text) {
         //get file path
         File file = new File(path);
         //save the text
-        String text = mainWindow.getEditPane().getText();
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write(text);
         } catch (IOException e1) {
@@ -109,11 +108,11 @@ public class FileOperation {
                     newFile = new File(file.getAbsolutePath() + ends);
                 }
                 String newPath = newFile.toString();
-                writeFile(newPath);
+                writeFile(newPath,mainWindow.getEditPane().getText());
                 mainWindow.getPathLabel().setText(newPath);
             }
         } else {//直接覆盖
-            writeFile(path);
+            writeFile(path,mainWindow.getEditPane().getText());
         }
 
     }

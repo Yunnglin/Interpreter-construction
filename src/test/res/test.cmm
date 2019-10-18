@@ -27,9 +27,11 @@ int main()
     //关系表达式+算术表达式
     if(a==b){
         int addition=a+b;
-    }else if(a<b){
+    }
+    if(a<b){
         int subtraction=b-a;
-    }else if(a>b){
+    }
+    if(a>b){
         int multiplication=a*b;
     }else{
         int division=b/a;
