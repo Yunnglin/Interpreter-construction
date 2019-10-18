@@ -115,19 +115,58 @@
                 <properties/>
                 <border type="none" title="输出结果"/>
                 <children>
-                  <scrollpane id="9f0d5" binding="outputScrollPane">
+                  <tabbedpane id="fa347" binding="outputTabbedPane">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="200" height="200"/>
+                      </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <tabPlacement value="3"/>
+                    </properties>
                     <border type="none"/>
                     <children>
-                      <component id="21a7d" class="javax.swing.JTextPane" binding="outputPane">
-                        <constraints/>
+                      <scrollpane id="9f0d5" binding="outputScrollPane">
+                        <constraints>
+                          <tabbedpane title="词法分析结果"/>
+                        </constraints>
                         <properties/>
-                      </component>
+                        <border type="none"/>
+                        <children>
+                          <component id="21a7d" class="javax.swing.JTextPane" binding="outputPane">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <scrollpane id="c2ec8" binding="parseOutputJSP">
+                        <constraints>
+                          <tabbedpane title="语法分析结果"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="bc121" class="javax.swing.JTextPane" binding="parseOutputPane">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <scrollpane id="5bf92" binding="excuteOutputJSP">
+                        <constraints>
+                          <tabbedpane title="解释执行结果"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="13fd9" class="javax.swing.JTextPane" binding="executeOutputPane">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
                     </children>
-                  </scrollpane>
+                  </tabbedpane>
                 </children>
               </grid>
             </children>

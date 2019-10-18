@@ -16,13 +16,13 @@ public class MTextPane {
     private MainWindow mainWindow;
     private JPopupMenu jPopMenu;
     private JTextPane editPane;
-    private JTextPane outputPane;
+    private JTextPane[] outputPanes;
 
 
     public MTextPane(MainWindow mainWindow){
         this.mainWindow = mainWindow;
         this.editPane = mainWindow.getEditPane();
-        this.outputPane = mainWindow.getOutputPane();
+        this.outputPanes = mainWindow.getOutputPanes();
         this.jPopMenu = mainWindow.getmPopMenu().getEditMenu();
     }
     public void init(){
@@ -31,10 +31,6 @@ public class MTextPane {
 
     }
 
-    public void setFont(Font font){
-        editPane.setFont(font);
-        outputPane.setFont(font);
-    }
 
     private void setTextPane(){
         editPane.setFont(MFont.codeFont);
@@ -47,9 +43,12 @@ public class MTextPane {
 
 
     private void setOutputPane(){
-        outputPane.setBackground(MColor.consoleAreaColor);
-        outputPane.setFont(MFont.consoleFont);
-        outputPane.setEditable(false);
+        for(JTextPane outputPane: outputPanes){
+            outputPane.setBackground(MColor.consoleAreaColor);
+            outputPane.setFont(MFont.consoleFont);
+            outputPane.setEditable(false);
+        }
+
     }
 
 

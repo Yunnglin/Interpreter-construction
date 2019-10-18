@@ -51,8 +51,13 @@ public class MButton {
         button.addActionListener(e -> {
             // 多线程
             new Thread(() -> {
-                mainWindow.getFileOperation().save();
-                String path = mainWindow.getPathLabel().getText();
+                if(mainWindow.getEditPane().getText().isEmpty())//输入区为空，返回
+                    return;
+                if(!mainWindow.getFileOperation().save())//保存
+                    return;
+                mainWindow.getFileOperation().setOutputEmpty();//清空输出区
+
+                String path = mainWindow.getPathLabel().getText();//获取路径
                 //initialize a lexer
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                     Lexer lex = new Lexer(reader);
@@ -61,6 +66,7 @@ public class MButton {
                     for (Token token : tokens) {
                         stringBuilder.append(token.toString()).append('\n');
                     }
+                    //设置词法分析结果区
                     mainWindow.getOutputPane().setText(stringBuilder.toString());
                 } catch (IOException | SyntaxError e1) {
                     mainWindow.getOutputPane().setText(e1.getMessage());
@@ -72,14 +78,17 @@ public class MButton {
 
     private void setParserButton(JButton button) {
         button.addActionListener(e -> new Thread(() -> {
-            mainWindow.getFileOperation().save();
+            if(mainWindow.getEditPane().getText().isEmpty())
+                return;
+            if(!mainWindow.getFileOperation().save())//保存
+                return;
             String path = mainWindow.getPathLabel().getText();
             //initialize a lexer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                 Lexer lex = new Lexer(reader);
                 Parser myParser = new Parser(lex);
                 myParser.addMessageListener(new ParserMessageListener());
-                mainWindow.getOutputPane().setText("");
+                mainWindow.getFileOperation().setOutputEmpty();
                 myParser.parse();
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
@@ -95,7 +104,7 @@ public class MButton {
             //消息种类
             Message.MessageType type = message.getType();
             //当前输出框内容
-            String curContent = mainWindow.getOutputPane().getText();
+            //String curContent = mainWindow.getOutputPane().getText();
             String preContent = "";
             switch (type) {
                 case LEXER_SUMMARY: {
@@ -111,6 +120,7 @@ public class MButton {
                         stringBuilder.append(token.toString()).append('\n');
                     }
                     preContent = stringBuilder.toString();
+                    mainWindow.getOutputPane().setText(preContent);
                     break;
                 }
                 case PARSER_SUMMARY: {
@@ -119,9 +129,10 @@ public class MButton {
                     float parseElapsedTime = (float) body[0];
                     INode root = (INode) body[1];
                     StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("\n----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
+                    stringBuilder.append("----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
                     stringBuilder.append("---- Tree----\n ").append(root.getAllChild()).append("\n");
                     preContent = stringBuilder.toString();
+                    mainWindow.getParseOutputPane().setText(preContent);
                     mainWindow.getFileOperation().writeFile("src/test/res/GrammarTree.txt",root.getAllChild());
                     break;
                 }
@@ -129,18 +140,17 @@ public class MButton {
                     preContent += "\n-----IO Error----\n";
                     IOException exception = (IOException) message.getBody();
                     preContent += exception.getMessage();
-
+                    mainWindow.getParseOutputPane().setText(preContent);
                     break;
                 }
                 case SYNTAX_ERROR: {
                     preContent += "\n-----Syntax Error----\n";
                     SyntaxError syntaxError = (SyntaxError) message.getBody();
                     preContent += syntaxError.getMessage();
-
+                    mainWindow.getParseOutputPane().setText(preContent);
                     break;
                 }
             }
-            mainWindow.getOutputPane().setText(curContent + preContent);
         }
 
     }
