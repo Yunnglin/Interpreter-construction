@@ -34,7 +34,7 @@ public class FileOperation {
 
     private void setContent(String path, String content) {
         new Thread(() -> {
-            mainWindow.getOutputPane().setText("");
+            setOutputEmpty();
             mainWindow.getPathLabel().setText(path);
             mainWindow.getEditPane().setText(content);
         }).start();
@@ -43,12 +43,22 @@ public class FileOperation {
 
     public void setEmpty() {
         new Thread(() -> {
-            mainWindow.getEditPane().setText("");
-            mainWindow.getOutputPane().setText("");
+            setEditEmpty();
+            setOutputEmpty();
             mainWindow.getPathLabel().setText("");
             mainWindow.getmScrollPane().updateLineNum();
         }).start();
 
+    }
+
+    public void setOutputEmpty() {
+        for (JTextPane textPane : mainWindow.getOutputPanes()) {
+            textPane.setText("");
+        }
+    }
+
+    public void setEditEmpty() {
+        mainWindow.getEditPane().setText("");
     }
 
     public String readFile(String path) {
@@ -67,7 +77,7 @@ public class FileOperation {
 
     }
 
-    public void writeFile(String path,String text) {
+    public void writeFile(String path, String text) {
         //get file path
         File file = new File(path);
         //save the text
@@ -94,7 +104,7 @@ public class FileOperation {
 
     }
 
-    public void save() {
+    public boolean save() {
         String path = mainWindow.getPathLabel().getText();
         if (path.equals("")) {
             if (JFileChooser.APPROVE_OPTION == jfc.showSaveDialog(mainWindow.getEditPane())) {
@@ -108,11 +118,15 @@ public class FileOperation {
                     newFile = new File(file.getAbsolutePath() + ends);
                 }
                 String newPath = newFile.toString();
-                writeFile(newPath,mainWindow.getEditPane().getText());
+                writeFile(newPath, mainWindow.getEditPane().getText());
                 mainWindow.getPathLabel().setText(newPath);
+                return true;
+            } else {
+                return false;
             }
         } else {//直接覆盖
-            writeFile(path,mainWindow.getEditPane().getText());
+            writeFile(path, mainWindow.getEditPane().getText());
+            return true;
         }
 
     }

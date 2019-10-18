@@ -118,9 +118,24 @@ public class FileTreePanel extends JPanel {
             this.path = file.toString();
             this.isFileSystemRoot = isFileSystemRoot;
             this.parent = parent;
-            this.children = this.file.listFiles();
-            if (this.children == null)
+            File[] files = this.file.listFiles();
+
+            if (files == null){
                 this.children = new File[0];
+                return;
+            }
+            //进行筛选
+            List<File> allowFiles = new ArrayList<>();
+            for(File curFile:files){
+                if (checkFile(curFile))
+                    allowFiles.add(curFile);
+            }
+            this.children = new File[allowFiles.size()];
+            allowFiles.toArray(this.children);
+        }
+
+        public boolean checkFile(File file){
+            return true;
         }
         /**
          * Creates a new file tree node.
