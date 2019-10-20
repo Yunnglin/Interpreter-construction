@@ -126,6 +126,8 @@ public class Lexer {
                                 } else if (peek == '*') {
                                     ++comments;
                                 }
+                            } else if (peek == '\n') {
+                                ++curLine;
                             }
                         }
                         getNextChar();
