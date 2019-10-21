@@ -23,25 +23,48 @@ public class Lexer {
         TokenTag.RESERVED_WORDS.put(tag.getText(), tag);
     }
 
+    /**
+     * Constructor
+     * set the initial peek a whitespace
+     */
     public Lexer() {
         this.curLine = 1;
         this.peek = ' ';
         this.reader = null;
     }
 
+    /**
+     * Constructor
+     * set the reader of file input stream of the input source code
+     * @param reader
+     */
     public Lexer(BufferedReader reader) {
         this();
         this.reader = reader;
     }
 
+    /**
+     * check whether the word token is a key word
+     * @param w the word token to check
+     * @return whether it is key word
+     */
     public boolean isKeyWord(Word w) {
         return TokenTag.RESERVED_WORDS.containsKey(w.getLexeme());
     }
 
+    /**
+     * check whether the string of a identifier is a key word
+     * @param s the string to check
+     * @return whether it is key word
+     */
     public boolean isKeyWord(String s) {
         return TokenTag.RESERVED_WORDS.containsKey(s);
     }
 
+    /**
+     * read a char from source code
+     * @throws IOException
+     */
     public void getNextChar() throws IOException {
         // 读取下一个字符
         if(reader != null) {
@@ -54,12 +77,24 @@ public class Lexer {
         }
     }
 
+    /**
+     * read a char from source code and check if it is a specified char
+     * @param c the specified char
+     * @return whether the char read from source is the specified char
+     * @throws IOException
+     */
     public boolean getNextChar(char c) throws IOException {
         // 读取下一个字符并判断是否为 c
         getNextChar();
         return c == peek;
     }
 
+    /**
+     * get all tokens lexed from source code
+     * @return the list of tokens
+     * @throws IOException
+     * @throws SyntaxError the error occurred while lexing
+     */
     public ArrayList<Token> getAllToken() throws IOException, SyntaxError {
         ArrayList<Token> tokens = new ArrayList<Token>();
         Token token = null;
@@ -70,6 +105,12 @@ public class Lexer {
         return tokens;
     }
 
+    /**
+     * read char from source code and do lexing till a token formed
+     * @return the new token
+     * @throws SyntaxError the error occurred while lexing
+     * @throws IOException
+     */
     public Token getNextToken() throws SyntaxError, IOException {
         boolean goon = true;                    // 一遍扫描后是否还需要继续扫描
         while(goon){

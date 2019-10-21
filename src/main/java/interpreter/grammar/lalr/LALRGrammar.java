@@ -1,5 +1,6 @@
 package interpreter.grammar.lalr;
 
+import interpreter.Const;
 import interpreter.grammar.TokenTag;
 import interpreter.grammar.GrammarSymbol;
 import interpreter.grammar.NonterminalSymbol;
@@ -14,38 +15,17 @@ import java.io.Serializable;
 import java.util.*;
 
 public class LALRGrammar implements Serializable {
-    public enum Nil implements GrammarSymbol {
-        NIL;
-
-        @Override
-        public String getSelfText() {
-            return this.toString();
-        }
-    }
-
-    public enum LALRNonterminalSymbol implements NonterminalSymbol {
-        E, PROG, EXTERN_DECLARATION, FUNC_DEFINITION, FUNC_DECLARATOR,
-        PARAM_LIST, PARAM_DECLARATION, STMT_LIST, STMT, DECLARE_STMT,
-        COMPOUND_STMT, DECLARATOR_LIST, TYPE, DECLARATOR, INITIALIZER,
-        INITIALIZER_LIST, IF_STMT, MORE_IF_ELSE, ELSE_STMT, WHILE_STMT,
-        READ_STMT, WRITE_STMT, ASSIGN_STMT, OTHER_ASSIGN, EXPR,
-        RELATIONAL_EXPR, RELATIONAL_EXPR_MORE, COMPARISON_OP,
-        SIMPLE_EXPR, MORE_TERM, ADD_OP, TERM, MORE_FACTOR, MUL_OP,
-        FACTOR, MORE_IDENTIFIER, NUMBER, NUMBER_INT, NUMBER_REAL;
-
-        private String text;
-
-        LALRNonterminalSymbol() {
-            this.text = this.toString();
-        }
-
-        @Override
-        public String getSelfText() {
-            return text;
-        }
-    }
 
     public static Nil NIL = Nil.NIL;
+    private static LALRGrammar instance = null;
+
+    public static LALRGrammar getGrammar() {
+        if (instance == null) {
+            instance = new LALRGrammar(Const.grammarFilePath);
+        }
+
+        return instance;
+    }
 
     private NonterminalSymbol startSymbol;
     private TerminalSymbol endSymbol;
@@ -57,9 +37,10 @@ public class LALRGrammar implements Serializable {
 
     /**
      * Constructor
+     * singleton pattern
      * @param filepath the path of the cmm grammar text file
      */
-    public LALRGrammar(String filepath) {
+    private LALRGrammar(String filepath) {
         this.startSymbol = LALRNonterminalSymbol.E;
         this.endSymbol = TokenTag.PROG_END;
         try {
@@ -251,10 +232,18 @@ public class LALRGrammar implements Serializable {
         return totalSize;
     }
 
+    /**
+     * get the start symbol of grammar
+     * @return a non-terminal symbol
+     */
     public NonterminalSymbol getStartSymbol() {
         return startSymbol;
     }
 
+    /**
+     * get the end symbol of grammar (a symbol that may not involved in code)
+     * @return a terminal symbol
+     */
     public TerminalSymbol getEndSymbol() {
         return endSymbol;
     }
@@ -290,20 +279,35 @@ public class LALRGrammar implements Serializable {
      * get the start position and length of the productions in
      * all productions of the specific non-terminal symbol
      * @param nonterminal the selfText of a non-terminal symbol
-     * @return
+     * @return a list that has two elements, index 0 is the start position
+     *                                       index 1 is the number of productions
      */
     public ArrayList<Integer> getStartPosAndLen(String nonterminal) {
         return productionStartPosAndLength.get(nonterminal);
     }
 
+    /**
+     * get the first sets of all non-terminal symbols
+     * @return a hash map, with the string of symbols as the key, and the first set as value
+     */
     public HashMap<String, HashSet<String>> getFirstSets() {
         return this.firstSet;
     }
 
+    /**
+     * get the follow sets of all non-terminal symbols
+     * @return a hash map, with the string of symbols as the key, and the follow set as value
+     */
     public HashMap<String, HashSet<String>> getFollowSets() {
         return this.followSet;
     }
 
+    /**
+     * get the first set of specified symbol
+     * @param symbol the specified symbol
+     * @return a hash set of string that represents the first set,
+     *         which only includes the symbol itself if it is terminal of NIL
+     */
     public HashSet<String> getFirstSet(GrammarSymbol symbol) {
         HashSet<String> set;
 
@@ -317,14 +321,28 @@ public class LALRGrammar implements Serializable {
         return set;
     }
 
+    /**
+     * get the first set of specified non-terminal symbol
+     * @param symbol the specified non-terminal symbol
+     * @return the follow set
+     */
     public HashSet<String> getFollowSet(GrammarSymbol symbol) {
         return followSet.get(symbol.getSelfText());
     }
 
+    /**
+     * get all productions in grammar
+     * @return
+     */
     public ArrayList<Production> getProductions() {
         return productions;
     }
 
+    /**
+     * get all the productions that have a specified symbol as left symbol
+     * @param symbol the non-terminal symbol
+     * @return the list of productions
+     */
     public ArrayList<Production> getProductions(GrammarSymbol symbol) {
         if (symbol.equals(NIL) || isTerminalSymbol(symbol.getSelfText())) {
             return null;
@@ -339,6 +357,11 @@ public class LALRGrammar implements Serializable {
         return newProductions;
     }
 
+    /**
+     * get the production of specified id (index)
+     * @param productionId  the specified id of production
+     * @return the specified production
+     */
     public Production getProduction(Integer productionId) {
         return productions.get(productionId);
     }

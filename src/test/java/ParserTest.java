@@ -3,6 +3,7 @@ import interpreter.lexer.Lexer;
 import interpreter.parser.Parser;
 import interpreter.grammar.GrammarSymbol;
 import interpreter.grammar.lalr.LALRGrammar;
+import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.grammar.lalr.state.LALRParseManager;
 import interpreter.grammar.lalr.state.LALRStateMachine;
 import interpreter.grammar.lalr.state.LRItem;
@@ -42,7 +43,7 @@ public class ParserTest {
 
     @Test
     public void firstFollowSet() {
-        LALRGrammar grammar = new LALRGrammar("src/test/res/grammar.yaml");
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         HashMap<String, HashSet<String>> firstSets = grammar.getFirstSets();
         HashMap<String, HashSet<String>> followSets = grammar.getFollowSets();
         for (String key : firstSets.keySet()) {
@@ -62,8 +63,8 @@ public class ParserTest {
         HashSet<GrammarSymbol> set3 = new HashSet<>();
         HashSet<GrammarSymbol> set4 = new HashSet<>();
 
-        arr1.add(LALRGrammar.LALRNonterminalSymbol.PROG);
-        arr2.add(LALRGrammar.LALRNonterminalSymbol.PROG);
+        arr1.add(LALRNonterminalSymbol.PROG);
+        arr2.add(LALRNonterminalSymbol.PROG);
         set3.add(TokenTag.PROG_END);
         set4.add(TokenTag.PROG_END);
 
@@ -85,7 +86,7 @@ public class ParserTest {
     @Test
     public void stateMachineTest() {
 //        System.out.println(System.getProperty("user.dir"));
-        LALRParseManager parseManager = LALRParseManager.getInstance();
+        LALRParseManager parseManager = new LALRParseManager();
         parseManager.runStateMachine();
         LALRStateMachine stateMachine = parseManager.getStateMachine();
         System.out.println(stateMachine.getTransitionTable().get(24));
@@ -107,7 +108,7 @@ public class ParserTest {
 
     @Test
     public void serializeManager() {
-        LALRParseManager manager = LALRParseManager.getInstance();
+        LALRParseManager manager = new LALRParseManager();
         manager.runStateMachine();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(

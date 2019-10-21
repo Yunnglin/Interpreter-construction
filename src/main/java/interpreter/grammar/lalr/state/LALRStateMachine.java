@@ -25,7 +25,7 @@ public class LALRStateMachine implements Serializable {
         transitionTable = new ArrayList<HashMap<GrammarSymbol, Integer>>();
 
         // add the initial state into the machine
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         ArrayList<Integer> posAndLen = grammar.getStartPosAndLen(grammar.getStartSymbol().getSelfText());
         HashSet<LRItem> initialItems = new HashSet<>();
         // create the first LR(1) item with the first production of start symbol
@@ -45,7 +45,7 @@ public class LALRStateMachine implements Serializable {
         // two flags that makes the list of states a queue
         int head = 0;
         int tail = states.size();
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         NonterminalSymbol startSymbol = grammar.getStartSymbol();
         TerminalSymbol endSymbol = grammar.getEndSymbol();
         ArrayList<Integer> posAndLen = grammar.getStartPosAndLen(startSymbol.getSelfText());
@@ -115,6 +115,11 @@ public class LALRStateMachine implements Serializable {
         }
     }
 
+    /**
+     * add a state to the list of states if the list does not contain the state
+     * @param state the state to add
+     * @return the id of the state in the list
+     */
     private int addStateIfNotExisted(LALRState state) {
         int len = states.size();
         for (int i=0; i<len; ++i) {
@@ -126,6 +131,13 @@ public class LALRStateMachine implements Serializable {
         return len;
     }
 
+    /**
+     * when add a transition into the table, check if there has been a value at the position.
+     * if there is, that shows there is a conflict, then report the conflict in the console
+     * @param index the row: the id of state
+     * @param symbol the column: the symbol
+     * @param newActionCode the new action that will add to the position
+     */
     private void reportConflict(int index, TerminalSymbol symbol, int newActionCode) {
         HashMap<GrammarSymbol, Integer> row = transitionTable.get(index);
         Integer oldActionCode = row.get(symbol);
@@ -144,18 +156,37 @@ public class LALRStateMachine implements Serializable {
                 " | " + newAction + " " + newActionCode);
     }
 
+    /**
+     * get all states of the state machine
+     * @return the list of state
+     */
     public ArrayList<LALRState> getStates() {
         return states;
     }
 
+    /**
+     * get a state with specified id
+     * @param stateId the id of the state
+     * @return a LALRState
+     */
     public LALRState getState(Integer stateId) {
         return this.states.get(stateId);
     }
 
+    /**
+     * get the transition table
+     * @return a list of hash map that represents the table
+     */
     public ArrayList<HashMap<GrammarSymbol, Integer>> getTransitionTable() {
         return transitionTable;
     }
 
+    /**
+     * get the action in specified place in the transition table
+     * @param stateId the row
+     * @param symbol the column
+     * @return the encoded integer that represents the action
+     */
     public Integer getAction(Integer stateId, GrammarSymbol symbol) {
         return transitionTable.get(stateId).get(symbol);
     }

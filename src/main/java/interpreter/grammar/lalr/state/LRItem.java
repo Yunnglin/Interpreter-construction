@@ -13,28 +13,42 @@ import java.util.Objects;
 import java.util.Set;
 
 import static interpreter.grammar.lalr.LALRGrammar.NIL;
-import static interpreter.grammar.lalr.LALRGrammar.Nil;
 
 public class LRItem implements Serializable {
     private HashSet<TerminalSymbol> lookAheadSet;
     private int productionId;
     private int dotPos;
 
+    /**
+     * Constructor, set the dotPos 0 and ookAheadSet a empty set
+     * @param productionId
+     */
     public LRItem(int productionId) {
         this(productionId, 0);
     }
 
+    /**
+     * Constructor, set lookAheadSet a empty set
+     * @param productionId the id of the production
+     * @param dotPos
+     */
     public LRItem(int productionId, int dotPos) {
         this(productionId, dotPos, new HashSet<TerminalSymbol>());
     }
 
+    /**
+     * Constructor
+     * @param productionId the id of the production
+     * @param dotPos the initial position of dot
+     * @param lookAheadSet the set of look ahead symbols
+     */
     public LRItem(int productionId, int dotPos, HashSet<TerminalSymbol> lookAheadSet) {
         this.lookAheadSet = lookAheadSet;
         this.productionId = productionId;
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         Production production = grammar.getProductions().get(productionId);
 
-        if (production.getRightSymbols().size() == 1 && production.getRightSymbols().get(0) == Nil.NIL) {
+        if (production.getRightSymbols().size() == 1 && production.getRightSymbols().get(0) == NIL) {
             dotPos = 1;
         }
         else if (dotPos >= production.getRightSymbols().size()) {
@@ -86,7 +100,7 @@ public class LRItem implements Serializable {
 
     @Override
     public String toString() {
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         Production production = grammar.getProductions().get(productionId);
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -112,14 +126,26 @@ public class LRItem implements Serializable {
         return stringBuilder.toString();
     }
 
+    /**
+     * get the set of look ahead symbols
+     * @return a set of grammar symbols
+     */
     public HashSet<TerminalSymbol> getLookAheadSet() {
         return lookAheadSet;
     }
 
+    /**
+     * get the id of the production
+     * @return a int value, the id of production
+     */
     public int getProductionId() {
         return productionId;
     }
 
+    /**
+     * get the current position of the dot
+     * @return
+     */
     public int getDotPos() {
         return dotPos;
     }
@@ -181,7 +207,7 @@ public class LRItem implements Serializable {
      * @return a grammar symbol
      */
     public GrammarSymbol getCurSymbol() {
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         Production production = grammar.getProductions().get(productionId);
         if (dotPos > production.getRightSymbols().size()-1) {
             return NIL;
@@ -196,7 +222,7 @@ public class LRItem implements Serializable {
      * @return new lookAheadSet, including terminal symbols
      */
     public HashSet<TerminalSymbol> getNewLookAheadInClosure() {
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         Production production = grammar.getProductions().get(productionId);
         ArrayList<GrammarSymbol> right = production.getRightSymbols();
 
@@ -233,14 +259,28 @@ public class LRItem implements Serializable {
         return firstSet;
     }
 
+    /**
+     * put a set as the look ahead set for this LRItem
+     * @param set
+     */
     public void setLookAheadSet(HashSet<TerminalSymbol> set) {
         this.lookAheadSet = set;
     }
 
+    /**
+     * add a symbol to look ahead set
+     * @param symbol the grammar symbol to add
+     * @return whether the symbol existed in the set before
+     */
     public boolean addToLookAheadSet(TerminalSymbol symbol) {
         return this.lookAheadSet.add(symbol);
     }
 
+    /**
+     * add a set of symbol to look ahead set
+     * @param symbols the set of grammar symbols to add
+     * @return whether the process succeed
+     */
     public boolean addToLookAheadSet(Set<TerminalSymbol> symbols) {
         return this.lookAheadSet.addAll(symbols);
     }
