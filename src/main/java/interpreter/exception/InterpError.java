@@ -2,10 +2,12 @@ package interpreter.exception;
 
 public class InterpError extends Exception {
     private int line;
+    private ErrorCode code;
 
-    public InterpError(String msg, int line) {
+    public InterpError(String msg, int line, ErrorCode code) {
         super(msg);
         this.line = line;
+        this.code = code;
     }
 
     public int getLine() {
@@ -18,6 +20,10 @@ public class InterpError extends Exception {
 
     public String getInnerMsg() {
         return super.getMessage();
+    }
+
+    public int getCode() {
+        return this.code.getCode();
     }
 
     @Override

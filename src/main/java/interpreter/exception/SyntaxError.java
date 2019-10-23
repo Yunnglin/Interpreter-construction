@@ -10,13 +10,13 @@ import interpreter.lexer.token.Word;
 import java.util.ArrayList;
 
 public class SyntaxError extends InterpError {
-    public SyntaxError(String msg, int line) {
-        super(msg, line);
+    public SyntaxError(String msg, int line, ErrorCode code) {
+        super(msg, line, code);
     }
 
     @Override
     public String getMessage() {
-        return "Syntax Error at line "+this.getLine()+": "+this.getInnerMsg();
+        return "Syntax Error (" + getCode() + ") at line "+this.getLine()+": "+this.getInnerMsg();
     }
 
     @Override
@@ -42,22 +42,22 @@ public class SyntaxError extends InterpError {
     }
 
     public static SyntaxError newLexicalError(String lex, int line) {
-        return new SyntaxError("BAD CHARACTER '"+lex+"'", line);
+        return new SyntaxError("BAD CHARACTER '"+lex+"'", line, ErrorCode.UNEXPECTED_CHAR);
     }
 
     public static SyntaxError newIdentifierError(String name, int line) {
-        return new SyntaxError("BAD IDENTIFIER '"+name+"'", line);
+        return new SyntaxError("BAD IDENTIFIER '"+name+"'", line, ErrorCode.IDENTIFIER_NAMING);
     }
 
     public static SyntaxError newConstantError(String num, int line) {
-        return new SyntaxError("BAD CONSTANT '"+num+"'", line);
+        return new SyntaxError("BAD CONSTANT '"+num+"'", line, ErrorCode.CONSTANT_DEFINE);
     }
 
     public static SyntaxError newUnexpectedTokenError(Token token) {
         int line = token.getLineNum();
         String desc = getTokenDescription(token);
 
-        return new SyntaxError("UNEXPECTED " + desc, line);
+        return new SyntaxError("UNEXPECTED " + desc, line, ErrorCode.UNEXPECTED_TOKEN);
     }
 
     public static SyntaxError newMissingTokenError(Token token, ArrayList<TokenTag> expected) {
@@ -72,6 +72,6 @@ public class SyntaxError extends InterpError {
         }
         stringBuilder.append(" BEHIND ").append(desc);
 
-        return new SyntaxError(stringBuilder.toString(), token.getLineNum());
+        return new SyntaxError(stringBuilder.toString(), token.getLineNum(), ErrorCode.MISSING_TOKEN);
     }
 }
