@@ -6,6 +6,7 @@ import FrontEnd.parts.conf.MFont;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +22,8 @@ public class FileOperation {
     public FileOperation(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         jfc.setAcceptAllFileFilterUsed(false);
-        jfc.addChoosableFileFilter(new MFileFilter("C--", ".cmm"));
-        jfc.addChoosableFileFilter(new MFileFilter("Java", ".java"));
-        jfc.addChoosableFileFilter(new MFileFilter("C", ".c"));
-        jfc.addChoosableFileFilter(new MFileFilter("python", ".py"));
-        jfc.addChoosableFileFilter(new MFileFilter("C++", ".cpp"));
-        jfc.addChoosableFileFilter(new MFileFilter("txt", ".txt"));
-        jfc.addChoosableFileFilter(new MFileFilter("HTML", ".html"));
+        jfc.addChoosableFileFilter(new FileNameExtensionFilter("C--", "cmm"));
+        jfc.addChoosableFileFilter(new FileNameExtensionFilter("others", "java","py","cpp","txt","html"));
         FileSystemView fsv = FileSystemView.getFileSystemView();
         jfc.setCurrentDirectory(fsv.getHomeDirectory());
     }

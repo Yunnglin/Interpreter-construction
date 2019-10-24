@@ -33,4 +33,17 @@ public class MWord {
             "false",
             "NULL"
     };
+
+    public static final String[] allowFiles = {
+            "txt",
+            "cmm",
+            "py",
+            "java",
+            "c",
+            "cpp",
+            "html",
+            "css",
+            "js",
+            "h"
+    };
 }
