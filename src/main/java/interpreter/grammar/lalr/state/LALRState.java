@@ -1,9 +1,9 @@
-package interpreter.utils.lalr.state;
+package interpreter.grammar.lalr.state;
 
-import interpreter.utils.lalr.GrammarSymbol;
-import interpreter.utils.lalr.LALRGrammar;
-import static interpreter.utils.lalr.LALRGrammar.NIL;
-import interpreter.utils.lalr.TerminalSymbol;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.lalr.LALRGrammar;
+import static interpreter.grammar.lalr.LALRGrammar.NIL;
+import interpreter.grammar.TerminalSymbol;
 
 import java.io.Serializable;
 import java.util.*;
@@ -15,6 +15,10 @@ public class LALRState implements Serializable {
     private HashMap<GrammarSymbol, ArrayList<LRItem>> partition;
     private HashMap<TerminalSymbol, Integer> reduceMap;
 
+    /**
+     * Constructor
+     * @param basicSet the basic set of LRItem in the state
+     */
     public LALRState(HashSet<LRItem> basicSet) {
         this.basicSet = basicSet;
         this.extendSet = new HashSet<LRItem>();
@@ -24,6 +28,11 @@ public class LALRState implements Serializable {
         makeReduce();
     }
 
+    /**
+     * compare two LALRState, important for check redundant state
+     * @param obj the other state to compare
+     * @return whether the two state are the same
+     */
     @Override
     public boolean equals(Object obj) {
         if (super.equals(obj)) {
@@ -35,6 +44,10 @@ public class LALRState implements Serializable {
         return basicSet.equals(state.basicSet);
     }
 
+    /**
+     * override the string representation of state
+     * @return string, including the basic set and extended set
+     */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -62,7 +75,7 @@ public class LALRState implements Serializable {
     private void makeClosure() {
         Stack<LRItem> itemStack = new Stack<>();
 
-        LALRGrammar grammar = LALRParseManager.getInstance().getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
 
         for (LRItem item : basicSet) {
             itemStack.push(item);
@@ -85,7 +98,8 @@ public class LALRState implements Serializable {
                 if (!basicSet.contains(newitem) && !extendSet.contains(newitem)) {
                     extendSet.add(newitem);
                     itemStack.push(newitem);
-                    // TODO remove redundant item that has greater look ahead set
+                    // remove redundants item that has greater look ahead set
+                    removeRedundantItems(newitem);
                 }
             }
         }
@@ -139,6 +153,10 @@ public class LALRState implements Serializable {
         }
     }
 
+    /**
+     * make the reduce map if there is any LRItem has the dot in the last
+     * the map shows a mapping from the terminal symbol to the id of production
+     */
     private void makeReduce() {
         reduceMap = new HashMap<>();
         if (this.partition.containsKey(NIL)) {
@@ -160,10 +178,37 @@ public class LALRState implements Serializable {
         }
     }
 
+    /**
+     * remove all redundant items that has a smaller lookahead set than new item
+     * @param newItem
+     */
+    private void removeRedundantItems(LRItem newItem) {
+        HashSet<LRItem> removeSet = new HashSet<>();
+        Iterator<LRItem> extIt = extendSet.iterator();
+        while(extIt.hasNext()) {
+            LRItem item = extIt.next();
+            if (newItem.covers(newItem)) {
+                removeSet.add(item);
+            } else if (item.covers(item)) {
+                removeSet.add(newItem);
+                break;
+            }
+        }
+        extendSet.removeAll(removeSet);
+    }
+
+    /**
+     * get the reduce map, a mapping from the terminal symbol to the id of production
+     * @return the reduce hash map
+     */
     public HashMap<TerminalSymbol, Integer> getReduceMap() {
         return reduceMap;
     }
 
+    /**
+     * get the partition of specified symbol
+     * @return a hash map represents partition
+     */
     public HashMap<GrammarSymbol, ArrayList<LRItem>> getPartition() {
         return partition;
     }

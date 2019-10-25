@@ -1,6 +1,6 @@
 package interpreter.lexer.token;
 
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 
 public class Word extends Token {
     private String lexeme;

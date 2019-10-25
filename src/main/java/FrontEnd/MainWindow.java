@@ -3,8 +3,8 @@ package FrontEnd;
 import FrontEnd.parts.*;
 
 import javax.swing.*;
-import java.io.File;
 
+@SuppressWarnings("ALL")
 public class MainWindow {
     private JPanel mainPanel;
     private JButton fileButton;
@@ -30,6 +30,11 @@ public class MainWindow {
     private JButton editButton;
     private JSplitPane splitTreeEdit;
     private JSplitPane splitInOut;
+    private JTabbedPane outputTabbedPane;
+    private JScrollPane parseOutputJSP;
+    private JTextPane parseOutputPane;
+    private JScrollPane excuteOutputJSP;
+    private JTextPane executeOutputPane;
 
 
     private MTextPane mTextPane;
@@ -38,6 +43,11 @@ public class MainWindow {
     private FileOperation fileOperation;
     private MFoldersTree mFoldersTree;
 
+    private JTextPane[] outputPanes = {
+            outputPane,
+            parseOutputPane,
+            executeOutputPane
+    };
 
     private MainWindow() {
         //更新顺序
@@ -62,7 +72,7 @@ public class MainWindow {
         fileOperation = new FileOperation(this);
 
 
-        mFoldersTree= new MFoldersTree(this);
+        mFoldersTree = new MFoldersTree(this);
 //        mFoldersTree.setFoldersTree(new File(System.getProperty("user.home")));
         mFoldersTree.setTree();
 //        pathLabel.setText(System.getProperty("user.home"));
@@ -95,7 +105,7 @@ public class MainWindow {
         return rowScrollPane;
     }
 
-    public JTree getFoldersTree(){
+    public JTree getFoldersTree() {
         return foldersTree;
     }
 
@@ -151,7 +161,25 @@ public class MainWindow {
         return mFoldersTree;
     }
 
+    public JTextPane getParseOutputPane() {
+        return parseOutputPane;
+    }
+
+    public JTextPane getExecuteOutputPane() {
+        return executeOutputPane;
+    }
+
     public static void main(String[] args) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         JFrame frame = new JFrame("MainWindow");
         frame.setContentPane(new MainWindow().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,4 +189,7 @@ public class MainWindow {
 
     }
 
+    public JTextPane[] getOutputPanes() {
+        return outputPanes;
+    }
 }

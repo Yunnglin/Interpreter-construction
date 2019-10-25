@@ -1,7 +1,7 @@
 package interpreter.lexer.token;
 
 
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 
 public class IntNum extends Token {
 

@@ -65,6 +65,8 @@ STMT:
     - DECLARE_STMT
   -
     - COMPOUND_STMT
+  -
+    - RETURN_STMT
 COMPOUND_STMT:
   -
     - L_BRACES
@@ -134,6 +136,9 @@ INITIALIZER_LIST:
     - EXPR
     - COMMA
     - INITIALIZER_LIST
+  -
+    - EXPR
+    - COMMA
 IF_STMT:
   -
     - IF
@@ -184,6 +189,11 @@ OTHER_ASSIGN:
     - INTEGER
     - R_SQUARE_BRACKETS
     - ASSIGN
+    - EXPR
+    - SEMICOLON
+RETURN_STMT:
+  -
+    - RETURN
     - EXPR
     - SEMICOLON
 EXPR:

@@ -1,4 +1,4 @@
-import interpreter.Const;
+import interpreter.grammar.TokenTag;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Hashtable;
 public class lexerTest {
     @Test
     public void except(){
-        InterpError ex = new SyntaxError("error!!!", 10);
+        InterpError ex = new SyntaxError("error!!!", 10, ErrorCode.UNEXPECTED_CHAR);
         System.out.println(ex.getMessage());
     }
 
@@ -74,6 +74,6 @@ public class lexerTest {
     @Test
     public void TokenTagTest() {
         String name = "IDENTIFIER";
-        System.out.println(Const.TokenTag.valueOf(name));
+        System.out.println(TokenTag.valueOf(name));
     }
 }

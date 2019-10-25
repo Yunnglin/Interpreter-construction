@@ -1,14 +1,18 @@
 package FrontEnd.parts;
 
+import FrontEnd.parts.conf.MWord;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
+
 /**
  * @author Kirill Grouchnikov
  */
@@ -17,6 +21,7 @@ public class FileTreePanel extends JPanel {
      * File system view.
      */
     protected static FileSystemView fsv = FileSystemView.getFileSystemView();
+
     /**
      * Renderer for the file tree.
      *
@@ -31,6 +36,7 @@ public class FileTreePanel extends JPanel {
          * Root name cache to speed the rendering.
          */
         private Map<File, String> rootNameCache = new HashMap<File, String>();
+
         /*
          * (non-Javadoc)
          *
@@ -72,6 +78,7 @@ public class FileTreePanel extends JPanel {
             return result;
         }
     }
+
     /**
      * A node in the file tree.
      *
@@ -106,33 +113,52 @@ public class FileTreePanel extends JPanel {
         /**
          * Creates a new file tree node.
          *
-         * @param file
-         * Node file
-         * @param isFileSystemRoot
-         * Indicates whether the file is a file system root.
-         * @param parent
-         * Parent node.
+         * @param file             Node file
+         * @param isFileSystemRoot Indicates whether the file is a file system root.
+         * @param parent           Parent node.
          */
         public FileTreeNode(File file, boolean isFileSystemRoot, TreeNode parent) {
             this.file = file;
             this.path = file.toString();
             this.isFileSystemRoot = isFileSystemRoot;
             this.parent = parent;
-            this.children = this.file.listFiles();
-            if (this.children == null)
+            File[] files = this.file.listFiles();
+
+            if (files == null) {
                 this.children = new File[0];
+                return;
+            }
+            //进行筛选
+            List<File> allowFiles = new ArrayList<>();
+            for (File curFile : files) {
+                if (checkFile(curFile))
+                    allowFiles.add(curFile);
+            }
+            this.children = new File[allowFiles.size()];
+            allowFiles.toArray(this.children);
         }
+
+        public boolean checkFile(File file) {
+            if (file.listFiles() != null) {
+                return true;
+            }
+            String fileName = file.getName();
+            String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+            //直接转化为列表，使用contains
+            return Arrays.asList(MWord.allowFiles).contains(suffix);
+        }
+
         /**
          * Creates a new file tree node.
          *
-         * @param children
-         * Children files.
+         * @param children Children files.
          */
         public FileTreeNode(File[] children) {
             this.file = null;
             this.parent = null;
             this.children = children;
         }
+
         /*
          * (non-Javadoc)
          *
@@ -142,6 +168,7 @@ public class FileTreePanel extends JPanel {
             final int elementCount = this.children.length;
             return new Enumeration<File>() {
                 int count = 0;
+
                 /*
                  * (non-Javadoc)
                  *
@@ -150,6 +177,7 @@ public class FileTreePanel extends JPanel {
                 public boolean hasMoreElements() {
                     return this.count < elementCount;
                 }
+
                 /*
                  * (non-Javadoc)
                  *
@@ -163,6 +191,7 @@ public class FileTreePanel extends JPanel {
                 }
             };
         }
+
         /*
          * (non-Javadoc)
          *
@@ -171,6 +200,7 @@ public class FileTreePanel extends JPanel {
         public boolean getAllowsChildren() {
             return true;
         }
+
         /*
          * (non-Javadoc)
          *
@@ -180,6 +210,7 @@ public class FileTreePanel extends JPanel {
             return new FileTreeNode(this.children[childIndex],
                     this.parent == null, this);
         }
+
         /*
          * (non-Javadoc)
          *
@@ -188,6 +219,7 @@ public class FileTreePanel extends JPanel {
         public int getChildCount() {
             return this.children.length;
         }
+
         /*
          * (non-Javadoc)
          *
@@ -201,6 +233,7 @@ public class FileTreePanel extends JPanel {
             }
             return -1;
         }
+
         /*
          * (non-Javadoc)
          *
@@ -209,6 +242,7 @@ public class FileTreePanel extends JPanel {
         public TreeNode getParent() {
             return this.parent;
         }
+
         /*
          * (non-Javadoc)
          *
@@ -218,10 +252,12 @@ public class FileTreePanel extends JPanel {
             return (this.getChildCount() == 0);
         }
     }
+
     /**
      * The file tree.
      */
     private JTree tree;
+
     /**
      * Creates the file tree panel.
      */
@@ -242,6 +278,7 @@ public class FileTreePanel extends JPanel {
         jsp.setBorder(new EmptyBorder(0, 0, 0, 0));
         this.add(jsp, BorderLayout.CENTER);
     }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

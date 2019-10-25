@@ -1,6 +1,4 @@
-package interpreter.utils.lalr;
-
-import interpreter.utils.lalr.GrammarSymbol;
+package interpreter.grammar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
