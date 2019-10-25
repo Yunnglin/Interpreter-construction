@@ -98,7 +98,8 @@ public class LALRState implements Serializable {
                 if (!basicSet.contains(newitem) && !extendSet.contains(newitem)) {
                     extendSet.add(newitem);
                     itemStack.push(newitem);
-                    // TODO remove redundant item that has greater look ahead set
+                    // remove redundants item that has greater look ahead set
+                    removeRedundantItems(newitem);
                 }
             }
         }
@@ -175,6 +176,25 @@ public class LALRState implements Serializable {
                 }
             }
         }
+    }
+
+    /**
+     * remove all redundant items that has a smaller lookahead set than new item
+     * @param newItem
+     */
+    private void removeRedundantItems(LRItem newItem) {
+        HashSet<LRItem> removeSet = new HashSet<>();
+        Iterator<LRItem> extIt = extendSet.iterator();
+        while(extIt.hasNext()) {
+            LRItem item = extIt.next();
+            if (newItem.covers(newItem)) {
+                removeSet.add(item);
+            } else if (item.covers(item)) {
+                removeSet.add(newItem);
+                break;
+            }
+        }
+        extendSet.removeAll(removeSet);
     }
 
     /**

@@ -21,7 +21,7 @@ public class LALRParseManager implements Serializable {
     /**
      * build the state machine
      */
-    public void runStateMachine() {
+    private void runStateMachine() {
         stateMachine = new LALRStateMachine();
     }
 

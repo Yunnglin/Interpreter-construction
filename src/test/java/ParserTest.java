@@ -81,13 +81,16 @@ public class ParserTest {
         System.out.println("hashSet(enum): " + set3.equals(set4));
         System.out.println("hash of hashSet(enum): " + (Objects.hash(set3) == Objects.hash(set4)));
         System.out.println("item: " + ((Object)item1).equals((Object) item2));
+
+        System.out.println(set1.removeAll(set2));
+        System.out.println("after remove" + set1);
     }
 
     @Test
     public void stateMachineTest() {
 //        System.out.println(System.getProperty("user.dir"));
         LALRParseManager parseManager = new LALRParseManager();
-        parseManager.runStateMachine();
+//        parseManager.runStateMachine();
         LALRStateMachine stateMachine = parseManager.getStateMachine();
         System.out.println(stateMachine.getTransitionTable().get(24));
     }
@@ -109,7 +112,7 @@ public class ParserTest {
     @Test
     public void serializeManager() {
         LALRParseManager manager = new LALRParseManager();
-        manager.runStateMachine();
+//        manager.runStateMachine();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream("src/main/res/LALRParserManagerInstance"));

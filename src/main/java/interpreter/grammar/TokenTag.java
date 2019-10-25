@@ -7,6 +7,7 @@ public enum TokenTag implements TerminalSymbol {
 
     // Reserved Words
     IF(1), ELSE(2), INT(3), WHILE(4), READ(5), WRITE(6), REAL(7),
+    RETURN(100),
 
     // Symbols
     SUM(8, "+"), SUB(9, "-"), MULTIPLY(10, "*"), DIVIDE(11, "/"),
@@ -26,7 +27,7 @@ public enum TokenTag implements TerminalSymbol {
     private int code;       // token tag(type code)
 
     private static final int FIRST_RESERVED_INDEX = IF.ordinal();
-    private static final int LAST_RESERVED_INDEX = REAL.ordinal();
+    private static final int LAST_RESERVED_INDEX = RETURN.ordinal();
 
     private static final int FIRST_SYMBOL_INDEX = SUM.ordinal();
     private static final int LAST_SYMBOL_INDEX = COMMA.ordinal();

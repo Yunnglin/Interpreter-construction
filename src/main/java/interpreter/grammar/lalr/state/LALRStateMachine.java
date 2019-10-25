@@ -35,6 +35,7 @@ public class LALRStateMachine implements Serializable {
         initialItems.add(startItem);
         states.add(new LALRState(initialItems));
 
+        // 构建初始 LALR(1) 状态机
         build();
     }
 
