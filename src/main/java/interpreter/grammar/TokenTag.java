@@ -14,7 +14,7 @@ public enum TokenTag implements TerminalSymbol {
     ASSIGN(12, "="), LESS_THAN(13, "<"), GREATER_THAN(14, ">"),
     EQ(15, "=="), NEQ(16, "<>"), L_PARENTHESES(17, "("),
     R_PARENTHESES(18, ")"), SEMICOLON(19, ";"), L_BRACES(20, "{"),
-    R_BRACES(21, ")"), LEQ(22, "<="), GEQ(23, ">="),
+    R_BRACES(21, "}"), LEQ(22, "<="), GEQ(23, ">="),
     L_SQUARE_BRACKETS(24, "["), R_SQUARE_BRACKETS(25, "]"), COMMA(26, ","),
 
     // Others
