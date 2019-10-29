@@ -182,24 +182,29 @@ PROG
 													SEMICOLON
 											STMT_LIST
 												STMT
-													WRITE_STMT
-														WRITE
-														EXPR
-															RELATIONAL_EXPR
-																SIMPLE_EXPR
-																	TERM
-																		FACTOR
-																			IDENTIFIER
-																			MORE_IDENTIFIER
-																		MORE_FACTOR
-																	MORE_TERM
-																RELATIONAL_EXPR_MORE
+													DECLARE_STMT
+														TYPE
+															INT
+														DECLARATOR_LIST
+															DECLARATOR
+																IDENTIFIER
+																INITIALIZER
+																	ASSIGN
+																	EXPR
+																		RELATIONAL_EXPR
+																			SIMPLE_EXPR
+																				TERM
+																					FACTOR
+																						NUMBER
+																							INTEGER
+																					MORE_FACTOR
+																				MORE_TERM
+																			RELATIONAL_EXPR_MORE
 														SEMICOLON
 												STMT_LIST
 													STMT
-														IF_STMT
-															IF
-															L_PARENTHESES
+														WRITE_STMT
+															WRITE
 															EXPR
 																RELATIONAL_EXPR
 																	SIMPLE_EXPR
@@ -210,61 +215,11 @@ PROG
 																			MORE_FACTOR
 																		MORE_TERM
 																	RELATIONAL_EXPR_MORE
-																		COMPARISON_OP
-																			EQ
-																		RELATIONAL_EXPR
-																			SIMPLE_EXPR
-																				TERM
-																					FACTOR
-																						NUMBER
-																							INTEGER
-																					MORE_FACTOR
-																				MORE_TERM
-																			RELATIONAL_EXPR_MORE
-															R_PARENTHESES
-															COMPOUND_STMT
-																L_BRACES
-																STMT_LIST
-																	STMT
-																		WRITE_STMT
-																			WRITE
-																			EXPR
-																				RELATIONAL_EXPR
-																					SIMPLE_EXPR
-																						TERM
-																							FACTOR
-																								IDENTIFIER
-																								MORE_IDENTIFIER
-																							MORE_FACTOR
-																						MORE_TERM
-																					RELATIONAL_EXPR_MORE
-																			SEMICOLON
-																R_BRACES
-															MORE_IF_ELSE
-																ELSE
-																ELSE_STMT
-																	COMPOUND_STMT
-																		L_BRACES
-																		STMT_LIST
-																			STMT
-																				WRITE_STMT
-																					WRITE
-																					EXPR
-																						RELATIONAL_EXPR
-																							SIMPLE_EXPR
-																								TERM
-																									FACTOR
-																										IDENTIFIER
-																										MORE_IDENTIFIER
-																									MORE_FACTOR
-																								MORE_TERM
-																							RELATIONAL_EXPR_MORE
-																					SEMICOLON
-																		R_BRACES
+															SEMICOLON
 													STMT_LIST
 														STMT
-															WHILE_STMT
-																WHILE
+															IF_STMT
+																IF
 																L_PARENTHESES
 																EXPR
 																	RELATIONAL_EXPR
@@ -277,7 +232,7 @@ PROG
 																			MORE_TERM
 																		RELATIONAL_EXPR_MORE
 																			COMPARISON_OP
-																				LESS_THAN
+																				EQ
 																			RELATIONAL_EXPR
 																				SIMPLE_EXPR
 																					TERM
@@ -305,12 +260,16 @@ PROG
 																							MORE_TERM
 																						RELATIONAL_EXPR_MORE
 																				SEMICOLON
-																		STMT_LIST
-																			STMT
-																				ASSIGN_STMT
-																					IDENTIFIER
-																					OTHER_ASSIGN
-																						ASSIGN
+																	R_BRACES
+																MORE_IF_ELSE
+																	ELSE
+																	ELSE_STMT
+																		COMPOUND_STMT
+																			L_BRACES
+																			STMT_LIST
+																				STMT
+																					WRITE_STMT
+																						WRITE
 																						EXPR
 																							RELATIONAL_EXPR
 																								SIMPLE_EXPR
@@ -320,21 +279,13 @@ PROG
 																											MORE_IDENTIFIER
 																										MORE_FACTOR
 																									MORE_TERM
-																										ADD_OP
-																											SUB
-																										TERM
-																											FACTOR
-																												NUMBER
-																													INTEGER
-																											MORE_FACTOR
-																										MORE_TERM
 																								RELATIONAL_EXPR_MORE
 																						SEMICOLON
-																	R_BRACES
+																			R_BRACES
 														STMT_LIST
 															STMT
-																IF_STMT
-																	IF
+																WHILE_STMT
+																	WHILE
 																	L_PARENTHESES
 																	EXPR
 																		RELATIONAL_EXPR
@@ -347,13 +298,13 @@ PROG
 																				MORE_TERM
 																			RELATIONAL_EXPR_MORE
 																				COMPARISON_OP
-																					EQ
+																					LESS_THAN
 																				RELATIONAL_EXPR
 																					SIMPLE_EXPR
 																						TERM
 																							FACTOR
-																								IDENTIFIER
-																								MORE_IDENTIFIER
+																								NUMBER
+																									INTEGER
 																							MORE_FACTOR
 																						MORE_TERM
 																					RELATIONAL_EXPR_MORE
@@ -362,35 +313,45 @@ PROG
 																		L_BRACES
 																		STMT_LIST
 																			STMT
-																				DECLARE_STMT
-																					TYPE
-																						INT
-																					DECLARATOR_LIST
-																						DECLARATOR
-																							IDENTIFIER
-																							INITIALIZER
-																								ASSIGN
-																								EXPR
-																									RELATIONAL_EXPR
-																										SIMPLE_EXPR
+																				WRITE_STMT
+																					WRITE
+																					EXPR
+																						RELATIONAL_EXPR
+																							SIMPLE_EXPR
+																								TERM
+																									FACTOR
+																										IDENTIFIER
+																										MORE_IDENTIFIER
+																									MORE_FACTOR
+																								MORE_TERM
+																							RELATIONAL_EXPR_MORE
+																					SEMICOLON
+																			STMT_LIST
+																				STMT
+																					ASSIGN_STMT
+																						IDENTIFIER
+																						OTHER_ASSIGN
+																							ASSIGN
+																							EXPR
+																								RELATIONAL_EXPR
+																									SIMPLE_EXPR
+																										TERM
+																											FACTOR
+																												IDENTIFIER
+																												MORE_IDENTIFIER
+																											MORE_FACTOR
+																										MORE_TERM
+																											ADD_OP
+																												SUB
 																											TERM
 																												FACTOR
-																													IDENTIFIER
-																													MORE_IDENTIFIER
+																													NUMBER
+																														INTEGER
 																												MORE_FACTOR
 																											MORE_TERM
-																												ADD_OP
-																													SUM
-																												TERM
-																													FACTOR
-																														IDENTIFIER
-																														MORE_IDENTIFIER
-																													MORE_FACTOR
-																												MORE_TERM
-																										RELATIONAL_EXPR_MORE
-																					SEMICOLON
+																									RELATIONAL_EXPR_MORE
+																							SEMICOLON
 																		R_BRACES
-																	MORE_IF_ELSE
 															STMT_LIST
 																STMT
 																	IF_STMT
@@ -407,7 +368,7 @@ PROG
 																					MORE_TERM
 																				RELATIONAL_EXPR_MORE
 																					COMPARISON_OP
-																						LESS_THAN
+																						EQ
 																					RELATIONAL_EXPR
 																						SIMPLE_EXPR
 																							TERM
@@ -440,7 +401,7 @@ PROG
 																													MORE_FACTOR
 																												MORE_TERM
 																													ADD_OP
-																														SUB
+																														SUM
 																													TERM
 																														FACTOR
 																															IDENTIFIER
@@ -467,7 +428,7 @@ PROG
 																						MORE_TERM
 																					RELATIONAL_EXPR_MORE
 																						COMPARISON_OP
-																							GREATER_THAN
+																							LESS_THAN
 																						RELATIONAL_EXPR
 																							SIMPLE_EXPR
 																								TERM
@@ -498,23 +459,505 @@ PROG
 																															IDENTIFIER
 																															MORE_IDENTIFIER
 																														MORE_FACTOR
-																															MUL_OP
-																																MULTIPLY
+																													MORE_TERM
+																														ADD_OP
+																															SUB
+																														TERM
 																															FACTOR
 																																IDENTIFIER
 																																MORE_IDENTIFIER
 																															MORE_FACTOR
-																													MORE_TERM
+																														MORE_TERM
 																												RELATIONAL_EXPR_MORE
 																							SEMICOLON
 																				R_BRACES
 																			MORE_IF_ELSE
-																				ELSE
-																				ELSE_STMT
-																					COMPOUND_STMT
-																						L_BRACES
-																						STMT_LIST
-																							STMT
+																	STMT_LIST
+																		STMT
+																			IF_STMT
+																				IF
+																				L_PARENTHESES
+																				EXPR
+																					RELATIONAL_EXPR
+																						SIMPLE_EXPR
+																							TERM
+																								FACTOR
+																									IDENTIFIER
+																									MORE_IDENTIFIER
+																								MORE_FACTOR
+																							MORE_TERM
+																						RELATIONAL_EXPR_MORE
+																							COMPARISON_OP
+																								GREATER_THAN
+																							RELATIONAL_EXPR
+																								SIMPLE_EXPR
+																									TERM
+																										FACTOR
+																											IDENTIFIER
+																											MORE_IDENTIFIER
+																										MORE_FACTOR
+																									MORE_TERM
+																								RELATIONAL_EXPR_MORE
+																				R_PARENTHESES
+																				COMPOUND_STMT
+																					L_BRACES
+																					STMT_LIST
+																						STMT
+																							DECLARE_STMT
+																								TYPE
+																									INT
+																								DECLARATOR_LIST
+																									DECLARATOR
+																										IDENTIFIER
+																										INITIALIZER
+																											ASSIGN
+																											EXPR
+																												RELATIONAL_EXPR
+																													SIMPLE_EXPR
+																														TERM
+																															FACTOR
+																																IDENTIFIER
+																																MORE_IDENTIFIER
+																															MORE_FACTOR
+																																MUL_OP
+																																	MULTIPLY
+																																FACTOR
+																																	IDENTIFIER
+																																	MORE_IDENTIFIER
+																																MORE_FACTOR
+																														MORE_TERM
+																													RELATIONAL_EXPR_MORE
+																								SEMICOLON
+																					R_BRACES
+																				MORE_IF_ELSE
+																					ELSE
+																					ELSE_STMT
+																						COMPOUND_STMT
+																							L_BRACES
+																							STMT_LIST
+																								STMT
+																									DECLARE_STMT
+																										TYPE
+																											INT
+																										DECLARATOR_LIST
+																											DECLARATOR
+																												IDENTIFIER
+																												INITIALIZER
+																													ASSIGN
+																													EXPR
+																														RELATIONAL_EXPR
+																															SIMPLE_EXPR
+																																TERM
+																																	FACTOR
+																																		IDENTIFIER
+																																		MORE_IDENTIFIER
+																																	MORE_FACTOR
+																																		MUL_OP
+																																			DIVIDE
+																																		FACTOR
+																																			IDENTIFIER
+																																			MORE_IDENTIFIER
+																																		MORE_FACTOR
+																																MORE_TERM
+																															RELATIONAL_EXPR_MORE
+																										SEMICOLON
+																							R_BRACES
+																		STMT_LIST
+																			STMT
+																				RETURN_STMT
+																					RETURN
+																					EXPR
+																						RELATIONAL_EXPR
+																							SIMPLE_EXPR
+																								TERM
+																									FACTOR
+																										NUMBER
+																											INTEGER
+																									MORE_FACTOR
+																								MORE_TERM
+																							RELATIONAL_EXPR_MORE
+																					SEMICOLON
+							R_BRACES
+				PROG
+					EXTERN_DECLARATION
+						DECLARE_STMT
+							TYPE
+								INT
+							DECLARATOR_LIST
+								DECLARATOR
+									IDENTIFIER
+									INITIALIZER
+										ASSIGN
+										EXPR
+											RELATIONAL_EXPR
+												SIMPLE_EXPR
+													TERM
+														FACTOR
+															NUMBER
+																INTEGER
+														MORE_FACTOR
+													MORE_TERM
+												RELATIONAL_EXPR_MORE
+							SEMICOLON
+					PROG
+						EXTERN_DECLARATION
+							DECLARE_STMT
+								TYPE
+									INT
+								DECLARATOR_LIST
+									DECLARATOR
+										IDENTIFIER
+										INITIALIZER
+											ASSIGN
+											EXPR
+												RELATIONAL_EXPR
+													SIMPLE_EXPR
+														TERM
+															FACTOR
+																NUMBER
+																	INTEGER
+															MORE_FACTOR
+														MORE_TERM
+													RELATIONAL_EXPR_MORE
+								SEMICOLON
+						PROG
+							EXTERN_DECLARATION
+								DECLARE_STMT
+									TYPE
+										INT
+									DECLARATOR_LIST
+										DECLARATOR
+											IDENTIFIER
+											INITIALIZER
+												ASSIGN
+												EXPR
+													RELATIONAL_EXPR
+														SIMPLE_EXPR
+															TERM
+																FACTOR
+																	NUMBER
+																		INTEGER
+																MORE_FACTOR
+															MORE_TERM
+														RELATIONAL_EXPR_MORE
+									SEMICOLON
+							PROG
+								EXTERN_DECLARATION
+									DECLARE_STMT
+										TYPE
+											INT
+										DECLARATOR_LIST
+											DECLARATOR
+												IDENTIFIER
+												INITIALIZER
+													ASSIGN
+													EXPR
+														RELATIONAL_EXPR
+															SIMPLE_EXPR
+																TERM
+																	FACTOR
+																		NUMBER
+																			INTEGER
+																	MORE_FACTOR
+																MORE_TERM
+															RELATIONAL_EXPR_MORE
+										SEMICOLON
+								PROG
+									EXTERN_DECLARATION
+										DECLARE_STMT
+											TYPE
+												INT
+											DECLARATOR_LIST
+												DECLARATOR
+													IDENTIFIER
+													INITIALIZER
+														ASSIGN
+														EXPR
+															RELATIONAL_EXPR
+																SIMPLE_EXPR
+																	TERM
+																		FACTOR
+																			NUMBER
+																				INTEGER
+																		MORE_FACTOR
+																	MORE_TERM
+																RELATIONAL_EXPR_MORE
+											SEMICOLON
+									PROG
+										EXTERN_DECLARATION
+											DECLARE_STMT
+												TYPE
+													INT
+												DECLARATOR_LIST
+													DECLARATOR
+														IDENTIFIER
+														INITIALIZER
+															ASSIGN
+															EXPR
+																RELATIONAL_EXPR
+																	SIMPLE_EXPR
+																		TERM
+																			FACTOR
+																				NUMBER
+																					INTEGER
+																			MORE_FACTOR
+																		MORE_TERM
+																	RELATIONAL_EXPR_MORE
+												SEMICOLON
+										PROG
+											EXTERN_DECLARATION
+												DECLARE_STMT
+													TYPE
+														INT
+													DECLARATOR_LIST
+														DECLARATOR
+															IDENTIFIER
+															INITIALIZER
+																ASSIGN
+																EXPR
+																	RELATIONAL_EXPR
+																		SIMPLE_EXPR
+																			TERM
+																				FACTOR
+																					NUMBER
+																						INTEGER
+																				MORE_FACTOR
+																			MORE_TERM
+																		RELATIONAL_EXPR_MORE
+													SEMICOLON
+											PROG
+												EXTERN_DECLARATION
+													DECLARE_STMT
+														TYPE
+															INT
+														DECLARATOR_LIST
+															DECLARATOR
+																IDENTIFIER
+																INITIALIZER
+																	ASSIGN
+																	EXPR
+																		RELATIONAL_EXPR
+																			SIMPLE_EXPR
+																				TERM
+																					FACTOR
+																						NUMBER
+																							INTEGER
+																					MORE_FACTOR
+																				MORE_TERM
+																			RELATIONAL_EXPR_MORE
+														SEMICOLON
+												PROG
+													EXTERN_DECLARATION
+														DECLARE_STMT
+															TYPE
+																INT
+															DECLARATOR_LIST
+																DECLARATOR
+																	IDENTIFIER
+																	INITIALIZER
+																		ASSIGN
+																		EXPR
+																			RELATIONAL_EXPR
+																				SIMPLE_EXPR
+																					TERM
+																						FACTOR
+																							NUMBER
+																								INTEGER
+																						MORE_FACTOR
+																					MORE_TERM
+																				RELATIONAL_EXPR_MORE
+															SEMICOLON
+													PROG
+														EXTERN_DECLARATION
+															DECLARE_STMT
+																TYPE
+																	INT
+																DECLARATOR_LIST
+																	DECLARATOR
+																		IDENTIFIER
+																		INITIALIZER
+																			ASSIGN
+																			EXPR
+																				RELATIONAL_EXPR
+																					SIMPLE_EXPR
+																						TERM
+																							FACTOR
+																								NUMBER
+																									INTEGER
+																							MORE_FACTOR
+																						MORE_TERM
+																					RELATIONAL_EXPR_MORE
+																SEMICOLON
+														PROG
+															EXTERN_DECLARATION
+																DECLARE_STMT
+																	TYPE
+																		INT
+																	DECLARATOR_LIST
+																		DECLARATOR
+																			IDENTIFIER
+																			INITIALIZER
+																				ASSIGN
+																				EXPR
+																					RELATIONAL_EXPR
+																						SIMPLE_EXPR
+																							TERM
+																								FACTOR
+																									NUMBER
+																										INTEGER
+																								MORE_FACTOR
+																							MORE_TERM
+																						RELATIONAL_EXPR_MORE
+																	SEMICOLON
+															PROG
+																EXTERN_DECLARATION
+																	DECLARE_STMT
+																		TYPE
+																			INT
+																		DECLARATOR_LIST
+																			DECLARATOR
+																				IDENTIFIER
+																				INITIALIZER
+																					ASSIGN
+																					EXPR
+																						RELATIONAL_EXPR
+																							SIMPLE_EXPR
+																								TERM
+																									FACTOR
+																										NUMBER
+																											INTEGER
+																									MORE_FACTOR
+																								MORE_TERM
+																							RELATIONAL_EXPR_MORE
+																		SEMICOLON
+																PROG
+																	EXTERN_DECLARATION
+																		DECLARE_STMT
+																			TYPE
+																				INT
+																			DECLARATOR_LIST
+																				DECLARATOR
+																					IDENTIFIER
+																					INITIALIZER
+																						ASSIGN
+																						EXPR
+																							RELATIONAL_EXPR
+																								SIMPLE_EXPR
+																									TERM
+																										FACTOR
+																											NUMBER
+																												INTEGER
+																										MORE_FACTOR
+																									MORE_TERM
+																								RELATIONAL_EXPR_MORE
+																			SEMICOLON
+																	PROG
+																		EXTERN_DECLARATION
+																			DECLARE_STMT
+																				TYPE
+																					INT
+																				DECLARATOR_LIST
+																					DECLARATOR
+																						IDENTIFIER
+																						INITIALIZER
+																							ASSIGN
+																							EXPR
+																								RELATIONAL_EXPR
+																									SIMPLE_EXPR
+																										TERM
+																											FACTOR
+																												NUMBER
+																													INTEGER
+																											MORE_FACTOR
+																										MORE_TERM
+																									RELATIONAL_EXPR_MORE
+																				SEMICOLON
+																		PROG
+																			EXTERN_DECLARATION
+																				DECLARE_STMT
+																					TYPE
+																						INT
+																					DECLARATOR_LIST
+																						DECLARATOR
+																							IDENTIFIER
+																							INITIALIZER
+																								ASSIGN
+																								EXPR
+																									RELATIONAL_EXPR
+																										SIMPLE_EXPR
+																											TERM
+																												FACTOR
+																													NUMBER
+																														INTEGER
+																												MORE_FACTOR
+																											MORE_TERM
+																										RELATIONAL_EXPR_MORE
+																					SEMICOLON
+																			PROG
+																				EXTERN_DECLARATION
+																					DECLARE_STMT
+																						TYPE
+																							INT
+																						DECLARATOR_LIST
+																							DECLARATOR
+																								IDENTIFIER
+																								INITIALIZER
+																									ASSIGN
+																									EXPR
+																										RELATIONAL_EXPR
+																											SIMPLE_EXPR
+																												TERM
+																													FACTOR
+																														NUMBER
+																															INTEGER
+																													MORE_FACTOR
+																												MORE_TERM
+																											RELATIONAL_EXPR_MORE
+																						SEMICOLON
+																				PROG
+																					EXTERN_DECLARATION
+																						DECLARE_STMT
+																							TYPE
+																								INT
+																							DECLARATOR_LIST
+																								DECLARATOR
+																									IDENTIFIER
+																									INITIALIZER
+																										ASSIGN
+																										EXPR
+																											RELATIONAL_EXPR
+																												SIMPLE_EXPR
+																													TERM
+																														FACTOR
+																															NUMBER
+																																INTEGER
+																														MORE_FACTOR
+																													MORE_TERM
+																												RELATIONAL_EXPR_MORE
+																							SEMICOLON
+																					PROG
+																						EXTERN_DECLARATION
+																							DECLARE_STMT
+																								TYPE
+																									INT
+																								DECLARATOR_LIST
+																									DECLARATOR
+																										IDENTIFIER
+																										INITIALIZER
+																											ASSIGN
+																											EXPR
+																												RELATIONAL_EXPR
+																													SIMPLE_EXPR
+																														TERM
+																															FACTOR
+																																NUMBER
+																																	INTEGER
+																															MORE_FACTOR
+																														MORE_TERM
+																													RELATIONAL_EXPR_MORE
+																								SEMICOLON
+																						PROG
+																							EXTERN_DECLARATION
 																								DECLARE_STMT
 																									TYPE
 																										INT
@@ -528,17 +971,93 @@ PROG
 																														SIMPLE_EXPR
 																															TERM
 																																FACTOR
-																																	IDENTIFIER
-																																	MORE_IDENTIFIER
+																																	NUMBER
+																																		INTEGER
 																																MORE_FACTOR
-																																	MUL_OP
-																																		DIVIDE
-																																	FACTOR
-																																		IDENTIFIER
-																																		MORE_IDENTIFIER
-																																	MORE_FACTOR
 																															MORE_TERM
 																														RELATIONAL_EXPR_MORE
 																									SEMICOLON
-																						R_BRACES
-							R_BRACES
+																							PROG
+																								EXTERN_DECLARATION
+																									DECLARE_STMT
+																										TYPE
+																											INT
+																										DECLARATOR_LIST
+																											DECLARATOR
+																												IDENTIFIER
+																												INITIALIZER
+																													ASSIGN
+																													EXPR
+																														RELATIONAL_EXPR
+																															SIMPLE_EXPR
+																																TERM
+																																	FACTOR
+																																		NUMBER
+																																			INTEGER
+																																	MORE_FACTOR
+																																MORE_TERM
+																															RELATIONAL_EXPR_MORE
+																										SEMICOLON
+																								PROG
+																									EXTERN_DECLARATION
+																										DECLARE_STMT
+																											TYPE
+																												INT
+																											DECLARATOR_LIST
+																												DECLARATOR
+																													IDENTIFIER
+																													INITIALIZER
+																														ASSIGN
+																														EXPR
+																															RELATIONAL_EXPR
+																																SIMPLE_EXPR
+																																	TERM
+																																		FACTOR
+																																			NUMBER
+																																				INTEGER
+																																		MORE_FACTOR
+																																	MORE_TERM
+																																RELATIONAL_EXPR_MORE
+																											SEMICOLON
+																									PROG
+																										EXTERN_DECLARATION
+																											DECLARE_STMT
+																												TYPE
+																													INT
+																												DECLARATOR_LIST
+																													DECLARATOR
+																														IDENTIFIER
+																														INITIALIZER
+																															ASSIGN
+																															EXPR
+																																RELATIONAL_EXPR
+																																	SIMPLE_EXPR
+																																		TERM
+																																			FACTOR
+																																				NUMBER
+																																					INTEGER
+																																			MORE_FACTOR
+																																		MORE_TERM
+																																	RELATIONAL_EXPR_MORE
+																												SEMICOLON
+																										PROG
+																											EXTERN_DECLARATION
+																												DECLARE_STMT
+																													TYPE
+																														INT
+																													DECLARATOR_LIST
+																														DECLARATOR
+																															IDENTIFIER
+																															INITIALIZER
+																																ASSIGN
+																																EXPR
+																																	RELATIONAL_EXPR
+																																		SIMPLE_EXPR
+																																			TERM
+																																				FACTOR
+																																					NUMBER
+																																						INTEGER
+																																				MORE_FACTOR
+																																			MORE_TERM
+																																		RELATIONAL_EXPR_MORE
+																													SEMICOLON

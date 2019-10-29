@@ -1,6 +1,7 @@
 package interpreter.intermediate.sym;
 
 import java.util.HashMap;
+import interpreter.intermediate.sym.SymTbl.SymTblKey;
 
 public class SymTblEntry {
 
@@ -14,5 +15,17 @@ public class SymTblEntry {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Object getValue(SymTblKey key) {
+        return this.valuesMap.get(key);
+    }
+
+    public Object addValue(SymTblKey key, Object value) {
+        return this.valuesMap.put(key, value);
     }
 }

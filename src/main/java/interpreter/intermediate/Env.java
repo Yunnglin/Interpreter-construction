@@ -12,6 +12,7 @@ public class Env {
 
     public Env() {
         symTblStack = new Stack<SymTbl>();
+        symTblStack.push(new SymTbl());
         curNestingLevel = 0;
     }
 
@@ -47,6 +48,10 @@ public class Env {
         }
 
         return null;
+    }
+
+    public SymTbl getCurScopeSymTbl() {
+        return this.symTblStack.get(curNestingLevel);
     }
 
 }

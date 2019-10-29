@@ -25,7 +25,7 @@ public class ExecutorFactory
         GrammarSymbol type=node.getSymbol();
         if (type==LALRNonterminalSymbol.EXPR)
         {
-            return new Expr();
+            return new Expr(env);
         }
 
         return null;

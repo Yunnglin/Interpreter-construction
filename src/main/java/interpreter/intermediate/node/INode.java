@@ -26,6 +26,10 @@ public class INode {
         return children;
     }
 
+    public INode getChild(int index) {
+        return this.children.get(index);
+    }
+
     public GrammarSymbol getSymbol() {
         return symbol;
     }
