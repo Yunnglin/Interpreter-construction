@@ -17,7 +17,7 @@ public class MSize {
     public static int frameHeight;
 
     //lineList
-    public static int lineCellHeight = (int)(MFont.codeFont.getSize()*1.2);
+    public static int lineCellHeight = MFont.codeFont.getSize()+3;
     public static int lineCellWidth = 40;
 
     static {

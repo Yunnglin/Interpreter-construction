@@ -1,14 +1,12 @@
-import interpreter.Const;
-import interpreter.exception.SyntaxError;
+import interpreter.grammar.TokenTag;
 import interpreter.lexer.Lexer;
-import interpreter.lexer.token.Token;
 import interpreter.parser.Parser;
-import interpreter.utils.lalr.GrammarSymbol;
-import interpreter.utils.lalr.LALRGrammar;
-import interpreter.utils.lalr.Production;
-import interpreter.utils.lalr.state.LALRParseManager;
-import interpreter.utils.lalr.state.LALRStateMachine;
-import interpreter.utils.lalr.state.LRItem;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.lalr.LALRGrammar;
+import interpreter.grammar.lalr.LALRNonterminalSymbol;
+import interpreter.grammar.lalr.state.LALRParseManager;
+import interpreter.grammar.lalr.state.LALRStateMachine;
+import interpreter.grammar.lalr.state.LRItem;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -45,7 +43,7 @@ public class ParserTest {
 
     @Test
     public void firstFollowSet() {
-        LALRGrammar grammar = new LALRGrammar("src/test/res/grammar.yaml");
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         HashMap<String, HashSet<String>> firstSets = grammar.getFirstSets();
         HashMap<String, HashSet<String>> followSets = grammar.getFollowSets();
         for (String key : firstSets.keySet()) {
@@ -65,15 +63,15 @@ public class ParserTest {
         HashSet<GrammarSymbol> set3 = new HashSet<>();
         HashSet<GrammarSymbol> set4 = new HashSet<>();
 
-        arr1.add(LALRGrammar.LALRNonterminalSymbol.PROG);
-        arr2.add(LALRGrammar.LALRNonterminalSymbol.PROG);
-        set3.add(Const.TokenTag.PROG_END);
-        set4.add(Const.TokenTag.PROG_END);
+        arr1.add(LALRNonterminalSymbol.PROG);
+        arr2.add(LALRNonterminalSymbol.PROG);
+        set3.add(TokenTag.PROG_END);
+        set4.add(TokenTag.PROG_END);
 
         LRItem item1 = new LRItem(0);
         LRItem item2 = new LRItem(0);
-        item1.getLookAheadSet().add(Const.TokenTag.PROG_END);
-        item2.getLookAheadSet().add(Const.TokenTag.PROG_END);
+        item1.getLookAheadSet().add(TokenTag.PROG_END);
+        item2.getLookAheadSet().add(TokenTag.PROG_END);
 
         set1.add(item1);
         set2.add(item2);
@@ -83,13 +81,16 @@ public class ParserTest {
         System.out.println("hashSet(enum): " + set3.equals(set4));
         System.out.println("hash of hashSet(enum): " + (Objects.hash(set3) == Objects.hash(set4)));
         System.out.println("item: " + ((Object)item1).equals((Object) item2));
+
+        System.out.println(set1.removeAll(set2));
+        System.out.println("after remove" + set1);
     }
 
     @Test
     public void stateMachineTest() {
 //        System.out.println(System.getProperty("user.dir"));
-        LALRParseManager parseManager = LALRParseManager.getInstance();
-        parseManager.runStateMachine();
+        LALRParseManager parseManager = new LALRParseManager();
+//        parseManager.runStateMachine();
         LALRStateMachine stateMachine = parseManager.getStateMachine();
         System.out.println(stateMachine.getTransitionTable().get(24));
     }
@@ -110,8 +111,8 @@ public class ParserTest {
 
     @Test
     public void serializeManager() {
-        LALRParseManager manager = LALRParseManager.getInstance();
-        manager.runStateMachine();
+        LALRParseManager manager = new LALRParseManager();
+//        manager.runStateMachine();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream("src/main/res/LALRParserManagerInstance"));

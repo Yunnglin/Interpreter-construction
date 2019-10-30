@@ -1,3 +1,6 @@
+import interpreter.grammar.lalr.LALRNonterminalSymbol;
+import interpreter.intermediate.node.INode;
+import interpreter.utils.List2Array;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,5 +13,25 @@ public class mylTest {
         List<String> lists = new ArrayList<>();
 
         System.out.println("hello");
+    }
+
+    @Test
+    public void test1(){
+        INode stlist1 = new INode(LALRNonterminalSymbol.STMT_LIST);
+        INode stlist2 = new INode(LALRNonterminalSymbol.STMT_LIST);
+        INode stlist3 = new INode(LALRNonterminalSymbol.STMT_LIST);
+        INode stmt1 = new INode(LALRNonterminalSymbol.STMT);
+        INode stmt2 = new INode(LALRNonterminalSymbol.STMT);
+        INode stmt3 = new INode(LALRNonterminalSymbol.STMT);
+        stlist1.addChild(stmt1);
+        stlist1.addChild(stlist2);
+        stlist2.addChild(stmt2);
+        stlist2.addChild(stlist3);
+        stlist3.addChild(stmt3);
+        ArrayList<INode> nodes = List2Array.getArray(stlist1);
+        for (INode node:nodes
+             ) {
+            System.out.println(node.getSymbol().getSelfText());
+        }
     }
 }

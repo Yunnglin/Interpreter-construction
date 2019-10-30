@@ -21,6 +21,7 @@ public class MWord {
     };
 
     public static final String[] reservedWords={
+            "read","write",
             "include","new","this",
             "switch","case","default","do","while","for","break","continue",
             "return","try","catch","private","protected","public","static","class","define",
@@ -31,5 +32,18 @@ public class MWord {
             "true",
             "false",
             "NULL"
+    };
+
+    public static final String[] allowFiles = {
+            "txt",
+            "cmm",
+            "py",
+            "java",
+            "c",
+            "cpp",
+            "html",
+            "css",
+            "js",
+            "h"
     };
 }

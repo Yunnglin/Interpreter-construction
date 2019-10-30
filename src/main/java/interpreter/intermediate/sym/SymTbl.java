@@ -5,11 +5,27 @@ import java.util.LinkedHashMap;
 public class SymTbl {
 
     public enum SymTblKey {
-
+        LINE, VALUE, TYPE, ARRAY_SIZE
     }
 
     private LinkedHashMap<String, SymTblEntry> entries;
     private int nestingLevel;
+
+    /**
+     * Constructor
+     * @param level nesting level
+     */
+    public SymTbl(int level) {
+        this.nestingLevel = level;
+        this.entries = new LinkedHashMap<>();
+    }
+
+    /**
+     * Constructor
+     */
+    public SymTbl() {
+        this.entries = new LinkedHashMap<>();
+    }
 
     /**
      * add an entry to the table
@@ -34,6 +50,14 @@ public class SymTbl {
      */
     public SymTblEntry find(String name) {
         return entries.get(name);
+    }
+
+    public int getNestingLevel() {
+        return this.nestingLevel;
+    }
+
+    public void setNestingLevel(int level) {
+        this.nestingLevel = level;
     }
 
 }

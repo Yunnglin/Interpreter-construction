@@ -1,0 +1,426 @@
+/**
+ * JJTree template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  STATIC = true;
+}
+
+PARSER_BEGIN(MyNewGrammar)
+package my;
+public class MyNewGrammar
+{
+  public static void main(String[] args) throws ParseException,TokenMgrError
+  {
+//    System.out.println("Reading from standard input...");
+//    new MyNewGrammar(System.in);
+//    SimpleNode n = MyNewGrammar.E();
+//    n.dump("");
+
+    System.out.println("Reading from standard input...");
+    new MyNewGrammar(System.in);
+    try
+    {
+      SimpleNode n = MyNewGrammar.E();
+      n.dump("");
+      System.out.println("Thank you.");
+    }
+    catch (Exception e)
+    {
+      System.out.println("Oops.");
+      System.out.println(e.getMessage());
+    }
+  }
+}
+
+PARSER_END(MyNewGrammar)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| < "//" (~[ "\n", "\r" ])*
+    (
+      "\n"
+    | "\r"
+    | "\r\n"
+    ) >
+| < "/*" (~[ "*" ])* "*"
+    (
+      ~[ "/" ] (~[ "*" ])* "*"
+    )*
+    "/" >
+}
+
+TOKEN :  /* Reserved Words */
+{
+  <IF: "if">
+	| <ELSE: "else">
+	| <INT: "int">
+	| <WHILE: "while">
+	| <READ: "read">
+	| <WRITE: "write">	
+	| <REAL: "real">
+	| <RETURN: "return">
+}
+
+TOKEN : /* Symbols */
+{
+  < SUM: "+" >
+	| < SUB: "-" >
+	| < MULTIPLY: "*" >
+	| < DIVIDE: "/" >
+	| < ASSIGN: "=" >
+	| < LESS_THAN: "< " >
+	| < GREATER_THAN: " >" >
+	| < EQ: "==" >
+	| < NEQ: "<>" >
+	| < L_PARENTHESES: "(" >
+	| < R_PARENTHESES: ")" >
+	| < SEMICOLON: ";" >
+	| < L_BRACES: " { " >
+	| < R_BRACES: " }" >
+	| < LEQ: "<=" >
+	| < GEQ: ">=" >
+	| < L_SQUARE_BRACKETS: "[" >
+	| < R_SQUARE_BRACKETS: "]" >
+	| < COMMA: "," >
+}
+
+TOKEN : /* REAL_NUMBER */
+{
+  <REAL_NUMBER:(<DIGIT>)+"."(<DIGIT>)+ >
+}
+
+TOKEN : /* INTEGER */
+{
+  <INTEGER :
+    <POSIT_DIGIT > (<DIGIT >)*
+    |"0">
+    | <#POSIT_DIGIT : [ "1"-"9" ] >
+}
+
+TOKEN : /*IDENTIFIER*/
+{
+	<IDENTIFIER:
+	<LETTER> (<LETTER> | <DIGIT>|"_")*>
+	| <#LETTER: ["a"-"z", "A"-"Z"]>
+	| <#DIGIT: ["0"-"9"]>
+}
+
+SimpleNode E() :
+{}
+{
+  PROG() "#"
+  {
+    return jjtThis;
+  }
+}
+
+void PROG() :
+{}
+{
+  EXTERN_DECLARATION()[PROG()]
+}
+
+void EXTERN_DECLARATION() :
+{}
+{
+
+  TYPE() SPEC_DECLARATION()
+}
+
+void SPEC_DECLARATION():
+{}
+{
+   LOOKAHEAD(2) DECLARATOR_LIST() <SEMICOLON>
+    |LOOKAHEAD(2) FUNC_DEFINITION()
+}
+
+void FUNC_DEFINITION() :
+{}
+{
+  POINTER_DECLARATOR() PARAMS() COMPOUND_STMT()
+}
+
+void POINTER_DECLARATOR():
+{}
+{
+    POINTER() <IDENTIFIER>
+    |<IDENTIFIER>
+}
+
+void POINTER():
+{}
+{
+    <MULTIPLY>[POINTER()]
+}
+
+void PARAMS():
+{}
+{
+
+    <L_PARENTHESES> [PARAM_LIST()]<R_PARENTHESES>
+}
+
+void PARAM_LIST() :
+{}
+{
+  PARAM_DECLARATION() [<COMMA> PARAM_LIST()]
+}
+  
+void PARAM_DECLARATION() :
+{}
+{
+    TYPE() <IDENTIFIER> [<L_SQUARE_BRACKETS> EXPR() <R_SQUARE_BRACKETS>]
+}
+
+//void ARRAY_PARAM():
+//{}
+//{
+//
+//}
+void STMT_LIST() :
+{}
+{
+    STMT() [STMT_LIST()]
+}
+
+void STMT() :
+{}
+{
+	IF_STMT()
+	| WHILE_STMT()
+	| READ_STMT()
+	| WRITE_STMT()
+	| ASSIGN_STMT()
+	| DECLARE_STMT()
+	| COMPOUND_STMT()
+	| RETURN_STMT()
+}
+
+void COMPOUND_STMT() :
+{}
+{
+  <L_BRACES> [STMT_LIST()] <R_BRACES>
+}
+
+void DECLARE_STMT() :
+{}
+{
+  TYPE() DECLARATOR_LIST() <SEMICOLON>
+}
+
+void DECLARATOR_LIST() :
+{}
+{
+    DECLARATOR() [<COMMA>  DECLARATOR_LIST()]
+}
+
+void TYPE() :
+{}
+{
+  <INT>
+	| <REAL>
+}
+
+void DECLARATOR() :
+{}
+{
+
+    POINTER_DECLARATOR() ARRAY_OR_VAR()
+}
+
+void ARRAY_OR_VAR():
+{}
+{
+    ARRAY_DECLARATOR()
+    |INITIALIZER()
+}
+
+void ARRAY_DECLARATOR():
+{}
+{
+LOOKAHEAD(2) FIXED_ARRAY() |LOOKAHEAD(2) VARIABLE_ARRAY()
+}
+
+void FIXED_ARRAY():
+{}
+{
+  <L_SQUARE_BRACKETS> EXPR() <R_SQUARE_BRACKETS> [INITIALIZER()]
+}
+
+void VARIABLE_ARRAY():
+{}
+{
+    <L_SQUARE_BRACKETS> <R_SQUARE_BRACKETS> INITIALIZER()
+}
+
+
+
+void INITIALIZER() :
+{}
+{
+    LOOKAHEAD(2) <ASSIGN > EXPR()
+	| LOOKAHEAD(2) <ASSIGN > <L_BRACES> INITIALIZER_LIST() <R_BRACES>
+}
+
+
+void INITIALIZER_LIST() :
+{}
+{
+    EXPR() [LOOKAHEAD(2) <COMMA> INITIALIZER() | <COMMA>]
+}
+
+void IF_STMT() :
+{}
+{
+
+    <IF> <L_PARENTHESES> EXPR() <R_PARENTHESES> COMPOUND_STMT() [ <ELSE> ELSE_STMT()]
+}
+
+//void MORE_IF_ELSE() :
+//{}
+//{
+//
+//	<ELSE> ELSE_STMT()
+//	/*NIL*/
+//}
+
+void ELSE_STMT() :
+{}
+{
+  IF_STMT()
+	| COMPOUND_STMT()
+}
+
+void WHILE_STMT() :
+{}
+{
+  <WHILE> <L_PARENTHESES> EXPR() <R_PARENTHESES> COMPOUND_STMT()
+}
+void READ_STMT() :
+{}
+{
+  <READ> <IDENTIFIER> <SEMICOLON>
+}
+
+void WRITE_STMT() :
+{}
+{
+  <WRITE> EXPR() <SEMICOLON>
+}
+
+void ASSIGN_STMT() :
+{}
+{
+  <IDENTIFIER> OTHER_ASSIGN()
+}
+
+void OTHER_ASSIGN() :
+{}
+{
+  < ASSIGN > EXPR() <SEMICOLON>
+	| <L_SQUARE_BRACKETS> <INTEGER> <R_SQUARE_BRACKETS> < ASSIGN > EXPR() <SEMICOLON>
+}
+
+void RETURN_STMT() :
+{}
+{
+  <RETURN> EXPR() <SEMICOLON>
+}
+
+void EXPR() :
+{}
+{
+  RELATIONAL_EXPR()
+}
+
+void RELATIONAL_EXPR() :
+{}
+{
+ SIMPLE_EXPR() [COMPARISON_OP() RELATIONAL_EXPR()]
+}
+
+//void RELATIONAL_EXPR_MORE() :
+//{}
+//{
+//  COMPARISON_OP() RELATIONAL_EXPR()
+//  /*NIL*/
+//}
+
+void COMPARISON_OP() :
+{}
+{
+  <LESS_THAN>
+	| <EQ>
+	| <NEQ>
+	| <GREATER_THAN>
+	| <LEQ>
+	| <GEQ>
+}
+
+void SIMPLE_EXPR() :
+{}
+{
+    TERM() (ADD_OP() TERM())*
+}
+
+//void MORE_TERM() :
+//{}
+//{
+//  /*NIL*/
+//	ADD_OP() TERM() MORE_TERM()
+//}
+
+void ADD_OP() :
+{}
+{
+  <SUM>
+	| <SUB>
+}
+
+void TERM() :
+{}
+{
+  FACTOR() (MUL_OP() FACTOR())*
+}
+
+//void MORE_FACTOR() :
+//{}
+//{
+//  /*NIL*/
+//	MUL_OP() FACTOR() MORE_FACTOR()
+//}
+
+void MUL_OP() :
+{}
+{
+  <MULTIPLY>
+	| < DIVIDE >
+}
+
+void FACTOR() :
+{}
+{
+
+     NUMBER()
+	| <SUB> NUMBER()
+	| <IDENTIFIER>[MORE_IDENTIFIER()]
+	| <L_PARENTHESES> EXPR() <R_PARENTHESES>
+}
+
+void MORE_IDENTIFIER() :
+{}
+{
+	<L_SQUARE_BRACKETS> <INTEGER> <R_SQUARE_BRACKETS>
+}
+
+void NUMBER() :
+{}
+{
+  <INTEGER>
+	| <REAL_NUMBER>
+}

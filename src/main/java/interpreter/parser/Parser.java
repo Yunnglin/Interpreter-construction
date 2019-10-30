@@ -1,7 +1,11 @@
 package interpreter.parser;
 
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 import interpreter.exception.SyntaxError;
+import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.NonterminalSymbol;
+import interpreter.grammar.Production;
+import interpreter.grammar.TerminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.node.INode.INodeKey;
 import interpreter.lexer.Lexer;
@@ -9,9 +13,9 @@ import interpreter.lexer.token.IntNum;
 import interpreter.lexer.token.Real;
 import interpreter.lexer.token.Token;
 import interpreter.lexer.token.Word;
-import interpreter.utils.lalr.*;
-import interpreter.utils.lalr.state.LALRParseManager;
-import interpreter.utils.lalr.state.LALRStateMachine;
+import interpreter.grammar.lalr.*;
+import interpreter.grammar.lalr.state.LALRParseManager;
+import interpreter.grammar.lalr.state.LALRStateMachine;
 import message.Message;
 import message.MessageListener;
 import message.MessageProducer;
@@ -43,12 +47,15 @@ public class Parser implements MessageProducer {
         this.handler.sendMessage(message);
     }
 
+    /**
+     * Constructor
+     * @param lexer the lexer that have not done lexing
+     */
     public Parser(Lexer lexer) {
         this.lexer = lexer;
         this.handler = new MessageHandler();
         if (update) {
-            this.parseManager = LALRParseManager.getInstance();
-            this.parseManager.runStateMachine();
+            this.parseManager = new LALRParseManager();
         } else {
             File file = new File("src/main/res/LALRParserManagerInstance");
             try {
@@ -64,6 +71,9 @@ public class Parser implements MessageProducer {
         }
     }
 
+    /**
+     * start lexing and parsing, and send the information to listeners
+     */
     public void parse() {
         try {
             // measure how much time lexer spent
@@ -74,7 +84,7 @@ public class Parser implements MessageProducer {
             // lexical part finished, sending summary message.
             float lexElapsedTime = (System.currentTimeMillis() - lexStartTime) / 1000f;
             Object[] lexMsgBody = new Object[] {lexElapsedTime, tokens};
-            handler.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
+            this.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
 
             // measure how much time parser spent
             long parseStartTime = System.currentTimeMillis();
@@ -82,20 +92,29 @@ public class Parser implements MessageProducer {
             INode root = parseTokens(tokens);
             float parseElapsedTime = (System.currentTimeMillis() - parseStartTime) / 1000f;
             Object[] parseMsgBody = new Object[] {parseElapsedTime, root};
-            handler.sendMessage(new Message(Message.MessageType.PARSER_SUMMARY, parseMsgBody));
+            this.sendMessage(new Message(Message.MessageType.PARSER_SUMMARY, parseMsgBody));
         } catch (IOException e) {
             Message errorMsg = new Message(Message.MessageType.IO_ERROR, e);
-            handler.sendMessage(errorMsg);
+            this.sendMessage(errorMsg);
             e.printStackTrace();
         } catch (SyntaxError syntaxError) {
             Message errorMsg = new Message(Message.MessageType.SYNTAX_ERROR, syntaxError);
-            handler.sendMessage(errorMsg);
+            this.sendMessage(errorMsg);
             syntaxError.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
+    /**
+     * do parsing
+     * @param tokens the token produced after lexing is done
+     * @return the root node of syntax tree
+     * @throws SyntaxError
+     */
     private INode parseTokens(ArrayList<Token> tokens) throws SyntaxError {
-        LALRGrammar grammar = parseManager.getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
         INode root = null;
 
         // prepare two stacks, one for symbols and the other for states
@@ -167,7 +186,7 @@ public class Parser implements MessageProducer {
                 int oldSymbolTop = symbolTop;
                 // stack pops items
                 for (int i=right.size()-1; i>=0; --i) {
-                    if (!right.get(i).equals(LALRGrammar.Nil.NIL)) {
+                    if (!right.get(i).equals(LALRGrammar.NIL)) {
                         if (!symbolStack.get(symbolTop).equals(right.get(i))) {
                             // there are some problems in the transition table
                             System.out.println("reduce: " + "An error escaped the check of transition table");
@@ -179,6 +198,11 @@ public class Parser implements MessageProducer {
                 for (int i=(symbolTop+1); i<=oldSymbolTop; ++i) {
                     newNode.addChild(curChildren.get(i-1));
                 }
+
+                // set attribute
+                newNode.setAttribute(INodeKey.LINE,
+                        newNode.hasChild() ? newNode.getChild(0).getAttribute(INodeKey.LINE) : 0);
+
                 // push the symbol into stack
                 Integer curState = stateStack.get(symbolTop);
                 Integer gotoId = parseManager.getAction(curState, left) - 1;
@@ -208,12 +232,17 @@ public class Parser implements MessageProducer {
         return root;
     }
 
+    /**
+     * when a syntax error occurred, get the expected type of tokens for current state
+     * @param curState the id of current state
+     * @return the list of expected tag of token
+     */
     private ArrayList<TokenTag> getExpectedTokenTag(Integer curState) {
         ArrayList<TokenTag> expected = new ArrayList<TokenTag>();
         LALRStateMachine stateMachine = parseManager.getStateMachine();
         ArrayList<HashMap<GrammarSymbol, Integer>> transitionTable = stateMachine.getTransitionTable();
         HashMap<GrammarSymbol, Integer> row = transitionTable.get(curState);
-        LALRGrammar grammar = parseManager.getGrammar();
+        LALRGrammar grammar = LALRGrammar.getGrammar();
 
         for (GrammarSymbol symbol : row.keySet()) {
             if (grammar.isTerminalSymbol(symbol.getSelfText())) {

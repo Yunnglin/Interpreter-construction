@@ -1,9 +1,9 @@
 package interpreter.intermediate.node;
 
-        import interpreter.utils.lalr.GrammarSymbol;
+import interpreter.grammar.GrammarSymbol;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class INode {
     public enum INodeKey {
@@ -24,6 +24,10 @@ public class INode {
 
     public ArrayList<INode> getChildren() {
         return children;
+    }
+
+    public INode getChild(int index) {
+        return this.children.get(index);
     }
 
     public GrammarSymbol getSymbol() {
@@ -55,24 +59,27 @@ public class INode {
         }
     }
 
-    public String getAllChild(){
+    public String getAllChild() {
         StringBuilder stringBuilder = new StringBuilder();
         ArrayList<INode> nodes = new ArrayList<>();
-        nodes.addAll(0,this.getChildren());
-        int depth=1;
-        while (true){
-            if(nodes.isEmpty())
+        nodes.addAll(0, this.getChildren());
+        while (true) {
+            if (nodes.isEmpty())
                 break;
             INode first = nodes.get(0);
             nodes.remove(0);
-            for (int i = 0; i <depth ; i++) {
+            int depth = first.getLevel()-1;
+            for (int i = 0; i < depth; i++) {
                 stringBuilder.append('\t');
             }
             stringBuilder.append(first.getSymbol().getSelfText()).append('\n');
-            nodes.addAll(0,first.getChildren());
-            depth++;
+            nodes.addAll(0, first.getChildren());
         }
         return stringBuilder.toString();
 
+    }
+
+    public boolean hasChild() {
+        return children.size() > 0;
     }
 }

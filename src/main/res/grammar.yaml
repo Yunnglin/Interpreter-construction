@@ -7,16 +7,40 @@ PROG:
   -
     - EXTERN_DECLARATION
     - PROG
+#PROG:
+#  -
+#    - EXTERN_DECLARATION
+#    - PROG_MORE
+#PROG_MORE:
+#  -
+#    - NIL
+#  -
+#    - PROG
 EXTERN_DECLARATION:
   -
     - DECLARE_STMT
   -
     - FUNC_DEFINITION
+#EXTERN_DECLARATION:
+#  -
+#    - TYPE
+#    - SPEC_DECLARATION
+#SPEC_DECLARATION:
+#  -
+#    - DECLARATOR_LIST
+#    - SEMICOLON
+#  -
+#    - FUNC_DEFINITION
 FUNC_DEFINITION:
   -
     - TYPE
     - FUNC_DECLARATOR
     - COMPOUND_STMT
+#FUNC_DEFINITION:
+#  -
+#    - POINTER_DECLARATOR
+#    - PARAMS
+#    - COMPOUND_STMT
 FUNC_DECLARATOR:
   -
     - IDENTIFIER
@@ -27,6 +51,26 @@ FUNC_DECLARATOR:
     - L_PARENTHESES
     - PARAM_LIST
     - R_PARENTHESES
+#POINTER_DECLARATOR:
+#  -
+#    - IDENTIFIER
+#  -
+#    - POINTER
+#    - IDENTIFIER
+#POINTER:
+#  -
+#    - MULTIPLY
+#  -
+#    - MULTIPLY
+#    - POINTER
+#PARAMS:
+#  -
+#    - L_PARENTHESES
+#    - R_PARENTHESES
+#  -
+#    - L_PARENTHESES
+#    - PARAM_LIST
+#    - R_PARENTHESES
 PARAM_LIST:
   -
     - PARAM_DECLARATION
@@ -44,6 +88,18 @@ PARAM_DECLARATION:
     - L_SQUARE_BRACKETS
     - EXPR
     - R_SQUARE_BRACKETS
+#PARAM_DECLARATION:
+#  -
+#    - TYPE
+#    - IDENTIFIER
+#    - ARRAY_PARAM
+#ARRAY_PARAM:
+#  -
+#    - L_SQUARE_BRACKETS
+#    - EXPR
+#    - R_SQUARE_BRACKETS
+#  -
+#    - NIL
 STMT_LIST:
   -
     - STMT
@@ -65,6 +121,10 @@ STMT:
     - DECLARE_STMT
   -
     - COMPOUND_STMT
+  -
+    - RETURN_STMT
+  -
+    - EXPR_STMT
 COMPOUND_STMT:
   -
     - L_BRACES
@@ -85,6 +145,16 @@ DECLARATOR_LIST:
     - DECLARATOR_LIST
   -
     - DECLARATOR
+#DECLARATOR_LIST:
+#  -
+#    - DECLARATOR
+#    - MORE_DECLARATOR
+#MORE_DECLARATOR:
+#  -
+#    - COMMA
+#    - DECLARATOR_LIST
+#  -
+#    - NIL
 TYPE:
   -
     - INT
@@ -112,6 +182,41 @@ DECLARATOR:
     - L_SQUARE_BRACKETS
     - R_SQUARE_BRACKETS
     - INITIALIZER
+#DECLARATOR:
+#  -
+#    - POINTER_DECLARATOR
+#    - ARRAY_OR_VAR
+#ARRAY_OR_VAR:
+#  -
+#    - ARRAY_DECLARATOR
+#  -
+#    - VAR_FURTHER
+#VAR_FURTHER:
+#  -
+#    - INITIALIZER
+#  -
+#    - NIL
+#ARRAY_DECLARATOR:
+#  -
+#    - FIXED_ARRAY
+#  -
+#    - VARIABLE_ARRAY
+#FIXED_ARRAY:
+#  -
+#    - L_SQUARE_BRACKETS
+#    - EXPR
+#    - R_SQUARE_BRACKETS
+#    - NULLABLE_INITIALIZER
+#NULLABLE_INITIALIZER:
+#  -
+#    - NIL
+#  -
+#    - INITIALIZER
+#VARIABLE_ARRAY:
+#  -
+#    - L_SQUARE_BRACKETS
+#    - R_SQUARE_BRACKETS
+#    - INITIALIZER
 INITIALIZER:
   -
     - ASSIGN
@@ -121,12 +226,12 @@ INITIALIZER:
     - L_BRACES
     - INITIALIZER_LIST
     - R_BRACES
-  -
-    - ASSIGN
-    - L_BRACES
-    - INITIALIZER_LIST
-    - COMMA
-    - R_BRACES
+#  -
+#    - ASSIGN
+#    - L_BRACES
+#    - INITIALIZER_LIST
+#    - COMMA
+#    - R_BRACES
 INITIALIZER_LIST:
   -
     - EXPR
@@ -134,6 +239,21 @@ INITIALIZER_LIST:
     - EXPR
     - COMMA
     - INITIALIZER_LIST
+  -
+    - EXPR
+    - COMMA
+#INITIALIZER_LIST:
+#  -
+#    - EXPR
+#    - MORE_INITIALIZER
+#MORE_INITIALIZER:
+#  -
+#    - COMMA
+#    - INITIALIZER_LIST
+#  -
+#    - COMMA
+#  -
+#    - NIL
 IF_STMT:
   -
     - IF
@@ -150,9 +270,7 @@ MORE_IF_ELSE:
     - ELSE_STMT
 ELSE_STMT:
   -
-    - IF
-    - COMPOUND_STMT
-    - MORE_IF_ELSE
+    - IF_STMT
   -
     - COMPOUND_STMT
 WHILE_STMT:
@@ -183,10 +301,18 @@ OTHER_ASSIGN:
     - SEMICOLON
   -
     - L_SQUARE_BRACKETS
-    - INTEGER
+    - EXPR
     - R_SQUARE_BRACKETS
     - ASSIGN
     - EXPR
+    - SEMICOLON
+RETURN_STMT:
+  -
+    - RETURN
+    - EXPR
+    - SEMICOLON
+  -
+    - RETURN
     - SEMICOLON
 EXPR:
   -
@@ -200,7 +326,8 @@ RELATIONAL_EXPR_MORE:
     - NIL
   -
     - COMPARISON_OP
-    - RELATIONAL_EXPR
+    - SIMPLE_EXPR
+    - RELATIONAL_EXPR_MORE
 COMPARISON_OP:
   -
     - LESS_THAN
@@ -251,7 +378,7 @@ FACTOR:
     - NUMBER
   -
     - SUB
-    - NUMBER
+    - FACTOR
   -
     - IDENTIFIER
     - MORE_IDENTIFIER
@@ -264,11 +391,29 @@ MORE_IDENTIFIER:
     - NIL
   -
     - L_SQUARE_BRACKETS
-    - INTEGER
+    - EXPR
     - R_SQUARE_BRACKETS
+  -
+    - L_PARENTHESES
+    - R_PARENTHESES
+  -
+    - L_PARENTHESES
+    - PARAM_VALUES
+    - R_PARENTHESES
+PARAM_VALUES:
+  -
+    - EXPR
+  -
+    - EXPR
+    - COMMA
+    - PARAM_VALUES
 NUMBER:
   -
     - INTEGER
   -
     - REAL_NUMBER
+EXPR_STMT:
+  -
+    - EXPR
+    - SEMICOLON
 

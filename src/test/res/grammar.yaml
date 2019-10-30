@@ -121,12 +121,12 @@ INITIALIZER:
     - L_BRACES
     - INITIALIZER_LIST
     - R_BRACES
-  -
-    - ASSIGN
-    - L_BRACES
-    - INITIALIZER_LIST
-    - COMMA
-    - R_BRACES
+#  -
+#    - ASSIGN
+#    - L_BRACES
+#    - INITIALIZER_LIST
+#    - COMMA
+#    - R_BRACES
 INITIALIZER_LIST:
   -
     - EXPR

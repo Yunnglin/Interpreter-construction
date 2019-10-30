@@ -1,6 +1,6 @@
 package interpreter.lexer.token;
 
-import interpreter.Const.TokenTag;
+import interpreter.grammar.TokenTag;
 
 public class Token {
 
@@ -21,7 +21,7 @@ public class Token {
     }
 
     public String getTagText() {
-        return tag.getSelfText();
+        return tag.getText();
     }
 
     public void setTag(TokenTag tag) {

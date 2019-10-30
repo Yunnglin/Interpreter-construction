@@ -7,7 +7,8 @@ int main()
     //顺序结构（赋值语句、输入read、输出write）
     int a = 3;
     int b = 4;
-    //int c[3]={1,1,1};
+    int c[4]={1,1,1,};
+    int ca[] = { 1, 2, 3,};
     read a;
     write b;
 
@@ -27,12 +28,15 @@ int main()
     //关系表达式+算术表达式
     if(a==b){
         int addition=a+b;
-    }else if(a<b){
+    }
+    if(a<b){
         int subtraction=b-a;
-    }else if(a>b){
+    }
+    if(a>b){
         int multiplication=a*b;
     }else{
         int division=b/a;
     }
 
+    return 0;
 }
