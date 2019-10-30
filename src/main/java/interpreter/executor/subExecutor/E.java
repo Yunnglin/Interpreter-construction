@@ -4,7 +4,7 @@ import interpreter.executor.BaseExecutor;
 import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
-import interpreter.intermediate.Env;
+import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 
 public class E extends BaseExecutor {

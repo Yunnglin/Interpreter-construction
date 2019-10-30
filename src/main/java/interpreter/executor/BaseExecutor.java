@@ -1,9 +1,9 @@
 package interpreter.executor;
 
-import interpreter.exception.SemanticError;
-import interpreter.intermediate.Env;
+import interpreter.env.Env;
 import interpreter.intermediate.node.INode.INodeKey;
 import interpreter.intermediate.node.INode;
+import message.Message;
 
 public abstract class BaseExecutor implements Executor {
 
@@ -35,6 +35,10 @@ public abstract class BaseExecutor implements Executor {
     protected Executor getSpecExecutor(INode node) {
         ExecutorFactory executorFactory = ExecutorFactory.getExecutorFactory();
         return executorFactory.getExecutor(node, env);
+    }
+
+    protected void postMessage(Message message) {
+        env.sendMessage(message);
     }
 
 }

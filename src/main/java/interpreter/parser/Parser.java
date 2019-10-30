@@ -84,7 +84,7 @@ public class Parser implements MessageProducer {
             // lexical part finished, sending summary message.
             float lexElapsedTime = (System.currentTimeMillis() - lexStartTime) / 1000f;
             Object[] lexMsgBody = new Object[] {lexElapsedTime, tokens};
-            handler.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
+            this.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
 
             // measure how much time parser spent
             long parseStartTime = System.currentTimeMillis();
@@ -92,15 +92,18 @@ public class Parser implements MessageProducer {
             INode root = parseTokens(tokens);
             float parseElapsedTime = (System.currentTimeMillis() - parseStartTime) / 1000f;
             Object[] parseMsgBody = new Object[] {parseElapsedTime, root};
-            handler.sendMessage(new Message(Message.MessageType.PARSER_SUMMARY, parseMsgBody));
+            this.sendMessage(new Message(Message.MessageType.PARSER_SUMMARY, parseMsgBody));
         } catch (IOException e) {
             Message errorMsg = new Message(Message.MessageType.IO_ERROR, e);
-            handler.sendMessage(errorMsg);
+            this.sendMessage(errorMsg);
             e.printStackTrace();
         } catch (SyntaxError syntaxError) {
             Message errorMsg = new Message(Message.MessageType.SYNTAX_ERROR, syntaxError);
-            handler.sendMessage(errorMsg);
+            this.sendMessage(errorMsg);
             syntaxError.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e);
+            e.printStackTrace();
         }
     }
 

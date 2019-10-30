@@ -1,11 +1,10 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
-import FrontEnd.parts.Utils.GUIPrintStream;
 import interpreter.exception.SyntaxError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.subExecutor.E;
-import interpreter.intermediate.Env;
+import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;

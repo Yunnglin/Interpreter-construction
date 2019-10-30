@@ -1,5 +1,7 @@
 package interpreter.exception;
 
+import interpreter.intermediate.type.DataType;
+
 public class SemanticError extends InterpError {
 
     public SemanticError(String msg, int line, ErrorCode code) {
@@ -16,6 +18,11 @@ public class SemanticError extends InterpError {
         return this.getMessage();
     }
 
+    private static String getTypeDesc(DataType type) {
+        return "'" + type.getBasicType().toString() + "' " +
+                type.getForm().toString();
+    }
+
     public static SemanticError newDupDeclareError(String lex, int newline, int oldline) {
         return new SemanticError("DUPLICATE DECLARATION FOR '" +
                 lex + "' AT LINE " + oldline, newline, ErrorCode.DUP_DECLARATION);
@@ -29,5 +36,16 @@ public class SemanticError extends InterpError {
     public static SemanticError newNonIntegerArraySizeError(String lex, int line) {
         return new SemanticError("SIZE OF ARRAY '" + lex + "' HAS NON-INTEGER TYPE",
                 line, ErrorCode.NON_INTEGER_ARRAY_SIZE);
+    }
+
+    public static SemanticError newInvalidInitializerError(DataType target, String lex, int line) {
+        return new SemanticError(target.getForm().toString() + " '" + lex + "' HAS INVALID INITIALIZER",
+                line, ErrorCode.INVALID_INITIALIZER);
+    }
+
+    public static SemanticError newInitialIncompatibleTypeError(DataType target, DataType value, int line) {
+        return new SemanticError("TYPE " + SemanticError.getTypeDesc(target) +
+                "AND TYPE " + SemanticError.getTypeDesc(value) +
+                "ARE INCOMPATIBLE WHEN INITIALIZING", line, ErrorCode.INITIAL_INCOMPATIBLE_TYPE);
     }
 }

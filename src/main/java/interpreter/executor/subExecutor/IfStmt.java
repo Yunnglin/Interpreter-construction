@@ -2,7 +2,7 @@ package interpreter.executor.subExecutor;
 
 import interpreter.executor.BaseExecutor;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
-import interpreter.intermediate.Env;
+import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 
 public class IfStmt extends BaseExecutor {

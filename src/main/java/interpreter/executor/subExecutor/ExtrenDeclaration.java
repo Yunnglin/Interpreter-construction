@@ -1,7 +1,7 @@
 package interpreter.executor.subExecutor;
 
 import interpreter.executor.BaseExecutor;
-import interpreter.intermediate.Env;
+import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 
 public class ExtrenDeclaration extends BaseExecutor {

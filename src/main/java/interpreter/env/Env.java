@@ -1,22 +1,28 @@
-package interpreter.intermediate;
+package interpreter.env;
 
+import message.Message;
+import message.MessageHandler;
 import interpreter.intermediate.sym.SymTbl;
 import interpreter.intermediate.sym.SymTblEntry;
 import interpreter.intermediate.type.BasicType;
 import interpreter.intermediate.type.DataType;
 import interpreter.intermediate.type.TypeForm;
+import message.MessageListener;
+import message.MessageProducer;
 
 import java.util.Stack;
 
-public class Env {
+public class Env implements MessageProducer {
 
     private Stack<SymTbl> symTblStack;
     private int curNestingLevel;
+    private MessageHandler ioHandler;
 
     public Env() {
         symTblStack = new Stack<SymTbl>();
         curNestingLevel = 0;
         symTblStack.push(new SymTbl(curNestingLevel));
+        ioHandler = new MessageHandler();
     }
 
     /**
@@ -112,6 +118,21 @@ public class Env {
         }
 
         return false;
+    }
+
+    @Override
+    public void addMessageListener(MessageListener listener) {
+        this.ioHandler.addListener(listener);
+    }
+
+    @Override
+    public void removeMessageListener(MessageListener listener) {
+        this.ioHandler.removeListener(listener);
+    }
+
+    @Override
+    public void sendMessage(Message message) {
+        this.ioHandler.sendMessage(message);
     }
 
 //    public DataType str2DataType(String type) {

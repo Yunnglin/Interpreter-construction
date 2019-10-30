@@ -2,7 +2,7 @@ package interpreter.executor;
 import interpreter.executor.subExecutor.*;
 import interpreter.grammar.GrammarSymbol;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
-import interpreter.intermediate.Env;
+import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 public class ExecutorFactory
 {
