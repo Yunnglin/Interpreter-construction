@@ -285,6 +285,12 @@ READ_STMT:
     - READ
     - IDENTIFIER
     - SEMICOLON
+  -
+    - READ
+    - IDENTIFIER
+    - L_SQUARE_BRACKETS
+    - EXPR
+    - R_SQUARE_BRACKETS
 WRITE_STMT:
   -
     - WRITE

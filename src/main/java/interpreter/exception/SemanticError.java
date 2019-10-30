@@ -48,4 +48,18 @@ public class SemanticError extends InterpError {
                 "AND TYPE " + SemanticError.getTypeDesc(value) +
                 "ARE INCOMPATIBLE WHEN INITIALIZING", line, ErrorCode.INITIAL_INCOMPATIBLE_TYPE);
     }
+
+    public static SemanticError newSymbolUndeclaredError(String lex, int line) {
+        return new SemanticError("'" + lex + "' UNDECLARED", line, ErrorCode.SYMBOL_UNDECLARED);
+    }
+
+    public static SemanticError newReadWrongTypeError(DataType wrong, int line) {
+        return new SemanticError("READ REQUIRED A SCALAR BUT GET A " +
+                SemanticError.getTypeDesc(wrong), line, ErrorCode.READ_WRONG_TYPE);
+    }
+
+    public static SemanticError newWrongSubscriptedType(DataType wrong, int line) {
+        return new SemanticError("WRONG TYPE OF SUBSCRIPTED VALUE " +
+                SemanticError.getTypeDesc(wrong), line, ErrorCode.WRONG_SUBSCRIPTED_TYPE);
+    }
 }

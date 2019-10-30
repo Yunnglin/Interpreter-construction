@@ -25,7 +25,8 @@ public class DeclareStmt extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.DECLARE_STMT)) {
-            throw new Exception("parse error in declare stmt");
+            throw new Exception("parse error in declare stmt at line " +
+                    root.getAttribute(INodeKey.LINE));
         }
         INode type = root.getChild(0);
         INode declaratorList = root.getChild(1);

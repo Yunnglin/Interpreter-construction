@@ -15,7 +15,8 @@ public class Expr extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.EXPR)) {
-            System.out.println("parse error in expression");
+            System.out.println("parse error in expression at line " +
+                    root.getAttribute(INode.INodeKey.LINE));
             return null;
         }
 
@@ -48,7 +49,6 @@ public class Expr extends BaseExecutor {
 
             return left;
         } else if (nodeSymbol.equals(LALRNonterminalSymbol.FACTOR)) {
-
         }
 
         throw new Exception("Unknown expression");
