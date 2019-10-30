@@ -127,28 +127,56 @@ public class DeclareStmt extends BaseExecutor {
                     throw SemanticError.newInvalidInitializerError(entryType, entry.getName(),
                             (Integer) initializer.getAttribute(INodeKey.LINE));
                 }
-                if (env.initializeCompatible(entryType, exprType)) {
+                if (!env.initializeCompatible(entryType, exprType)) {
                     // incompatible type
                     throw SemanticError.newInitialIncompatibleTypeError(entryType, exprType,
                             (Integer) initializer.getAttribute(INodeKey.LINE));
                 }
 
-                // TODO set the value column
-                // entry.addValue(SymTblKey.VALUE, exprValue);
+                //  set the value column
+                entry.addValue(SymTblKey.VALUE, exprValue);
             } else {
                 INode initList = children.get(2);
                 ArrayList<INode> exprArr = List2Array.getArray(initList);
 
-                for (INode expr : exprArr) {
-                    Object[] exprValue = (Object[]) executeNode(expr);
+                if (!entryType.getForm().equals(TypeForm.ARRAY)) {
+                    // invalid initializer
+                    throw SemanticError.newInvalidInitializerError(entryType, entry.getName(),
+                            (Integer) initializer.getAttribute(INodeKey.LINE));
                 }
 
-                // TODO semantic error
-//                if (entry.getValue(SymTblKey.FORM) != TypeForm.ARRAY) {
-//                    // invalid initializer
-//                }
-                // mismatch type
-                // invalid initializer due to wrong size array initial value
+                // initialize array
+                DataType eleType = new DataType(entryType.getBasicType(), TypeForm.SCALAR);
+                ArrayList<Object> values = new ArrayList<>();
+                for (INode expr : exprArr) {
+                    Object[] exprValues = (Object[]) executeNode(expr);
+                    DataType exprType = (DataType) exprValues[0];
+                    Object exprValue = exprValues[1];
+                    if (!env.initializeCompatible(eleType, exprType)) {
+                        // the element type is not compatible
+                        throw SemanticError.newInitialIncompatibleTypeError(eleType, exprType,
+                                (Integer) expr.getAttribute(INodeKey.LINE));
+                    }
+                    values.add(exprValue);
+                }
+
+                // check size the declarator is size-fixed
+                Object size = entry.getValue(SymTblKey.ARRAY_SIZE);
+                if (size != null) {
+                    if ((Integer) size < values.size()) {
+                        // the size of initial values greater
+                        // TODO WARNING ?
+                    }
+
+                    Object[] array = new Object[(Integer) size];
+                    for (int i=0; i<values.size() && i<array.length; ++i) {
+                        array[i] = values.get(i);
+                    }
+                    entry.addValue(SymTblKey.VALUE, array);
+                } else {
+                    entry.addValue(SymTblKey.ARRAY_SIZE, values.size());
+                    entry.addValue(SymTblKey.VALUE, values.toArray());
+                }
             }
         }
     }
