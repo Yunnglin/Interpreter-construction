@@ -8,7 +8,7 @@ public class SemanticError extends InterpError {
 
     @Override
     public String getMessage() {
-        return "Semantic Error (" + getCode() + ") at line "+this.getLine()+": "+this.getInnerMsg();
+        return "Semantic error (" + getCode() + ") at line "+this.getLine()+": "+this.getInnerMsg();
     }
 
     @Override

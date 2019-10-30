@@ -36,6 +36,9 @@ public class DeclareStmt extends BaseExecutor {
         String typeName = (String) type.getChild(0).getAttribute(INodeKey.NAME);
         ArrayList<INode> declarators = List2Array.getArray(declaratorList);
 
+        for (INode declarator : declarators) {
+            declare(typeName, declarator);
+        }
 
         return null;
     }

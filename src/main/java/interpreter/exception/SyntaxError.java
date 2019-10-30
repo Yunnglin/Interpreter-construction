@@ -16,7 +16,7 @@ public class SyntaxError extends InterpError {
 
     @Override
     public String getMessage() {
-        return "Syntax Error (" + getCode() + ") at line "+this.getLine()+": "+this.getInnerMsg();
+        return "Syntax error (" + getCode() + ") at line "+this.getLine()+": "+this.getInnerMsg();
     }
 
     @Override

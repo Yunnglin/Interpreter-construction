@@ -12,8 +12,8 @@ public class Env {
 
     public Env() {
         symTblStack = new Stack<SymTbl>();
-        symTblStack.push(new SymTbl());
         curNestingLevel = 0;
+        symTblStack.push(new SymTbl(curNestingLevel));
     }
 
     /**
@@ -23,6 +23,7 @@ public class Env {
     public void pushSymTbl(SymTbl table) {
         symTblStack.push(table);
         curNestingLevel++;
+        table.setNestingLevel(curNestingLevel);
     }
 
     /**

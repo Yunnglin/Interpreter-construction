@@ -9,7 +9,12 @@ public enum ErrorCode {
     UNEXPECTED_TOKEN(2001), MISSING_TOKEN(2002),
 
     // semantic part
-    DUP_DECLARATION(3001);
+    DUP_DECLARATION(3001),
+
+    // execution part
+    DIV_BY_ZERO(4001)
+
+    ;
 
     private int code;
 
