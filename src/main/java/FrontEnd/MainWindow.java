@@ -1,10 +1,11 @@
 package FrontEnd;
 
 import FrontEnd.parts.*;
+import FrontEnd.parts.Utils.GUIPrintStream;
 
 import javax.swing.*;
 
-@SuppressWarnings("ALL")
+
 public class MainWindow {
     private JPanel mainPanel;
     private JButton fileButton;
@@ -13,7 +14,7 @@ public class MainWindow {
     private JTree foldersTree;
     private JButton lexerBtn;
     private JButton parserBtn;
-    private JButton complainBtn;
+    private JButton executeBtn;
     private JLabel path1;
     private JLabel pathLabel;
     private JPanel inputPanel;
@@ -78,6 +79,11 @@ public class MainWindow {
 //        pathLabel.setText(System.getProperty("user.home"));
         foldersTree = mFoldersTree.getTree();
         splitTreeEdit.setLeftComponent(new JScrollPane(foldersTree));
+
+        //输出重定向
+        GUIPrintStream.setMainWindow(this);
+//        System.setOut(GUIPrintStream.getPrintStream());
+//        System.out.println("Hello");
     }
 
 
@@ -129,8 +135,8 @@ public class MainWindow {
         return fileButton;
     }
 
-    public JButton getComplainBtn() {
-        return complainBtn;
+    public JButton getExecuteBtn() {
+        return executeBtn;
     }
 
     public MPopMenu getmPopMenu() {

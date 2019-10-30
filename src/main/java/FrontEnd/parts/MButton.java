@@ -1,7 +1,11 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
+import FrontEnd.parts.Utils.GUIPrintStream;
 import interpreter.exception.SyntaxError;
+import interpreter.executor.BaseExecutor;
+import interpreter.executor.subExecutor.E;
+import interpreter.intermediate.Env;
 import interpreter.intermediate.node.INode;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
@@ -27,6 +31,7 @@ public class MButton {
         setFileButton(mainWindow.getFileButton());
         setLexerButton(mainWindow.getLexerBtn());
         setParserButton(mainWindow.getParserBtn());
+        setExecuteButton(mainWindow.getExecuteBtn());
     }
 
     private void setFileButton(JButton button) {
@@ -97,10 +102,42 @@ public class MButton {
         }).start());
     }
 
+    private void setExecuteButton(JButton button) {
+        button.addActionListener(e -> new Thread(() -> {
+            if(mainWindow.getEditPane().getText().isEmpty())
+                return;
+            if(!mainWindow.getFileOperation().save())//保存
+                return;
+            String path = mainWindow.getPathLabel().getText();
+            //initialize a lexer
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
+                Lexer lex = new Lexer(reader);
+                Parser myParser = new Parser(lex);
+                myParser.addMessageListener(new ParserMessageListener());
+                mainWindow.getFileOperation().setOutputEmpty();
+                myParser.parse();
+            } catch (IOException e1) {
+                mainWindow.getOutputPane().setText(e1.getMessage());
+                e1.printStackTrace();
+            }
+        }).start());
+    }
+
+    private void startExecute(INode root) {
+        new Thread(()->{
+            BaseExecutor baseExecutor = new E(new Env());
+            try {
+                baseExecutor.Execute(root);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+    }
 
     private class ParserMessageListener implements MessageListener {
         @Override
-        public void onMessageReceived(Message message) {
+        public void onMessageReceived(Message message){
             //消息种类
             Message.MessageType type = message.getType();
             //当前输出框内容
@@ -128,6 +165,10 @@ public class MButton {
                     Object[] body = (Object[]) message.getBody();
                     float parseElapsedTime = (float) body[0];
                     INode root = (INode) body[1];
+
+                    //执行
+                    startExecute(root);
+
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
                     stringBuilder.append("---- Tree----\n ").append(root.getAllChild()).append("\n");
