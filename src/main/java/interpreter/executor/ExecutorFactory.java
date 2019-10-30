@@ -26,6 +26,12 @@ public class ExecutorFactory
         if (type==LALRNonterminalSymbol.EXPR)
         {
             return new Expr(env);
+        }else if(type == LALRNonterminalSymbol.E){
+            return new E(env);
+        }else if(type == LALRNonterminalSymbol.EXTERN_DECLARATION){
+            return new ExtrenDeclaration(env);
+        }else if(type == LALRNonterminalSymbol.STMT){
+            return new Stmt(env);
         }
 
         return null;

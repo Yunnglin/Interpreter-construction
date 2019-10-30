@@ -131,6 +131,7 @@ public class MButton {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
                     stringBuilder.append("---- Tree----\n ").append(root.getAllChild()).append("\n");
+                    System.out.println(root.getSymbol().getSelfText());
                     preContent = stringBuilder.toString();
                     mainWindow.getParseOutputPane().setText(preContent);
                     mainWindow.getFileOperation().writeFile("src/test/res/GrammarTree.txt",root.getAllChild());
