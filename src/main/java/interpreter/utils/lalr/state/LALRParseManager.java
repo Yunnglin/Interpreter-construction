@@ -1,6 +1,6 @@
 package interpreter.utils.lalr.state;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
+
 import interpreter.utils.lalr.GrammarSymbol;
 import interpreter.utils.lalr.LALRGrammar;
 
