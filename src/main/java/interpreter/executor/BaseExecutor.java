@@ -13,7 +13,7 @@ public abstract class BaseExecutor implements Executor {
         this.env = env;
     }
 
-    protected Object executeNode(INode root) {
+    protected Object executeNode(INode root) throws Exception {
         ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
 //        int i = 0;
 //
@@ -24,23 +24,17 @@ public abstract class BaseExecutor implements Executor {
 //            i++;
 //        }
         Executor executor = factory.getExecutor(root, env);
-        try {
-            return executor.Execute(root);
-        } catch (SemanticError se) {
-            se.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return executor.Execute(root);
     }
 
     protected void copyChild(INode root, INode child) {
         root.setAttribute(INode.INodeKey.LINE, child.getAttribute(INodeKey.LINE));
     }
 
-    protected Executor getSpecExecutor(INode node){
-        ExecutorFactory  executorFactory = ExecutorFactory.getExecutorFactory();
-        return executorFactory.getExecutor(node,env);
+    protected Executor getSpecExecutor(INode node) {
+        ExecutorFactory executorFactory = ExecutorFactory.getExecutorFactory();
+        return executorFactory.getExecutor(node, env);
     }
 
 }

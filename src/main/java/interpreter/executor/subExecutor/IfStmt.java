@@ -30,7 +30,7 @@ public class IfStmt extends BaseExecutor {
         return null;
     }
 
-    private Object ifElse(INode moreIf){
+    private Object ifElse(INode moreIf) throws Exception {
         int childSize = moreIf.getChildren().size();
         if(childSize == 0){
             return null;

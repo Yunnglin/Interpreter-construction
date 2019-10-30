@@ -218,7 +218,7 @@
                 <constraints/>
                 <properties/>
               </component>
-              <component id="81066" class="javax.swing.JButton" binding="complainBtn">
+              <component id="81066" class="javax.swing.JButton" binding="executeBtn">
                 <constraints/>
                 <properties>
                   <text value="解释执行"/>
