@@ -36,6 +36,10 @@ public class ExecutorFactory
             return new CompoundStmt(env);
         }else if(type == LALRNonterminalSymbol.IF_STMT){
             return new IfStmt(env);
+        }else if(type == LALRNonterminalSymbol.DECLARE_STMT) {
+            return new DeclareStmt(env);
+        }else if(type == LALRNonterminalSymbol.EXPR_STMT) {
+            return new ExprStmt(env);
         }
 
         return null;

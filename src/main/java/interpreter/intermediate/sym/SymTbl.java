@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 public class SymTbl {
 
     public enum SymTblKey {
-        LINE, VALUE, TYPE, FORM, ELEMENT_NUMBER
+        LINE, VALUE, TYPE, ELEMENT_NUMBER
     }
 
     private LinkedHashMap<String, SymTblEntry> entries;

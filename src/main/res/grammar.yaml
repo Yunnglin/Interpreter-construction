@@ -123,6 +123,8 @@ STMT:
     - COMPOUND_STMT
   -
     - RETURN_STMT
+  -
+    - EXPR_STMT
 COMPOUND_STMT:
   -
     - L_BRACES
@@ -309,6 +311,9 @@ RETURN_STMT:
     - RETURN
     - EXPR
     - SEMICOLON
+  -
+    - RETURN
+    - SEMICOLON
 EXPR:
   -
     - RELATIONAL_EXPR
@@ -373,7 +378,7 @@ FACTOR:
     - NUMBER
   -
     - SUB
-    - NUMBER
+    - FACTOR
   -
     - IDENTIFIER
     - MORE_IDENTIFIER
@@ -386,11 +391,29 @@ MORE_IDENTIFIER:
     - NIL
   -
     - L_SQUARE_BRACKETS
-    - INTEGER
+    - EXPR
     - R_SQUARE_BRACKETS
+  -
+    - L_PARENTHESES
+    - R_PARENTHESES
+  -
+    - L_PARENTHESES
+    - PARAM_VALUES
+    - R_PARENTHESES
+PARAM_VALUES:
+  -
+    - EXPR
+  -
+    - EXPR
+    - COMMA
+    - PARAM_VALUES
 NUMBER:
   -
     - INTEGER
   -
     - REAL_NUMBER
+EXPR_STMT:
+  -
+    - EXPR
+    - SEMICOLON
 

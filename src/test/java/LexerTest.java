@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class lexerTest {
+public class LexerTest {
     @Test
     public void except(){
         InterpError ex = new SyntaxError("error!!!", 10, ErrorCode.UNEXPECTED_CHAR);

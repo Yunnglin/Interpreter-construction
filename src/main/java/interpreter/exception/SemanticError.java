@@ -20,4 +20,14 @@ public class SemanticError extends InterpError {
         return new SemanticError("DUPLICATE DECLARATION FOR '" +
                 lex + "' AT LINE " + oldline, newline, ErrorCode.DUP_DECLARATION);
     }
+
+    public static SemanticError newNegativeArraySizeError(String lex, int line) {
+        return new SemanticError("SIZE OF ARRAY '" + lex + "' IS NEGATIVE",
+                line, ErrorCode.NEG_ARRAY_SIZE);
+    }
+
+    public static SemanticError newNonIntegerArraySizeError(String lex, int line) {
+        return new SemanticError("SIZE OF ARRAY '" + lex + "' HAS NON-INTEGER TYPE",
+                line, ErrorCode.NON_INTEGER_ARRAY_SIZE);
+    }
 }

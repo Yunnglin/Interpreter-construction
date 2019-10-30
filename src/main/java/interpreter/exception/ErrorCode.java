@@ -12,7 +12,7 @@ public enum ErrorCode {
     DUP_DECLARATION(3001),
 
     // execution part
-    DIV_BY_ZERO(4001)
+    DIV_BY_ZERO(4001), NEG_ARRAY_SIZE(4002), NON_INTEGER_ARRAY_SIZE(4003)
 
     ;
 

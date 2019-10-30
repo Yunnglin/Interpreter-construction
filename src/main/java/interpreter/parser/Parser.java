@@ -195,6 +195,11 @@ public class Parser implements MessageProducer {
                 for (int i=(symbolTop+1); i<=oldSymbolTop; ++i) {
                     newNode.addChild(curChildren.get(i-1));
                 }
+
+                // set attribute
+                newNode.setAttribute(INodeKey.LINE,
+                        newNode.hasChild() ? newNode.getChild(0).getAttribute(INodeKey.LINE) : 0);
+
                 // push the symbol into stack
                 Integer curState = stateStack.get(symbolTop);
                 Integer gotoId = parseManager.getAction(curState, left) - 1;

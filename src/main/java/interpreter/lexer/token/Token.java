@@ -21,7 +21,7 @@ public class Token {
     }
 
     public String getTagText() {
-        return tag.getSelfText();
+        return tag.getText();
     }
 
     public void setTag(TokenTag tag) {

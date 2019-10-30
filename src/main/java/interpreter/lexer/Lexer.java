@@ -142,12 +142,19 @@ public class Lexer {
                     if(getNextChar('>')) {
                         getNextChar();
                         return new Token(TokenTag.NEQ, curLine);
+                    } else if (peek == '=') {
+                        getNextChar();
+                        return new Token(TokenTag.LEQ, curLine);
                     } else {
                         return new Token(TokenTag.LESS_THAN, curLine);
                     }
                 case '>':
-                    getNextChar();
-                    return new Token(TokenTag.GREATER_THAN, curLine);
+                    if (getNextChar('=')) {
+                        getNextChar();
+                        return new Token(TokenTag.GEQ, curLine);
+                    } else {
+                        return new Token(TokenTag.GREATER_THAN, curLine);
+                    }
                 case '/':
                     if(getNextChar('*')) {
                         // 进入注释

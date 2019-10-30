@@ -78,4 +78,8 @@ public class INode {
         return stringBuilder.toString();
 
     }
+
+    public boolean hasChild() {
+        return children.size() > 0;
+    }
 }
