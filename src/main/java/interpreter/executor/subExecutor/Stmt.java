@@ -12,8 +12,9 @@ public class Stmt extends BaseExecutor {
     }
     @Override
     public Object Execute(INode root) throws Exception {
-        Executor executor = getSpecExecutor(root.getChild(0));
-        executor.Execute(root.getChild(0));
-       return root;
+//        Executor executor = getSpecExecutor(root.getChild(0));
+//        executor.Execute(root.getChild(0));
+       return executeNode(root.getChild(0));
+
     }
 }

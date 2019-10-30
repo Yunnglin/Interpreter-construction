@@ -1,7 +1,6 @@
 package interpreter.executor;
 
 import interpreter.exception.SemanticError;
-import interpreter.executor.subExecutor.E;
 import interpreter.intermediate.Env;
 import interpreter.intermediate.node.INode.INodeKey;
 import interpreter.intermediate.node.INode;
@@ -14,7 +13,7 @@ public abstract class BaseExecutor implements Executor {
         this.env = env;
     }
 
-    protected void executeChildNode(INode root) {
+    protected Object executeNode(INode root) {
         ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
 //        int i = 0;
 //
@@ -26,12 +25,13 @@ public abstract class BaseExecutor implements Executor {
 //        }
         Executor executor = factory.getExecutor(root, env);
         try {
-            executor.Execute(root);
+            return executor.Execute(root);
         } catch (SemanticError se) {
             se.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     protected void copyChild(INode root, INode child) {

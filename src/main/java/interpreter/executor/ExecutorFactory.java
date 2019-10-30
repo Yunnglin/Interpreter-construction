@@ -32,6 +32,10 @@ public class ExecutorFactory
             return new ExtrenDeclaration(env);
         }else if(type == LALRNonterminalSymbol.STMT){
             return new Stmt(env);
+        }else if(type ==LALRNonterminalSymbol.COMPOUND_STMT){
+            return new CompoundStmt(env);
+        }else if(type == LALRNonterminalSymbol.IF_STMT){
+            return new IfStmt(env);
         }
 
         return null;
