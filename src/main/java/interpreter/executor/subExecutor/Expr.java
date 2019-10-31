@@ -1,5 +1,6 @@
 package interpreter.executor.subExecutor;
 
+import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.grammar.GrammarSymbol;
@@ -110,19 +111,20 @@ public class Expr extends BaseExecutor {
         Object[] result = new Object[2];
 
         //尝试进行类型转换
-
         if ((leftType.getBasicType().equals(BasicType.REAL) && rightType.getBasicType().equals(BasicType.REAL)) ||
                 (leftType.getBasicType().equals(BasicType.REAL) && rightType.getBasicType().equals(BasicType.INT)) ||
                 (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.REAL)) ||
                 (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.INT))) {
-
             if (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.INT)) {
                 int leftValue = Integer.parseInt((String) LeftArray[1]);
                 int rightValue = Integer.parseInt((String) RightArray[1]);
                 // add op
                 if (opSymbol.equals(TokenTag.SUM) || opSymbol.equals(TokenTag.SUB) || opSymbol.equals(TokenTag.MULTIPLY) || opSymbol.equals(TokenTag.DIVIDE))
                 {
-                    // +
+                    if(opSymbol.equals(TokenTag.SUM)&&rightValue==0)
+                    {
+                        throw ExecutionError.newDivByZeroError((Integer) op.getAttribute(INode.INodeKey.LINE));
+                    }
                     DataType elementType = new DataType(BasicType.INT, TypeForm.SCALAR);
                     result[0] = elementType;
                     if (opSymbol.equals(TokenTag.SUM)) result[1] = leftValue + rightValue;
@@ -184,7 +186,10 @@ public class Expr extends BaseExecutor {
                 double rightValue = Double.parseDouble((String) RightArray[1]);
                 if (opSymbol.equals(TokenTag.SUM) || opSymbol.equals(TokenTag.SUB) || opSymbol.equals(TokenTag.MULTIPLY) || opSymbol.equals(TokenTag.DIVIDE))
                 {
-                    // +
+                    if(opSymbol.equals(TokenTag.SUM)&&rightValue==0)
+                    {
+                        throw ExecutionError.newDivByZeroError((Integer) op.getAttribute(INode.INodeKey.LINE));
+                    }
                     DataType elementType = new DataType(BasicType.INT, TypeForm.SCALAR);
                     result[0] = elementType;
                     if (opSymbol.equals(TokenTag.SUM)) result[1] = leftValue + rightValue;
@@ -244,10 +249,8 @@ public class Expr extends BaseExecutor {
             }
 
         } else {
-            //TODO 报错
+            //错误操作类型
+            throw ExecutionError.newWrongOpeTypeError(leftType,rightType,(Integer) op.getAttribute(INode.INodeKey.LINE));
         }
-
-
-        throw new Exception("Unknown operation");
     }
 }
