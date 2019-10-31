@@ -24,8 +24,8 @@ public class SemanticError extends InterpError {
     }
 
     public static SemanticError newDupDeclareError(String lex, int newline, int oldline) {
-        return new SemanticError("DUPLICATE DECLARATION FOR '" +
-                lex + "' AT LINE " + oldline, newline, ErrorCode.DUP_DECLARATION);
+        return new SemanticError("'" + lex + "' HAS BEEN DECLARED AT LINE " + oldline
+                , newline, ErrorCode.DUP_DECLARATION);
     }
 
     public static SemanticError newNegativeArraySizeError(String lex, int line) {
@@ -63,5 +63,10 @@ public class SemanticError extends InterpError {
     public static SemanticError newWrongSubscriptedType(DataType wrong, int line) {
         return new SemanticError("WRONG TYPE OF SUBSCRIPTED VALUE " +
                 SemanticError.getTypeDesc(wrong), line, ErrorCode.WRONG_SUBSCRIPTED_TYPE);
+    }
+
+    public static SemanticError newDupFuncDefinitionError(String funcName, int newline, int oldline) {
+        return new SemanticError("FUNCTION '" + funcName + "' HAS BEEN DEFINED AT LINE " + oldline,
+                newline, ErrorCode.DUP_DECLARATION);
     }
 }

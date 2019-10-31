@@ -58,8 +58,8 @@ public class DeclareStmt extends BaseExecutor {
         } else {
             int childrenSize = children.size();
             SymTblEntry newEntry = new SymTblEntry(idName);
-            // set type to symbol table entry
-            newEntry.addValue(SymTblKey.TYPE, type);
+            // set line to symbol table entry
+            newEntry.addValue(SymTblKey.LINE, declarator.getAttribute(INodeKey.LINE));
 
             if (childrenSize == 1) {
                 // only a identifier

@@ -12,6 +12,7 @@ import interpreter.intermediate.type.DataType;
 import interpreter.intermediate.type.TypeForm;
 import interpreter.lexer.token.Token;
 import message.Message;
+import message.Message.MessageType;
 
 public class ReadStmt extends BaseExecutor {
 
@@ -25,7 +26,7 @@ public class ReadStmt extends BaseExecutor {
             throw new Exception("parse error in read stmt at line " +
                     root.getAttribute(INode.INodeKey.LINE));
         }
-        // read identifier
+        // read identifier | read identifier [expr]
         INode identifier = root.getChild(1);
         INode more = root.getChild(2);
         String idName = (String) identifier.getAttribute(INode.INodeKey.NAME);
@@ -46,9 +47,12 @@ public class ReadStmt extends BaseExecutor {
             }
 
             // start read
-            Object input = read();
+            Message input = read();
+            if (input.getType().equals(MessageType.IO_ERROR)) {
+                // if encountered io error
+            }
 
-            return input;
+            return input.getBody();
         } else {
             // not terminated, read to a array element
             if (!type.getForm().equals(TypeForm.ARRAY)) {
@@ -57,13 +61,16 @@ public class ReadStmt extends BaseExecutor {
             }
 
             // start read
-            Object input = read();
+            Message input = read();
+            if (input.getType().equals(MessageType.IO_ERROR)) {
+                // if encountered io error
+            }
 
-            return input;
+            return input.getBody();
         }
     }
 
-    private Object read() throws InterruptedException {
+    private Message read() throws InterruptedException {
         Object[] body = new Object[] {};
         Message message = new Message(Message.MessageType.READ_INPUT, body);
         new Thread(() -> {
@@ -73,7 +80,6 @@ public class ReadStmt extends BaseExecutor {
         // wait the input
         synchronized (message) {
             message.wait();
-
         }
 
         return message;

@@ -57,44 +57,44 @@ public class Expr extends BaseExecutor {
     private Object binaryOp(INode op, Object left, Object right) throws Exception {
         GrammarSymbol opSymbol = op.getSymbol();
 
-//        // add op
-//        if (opSymbol.equals(TokenTag.SUM)) {
-//            // +
-//            return left + right;
-//        } else if (opSymbol.equals(TokenTag.SUB)) {
-//            // -
-//            return left - right;
-//        }
-//
-//        // multiply op
-//        if (opSymbol.equals(TokenTag.MULTIPLY)) {
-//            // *
-//            return left * right;
-//        } else if (opSymbol.equals(TokenTag.DIVIDE)) {
-//            // /
-//            return left / right;
-//        }
-//
-//        // compare op
-//        if (opSymbol.equals(TokenTag.LESS_THAN)) {
-//            // <
-//            return left < right;
-//        } else if (opSymbol.equals(TokenTag.GREATER_THAN)) {
-//            // >
-//            return left > right;
-//        } else if (opSymbol.equals(TokenTag.EQ)) {
-//            // ==
-//            return left == right;
-//        } else if (opSymbol.equals(TokenTag.NEQ)) {
-//            // <>
-//            return left != right;
-//        } else if (opSymbol.equals(TokenTag.LEQ)) {
-//            // <=
-//            return left <= right;
-//        } else if (opSymbol.equals(TokenTag.GEQ)) {
-//            // >=
-//            return left >= right;
-//        }
+        // add op
+        if (opSymbol.equals(TokenTag.SUM)) {
+            // +
+            return left + right;
+        } else if (opSymbol.equals(TokenTag.SUB)) {
+            // -
+            return left - right;
+        }
+
+        // multiply op
+        if (opSymbol.equals(TokenTag.MULTIPLY)) {
+            // *
+            return left * right;
+        } else if (opSymbol.equals(TokenTag.DIVIDE)) {
+            // /
+            return left / right;
+        }
+
+        // compare op
+        if (opSymbol.equals(TokenTag.LESS_THAN)) {
+            // <
+            return left < right;
+        } else if (opSymbol.equals(TokenTag.GREATER_THAN)) {
+            // >
+            return left > right;
+        } else if (opSymbol.equals(TokenTag.EQ)) {
+            // ==
+            return left == right;
+        } else if (opSymbol.equals(TokenTag.NEQ)) {
+            // <>
+            return left != right;
+        } else if (opSymbol.equals(TokenTag.LEQ)) {
+            // <=
+            return left <= right;
+        } else if (opSymbol.equals(TokenTag.GEQ)) {
+            // >=
+            return left >= right;
+        }
 
         throw new Exception("Unknown operation");
     }
