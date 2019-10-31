@@ -65,6 +65,8 @@ public class DeclareStmt extends BaseExecutor {
                 // only a identifier
                 // set it to a scalar of specific type
                 newEntry.addValue(SymTblKey.TYPE, new DataType(basicType, TypeForm.SCALAR));
+                // set initial value
+                env.defaultInitializer(newEntry);
                 symTbl.addEntry(newEntry);
             } else {
                 // find whether there is a initializer
@@ -179,6 +181,9 @@ public class DeclareStmt extends BaseExecutor {
                     entry.addValue(SymTblKey.VALUE, values.toArray());
                 }
             }
+        } else {
+            // default initializer
+            env.defaultInitializer(entry);
         }
     }
 

@@ -1,7 +1,7 @@
 package interpreter.intermediate.type;
 
 public enum BasicType {
-    INT(4), REAL(8), VOID;
+    INT(4), REAL(8), VOID, POINTER(8), FUNC_POINTER(1);
 
     private int wordSize;
 

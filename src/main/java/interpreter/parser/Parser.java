@@ -1,5 +1,6 @@
 package interpreter.parser;
 
+import interpreter.Const;
 import interpreter.grammar.TokenTag;
 import interpreter.exception.SyntaxError;
 import interpreter.grammar.GrammarSymbol;
@@ -57,7 +58,7 @@ public class Parser implements MessageProducer {
         if (update) {
             this.parseManager = new LALRParseManager();
         } else {
-            File file = new File("src/main/res/LALRParserManagerInstance");
+            File file = new File(Const.parseManagerInstancePath);
             try {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
                 this.parseManager = (LALRParseManager) ois.readObject();
