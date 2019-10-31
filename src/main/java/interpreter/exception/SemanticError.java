@@ -50,7 +50,6 @@ public class SemanticError extends InterpError {
     }
 
 
-
     public static SemanticError newSymbolUndeclaredError(String lex, int line) {
         return new SemanticError("'" + lex + "' UNDECLARED", line, ErrorCode.SYMBOL_UNDECLARED);
     }
@@ -68,5 +67,9 @@ public class SemanticError extends InterpError {
     public static SemanticError newDupFuncDefinitionError(String funcName, int newline, int oldline) {
         return new SemanticError("FUNCTION '" + funcName + "' HAS BEEN DEFINED AT LINE " + oldline,
                 newline, ErrorCode.DUP_DECLARATION);
+    }
+
+    public static SemanticError newWrongNegativeTpye(DataType wrong, int line) {
+        return new SemanticError("CANNOT BE NEGATIVE " + SemanticError.getTypeDesc(wrong), line, ErrorCode.WRONG_NEGATIVE_TYPE);
     }
 }
