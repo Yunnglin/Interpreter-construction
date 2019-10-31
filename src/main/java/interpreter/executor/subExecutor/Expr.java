@@ -13,6 +13,10 @@ import interpreter.intermediate.sym.SymTblEntry;
 import interpreter.intermediate.type.BasicType;
 import interpreter.intermediate.type.DataType;
 import interpreter.intermediate.type.TypeForm;
+import interpreter.lexer.token.Token;
+import interpreter.utils.List2Array;
+
+import java.util.ArrayList;
 
 public class Expr extends BaseExecutor {
 
@@ -21,7 +25,7 @@ public class Expr extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.EXPR)) {
             throw new Exception("parse error in expression at line " +
                     root.getAttribute(INode.INodeKey.LINE));
@@ -32,7 +36,7 @@ public class Expr extends BaseExecutor {
         return calExpr(relExpr);
     }
 
-    private Object[] calExpr(INode expr) throws Exception {
+    private Object[] calExpr(INode expr) throws Exception, ReturnStmt.ReturnSignal {
         GrammarSymbol nodeSymbol = expr.getSymbol();
 
         if (nodeSymbol.equals(LALRNonterminalSymbol.RELATIONAL_EXPR)
@@ -83,17 +87,65 @@ public class Expr extends BaseExecutor {
                     return result;
                 }
                 if (preFix.getSymbol().equals(TokenTag.IDENTIFIER)) {// factor-> identifier more-identifier
+                    String idName = (String) preFix.getAttribute(INode.INodeKey.NAME);
+                    SymTblEntry symTblEntry = env.findSymTblEntry(idName);
+                    if (symTblEntry == null) {
+                        throw SemanticError.newSymbolUndeclaredError(idName,
+                                (Integer) preFix.getAttribute(INode.INodeKey.LINE));
+                    }
+                    // get symbol type
+                    DataType idType = (DataType) symTblEntry.getValue(SymTbl.SymTblKey.TYPE);
                     INode more = expr.getChild(1);
                     int moreChildSize = more.getChildren().size();
                     if (moreChildSize == 0) {// prefix is identifier
-                        SymTblEntry symTblEntry = env.findSymTblEntry((String) preFix.getAttribute(INode.INodeKey.NAME));
+
                         result[0] = symTblEntry.getValue(SymTbl.SymTblKey.TYPE);
                         result[1] = symTblEntry.getValue(SymTbl.SymTblKey.VALUE);
                         return result;
                     }else if(moreChildSize == 2){
-                        SymTblEntry symTblEntry = env.findSymTblEntry((String) preFix.getAttribute(INode.INodeKey.NAME));
-                        SymTbl symTbl = (SymTbl) symTblEntry.getValue(SymTbl.SymTblKey.SYMTBL);
-                        //TODO () [expr] (param-values)
+                        // () no param call
+                        INode[] emptyParams = new INode[0];
+                        FuncCaller caller = new FuncCaller(env);
+                        return caller.callFunc(idName, emptyParams, preFix);
+                    } else if(moreChildSize == 3) {
+                        // ( param-values ) | [expr]
+                        if (more.getChild(0).getSymbol().equals(TokenTag.L_SQUARE_BRACKETS)) {
+                            // return an element of array
+                            Object[] indexExpr = (Object[]) executeNode(more.getChild(1));
+                            DataType indexType = (DataType) indexExpr[0];
+                            // check type
+                            if (!idType.getForm().equals(TypeForm.ARRAY)) {
+                                // not a array
+                                throw SemanticError.newWrongSubscriptedType(indexType,
+                                        (Integer) more.getChild(1).getAttribute(INode.INodeKey.LINE));
+                            }
+                            if (!indexType.equals(DataType.PredefinedType.TYPE_INT)) {
+                                // not a integer index
+                                throw SemanticError.newNonIntegerArrayIndexError(idName,
+                                        (Integer) more.getChild(1).getAttribute(INode.INodeKey.LINE));
+                            }
+                            Integer idx = (Integer) indexExpr[1];
+                            Integer size = (Integer) symTblEntry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
+                            Object[] values = (Object[]) symTblEntry.getValue(SymTbl.SymTblKey.VALUE);
+                            if (idx < 0 || idx>=size) {
+                                // out of bound
+                                throw ExecutionError.newBadArrayBoundError(idName,
+                                        (Integer) more.getChild(1).getAttribute(INode.INodeKey.LINE));
+                            }
+
+                            Object[] exprValue = new Object[2];
+                            // TODO scalar only now, may add a new column element type
+                            exprValue[0] = new DataType(idType.getBasicType(), TypeForm.SCALAR);
+                            exprValue[1] = values[idx];
+                        } else {
+                            // return the return value of call function
+                            // make params a list
+                            INode paramValues = more.getChild(1);
+                            ArrayList<INode> params = List2Array.getArray(paramValues);
+                            // call function
+                            FuncCaller caller = new FuncCaller(env);
+                            return caller.callFunc(idName, (INode[]) params.toArray(), preFix);
+                        }
                     }
                 }
             }

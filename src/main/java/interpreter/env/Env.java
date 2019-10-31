@@ -1,5 +1,7 @@
 package interpreter.env;
 
+import interpreter.exception.ExecutionError;
+import interpreter.intermediate.type.FuncPrototype;
 import message.Message;
 import message.MessageHandler;
 import interpreter.intermediate.sym.SymTbl;
@@ -18,6 +20,7 @@ public class Env implements MessageProducer {
     private Stack<SymTbl> symTblStack;
     private int curNestingLevel;
     private MessageHandler ioHandler;
+    private SymTblEntry mainEntry;
 
     public Env() {
         symTblStack = new Stack<SymTbl>();
@@ -203,6 +206,24 @@ public class Env implements MessageProducer {
         }
 
         return null;
+    }
+
+    public void setMainEntry(SymTblEntry entry) {
+        FuncPrototype mainFuncProto = (FuncPrototype) entry.getValue(SymTbl.SymTblKey.FUNC_PROTOTYPE);
+//        DataType retType = mainFuncProto.getRetType();
+//        // the return type of main should be void or int
+//        if (!(retType.equals(DataType.PredefinedType.TYPE_INT) ||
+//                retType.equals(DataType.PredefinedType.TYPE_VOID))) {
+//
+//        }
+        this.mainEntry = entry;
+    }
+
+    public Integer runProgram() {
+        if (mainEntry == null) {
+
+            sendMessage();
+        }
     }
 
 }

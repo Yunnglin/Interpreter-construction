@@ -18,6 +18,19 @@ public class ExecutionError extends InterpError {
                 type.getForm().toString();
     }
 
+    private static String getParamPositionStr(int pos) {
+        switch (pos) {
+            case 1:
+                return pos + "st";
+            case 2:
+                return pos + "nd";
+            case 3:
+                return pos + "rd";
+            default:
+                return pos + "th";
+        }
+    }
+
     @Override
     public String toString() {
         return this.getMessage();
@@ -48,6 +61,23 @@ public class ExecutionError extends InterpError {
 
     public static ExecutionError newBadArrayBoundError(String identifierName, int line) {
         return new ExecutionError(identifierName + " BAD ARRAY BOUND ", line, ErrorCode.BAD_ARRAY_BOUND);
+    }
+
+    public static ExecutionError newMissingReturnError(String lex, int line) {
+        return new ExecutionError("MISSING RETURN STATEMENT IN FUNCTION '" + lex + "'",
+                line, ErrorCode.MISSING_RETURN);
+    }
+
+    public static ExecutionError newFewManyArgsError(String lex, boolean few, int line) {
+        return new ExecutionError("TOO " + (few ? "FEW" : "MANY") + " ARGUMENTS FOR FUNCTION '" +
+                lex + "'", line, ErrorCode.FEW_MANY_ARGS);
+    }
+
+    public static ExecutionError newArgTypeNotCompatible(String lex, DataType argType, DataType valType,
+                                                         int argPos, int line) {
+        return new ExecutionError("TYPE OF" + getParamPositionStr(argPos) + " ARGUMENT OF '" +
+                lex + "' " + getTypeDesc(argType) + " IS INCOMPATIBLE WITH" + getTypeDesc(valType),
+                line, ErrorCode.INCOMPATIBLE_ARG_VAL);
     }
 
 }

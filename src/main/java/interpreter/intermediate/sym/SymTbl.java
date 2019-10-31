@@ -60,4 +60,7 @@ public class SymTbl {
         this.nestingLevel = level;
     }
 
+    public LinkedHashMap<String, SymTblEntry> getEntries() {
+        return entries;
+    }
 }

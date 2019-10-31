@@ -12,7 +12,7 @@ public class ExtrenDeclaration extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         // a declare statement or a function definition
         if (!root.getSymbol().equals(LALRNonterminalSymbol.EXTERN_DECLARATION)) {
             throw new Exception("parse error in external declaration at line " +

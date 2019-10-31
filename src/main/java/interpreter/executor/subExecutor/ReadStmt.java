@@ -25,7 +25,7 @@ public class ReadStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.READ_STMT)) {
             throw new Exception("parse error in read stmt at line " +
                     root.getAttribute(INode.INodeKey.LINE));

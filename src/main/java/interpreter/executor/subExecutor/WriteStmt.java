@@ -18,7 +18,7 @@ public class WriteStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.WRITE_STMT)) {
             System.out.println("parse error in write stmt");
         }

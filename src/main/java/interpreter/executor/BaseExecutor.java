@@ -1,6 +1,7 @@
 package interpreter.executor;
 
 import interpreter.env.Env;
+import interpreter.executor.subExecutor.ReturnStmt;
 import interpreter.intermediate.node.INode.INodeKey;
 import interpreter.intermediate.node.INode;
 import message.Message;
@@ -13,7 +14,7 @@ public abstract class BaseExecutor implements Executor {
         this.env = env;
     }
 
-    protected Object executeNode(INode root) throws Exception {
+    protected Object executeNode(INode root) throws Exception, ReturnStmt.ReturnSignal {
         ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
 //        int i = 0;
 //

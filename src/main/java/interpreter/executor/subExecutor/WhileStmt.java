@@ -16,7 +16,7 @@ public class WhileStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.WHILE_STMT)) {
             System.out.println("parse error in while stmt");
         }

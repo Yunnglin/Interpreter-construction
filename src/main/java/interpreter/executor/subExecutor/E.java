@@ -13,7 +13,7 @@ public class E extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.E)) {
             throw new Exception("parse error in E");
         }
@@ -22,7 +22,7 @@ public class E extends BaseExecutor {
         return null;
     }
 
-    private void progress(INode prog) throws Exception {
+    private void progress(INode prog) throws Exception, ReturnStmt.ReturnSignal {
         int childSize = prog.getChildren().size();
         ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
 

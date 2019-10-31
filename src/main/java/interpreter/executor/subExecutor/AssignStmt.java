@@ -23,7 +23,7 @@ public class AssignStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.ASSIGN_STMT)) {
             System.out.println("parse error in assign stmt");
             return null;

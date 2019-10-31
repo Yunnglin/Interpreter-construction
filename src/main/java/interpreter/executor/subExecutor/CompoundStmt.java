@@ -15,7 +15,7 @@ public class CompoundStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.COMPOUND_STMT)) {
             throw new Exception("parse error in compound stmt");
         }
@@ -29,10 +29,16 @@ public class CompoundStmt extends BaseExecutor {
 
             env.pushSymTbl(new SymTbl());//push a deeper sym table
             ArrayList<INode> stmts = List2Array.getArray(stmtList);
-            for (INode stmt : stmts) {
-                executeNode(stmt);
+            try {
+                for (INode stmt : stmts) {
+                    executeNode(stmt);
+                }
+            } catch (ReturnStmt.ReturnSignal returnSignal) {
+                throw returnSignal;
+            } finally {
+                env.popSymTbl(); //pop current sym table
             }
-            env.popSymTbl(); //pop current sym table
+
         }
         return null;
     }

@@ -23,7 +23,7 @@ public class DeclareStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.DECLARE_STMT)) {
             throw new Exception("parse error in declare stmt at line " +
                     root.getAttribute(INodeKey.LINE));
@@ -41,7 +41,7 @@ public class DeclareStmt extends BaseExecutor {
         return null;
     }
 
-    private void declare(String type, INode declarator) throws Exception {
+    private void declare(String type, INode declarator) throws Exception, ReturnStmt.ReturnSignal {
         SymTbl symTbl = env.getCurScopeSymTbl();
 
         // get the nodes
@@ -91,7 +91,7 @@ public class DeclareStmt extends BaseExecutor {
                         DataType lenType = (DataType) values[0];
 
                         // check type to be integer
-                        if (!lenType.getBasicType().equals(BasicType.INT)) {
+                        if (!lenType.equals(DataType.PredefinedType.TYPE_INT)) {
                             throw SemanticError.newNonIntegerArraySizeError(idName,
                                     (Integer) identifier.getAttribute(INodeKey.LINE));
                         }
@@ -111,7 +111,7 @@ public class DeclareStmt extends BaseExecutor {
         }
     }
 
-    private void initialize(SymTblEntry entry, INode initializer) throws Exception {
+    private void initialize(SymTblEntry entry, INode initializer) throws Exception, ReturnStmt.ReturnSignal {
         if (initializer != null) {
             DataType entryType = (DataType) entry.getValue(SymTblKey.TYPE);
             ArrayList<INode> children = initializer.getChildren();

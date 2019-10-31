@@ -15,7 +15,7 @@ public class IfStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.IF_STMT)) {
             throw new Exception("parse error in if stmt");
         }
@@ -47,7 +47,7 @@ public class IfStmt extends BaseExecutor {
         }
     }
 
-    private Object ifElse(INode moreIf) throws Exception {
+    private Object ifElse(INode moreIf) throws Exception, ReturnStmt.ReturnSignal {
         int childSize = moreIf.getChildren().size();
         if (childSize == 0) {
             return null;

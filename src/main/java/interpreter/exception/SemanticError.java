@@ -71,4 +71,9 @@ public class SemanticError extends InterpError {
     public static SemanticError newSymbolNotCallableError(String lex, int line) {
         return new SemanticError("SYMBOL '" + lex + "' IS NOT CALLABLE", line, ErrorCode.SYMBOL_NOT_CALLABLE);
     }
+
+    public static SemanticError newNonIntegerArrayIndexError(String lex, int line) {
+        return new SemanticError("INDEX OF ARRAY '" + lex + "' IS NON-INTEGER VALUE",
+                line, ErrorCode.NON_INTEGER_ARRAY_INDEX);
+    }
 }

@@ -11,11 +11,11 @@ public class Stmt extends BaseExecutor {
         super(env);
     }
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.STMT)) {
             throw new Exception("parse error in stmt");
         }
-       executeNode(root.getChild(0));
+        executeNode(root.getChild(0));
         return null;
 
     }

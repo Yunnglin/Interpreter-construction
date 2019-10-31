@@ -11,7 +11,7 @@ public class ExprStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         // expression ;
         if (!root.getSymbol().equals(LALRNonterminalSymbol.EXPR_STMT)) {
             throw new Exception("parse error in expression statement at line " +
