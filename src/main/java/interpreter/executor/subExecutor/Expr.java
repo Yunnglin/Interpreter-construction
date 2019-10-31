@@ -8,6 +8,7 @@ import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTbl;
+import interpreter.intermediate.sym.SymTblEntry;
 import interpreter.intermediate.type.DataType;
 
 public class Expr extends BaseExecutor {
@@ -74,13 +75,23 @@ public class Expr extends BaseExecutor {
                     if (!env.whileCompatible(dataType)) {
                         throw SemanticError.newWrongNegativeTpye(dataType, (Integer) expr.getChild(1).getAttribute(INode.INodeKey.LINE));
                     }
-                    double res = (double)result[1];
+                    double res = (double) result[1];
                     result[1] = -res;
                     return result;
                 }
-                if(preFix.getSymbol().equals(TokenTag.IDENTIFIER)){// factor-> identifier more-identifier
+                if (preFix.getSymbol().equals(TokenTag.IDENTIFIER)) {// factor-> identifier more-identifier
                     INode more = expr.getChild(1);
-
+                    int moreChildSize = more.getChildren().size();
+                    if (moreChildSize == 0) {// prefix is identifier
+                        SymTblEntry symTblEntry = env.findSymTblEntry((String) preFix.getAttribute(INode.INodeKey.NAME));
+                        result[0] = symTblEntry.getValue(SymTbl.SymTblKey.TYPE);
+                        result[1] = symTblEntry.getValue(SymTbl.SymTblKey.VALUE);
+                        return result;
+                    }else if(moreChildSize == 2){
+                        SymTblEntry symTblEntry = env.findSymTblEntry((String) preFix.getAttribute(INode.INodeKey.NAME));
+                        SymTbl symTbl = (SymTbl) symTblEntry.getValue(SymTbl.SymTblKey.SYMTBL);
+                        //TODO () [expr] (param-values)
+                    }
                 }
             }
         }
