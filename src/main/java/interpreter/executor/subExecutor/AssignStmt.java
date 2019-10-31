@@ -62,39 +62,42 @@ public class AssignStmt extends BaseExecutor {
                 //other-assign->[expr]=expr;
                 else if (AssignListLength == 6) {
                     //判断标识符的类型是否是数组
-                    if (NodeType.getForm().equals(TypeForm.ARRAY)) {
-                        Executor exe = factory.getExecutor(AssignNodeList.get(1), env);
-                        Object[] exeValue1 = (Object[]) exe.Execute(AssignNodeList.get(1));
-                        DataType exe1Type = (DataType) exeValue1[0];
+                        if (NodeType.getForm().equals(TypeForm.ARRAY)) {
+                            Executor exe = factory.getExecutor(AssignNodeList.get(1), env);
+                            Object[] exeValue1 = (Object[]) exe.Execute(AssignNodeList.get(1));
+                            DataType exe1Type = (DataType) exeValue1[0];
 
-                        //判断索引的类型是否是整数
-                        if (exe1Type.getBasicType().equals(BasicType.INT)) {
-                            //确定索引大小
-                            int indexNum = (int) exeValue1[1];
-                            //执行表达式二
-                            Object[] exeValue2 = (Object[]) exe.Execute(AssignNodeList.get(4));
-                            DataType exeResultType = (DataType) exeValue2[0];
-                            //判断类型是否匹配
-                            if (env.assignCompatible(NodeType, exeResultType)) {
-                                //判断索引是否越界,首先获取节点的数组size
-                                int arrayLength = (int) entry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
-                                //如果索引大于等于0且小于等于length-1
-                                if (indexNum >= 0 && (indexNum + 1) <= arrayLength)
-                                {
-                                    return exeValue2[1];
-                                } else
+                            //判断索引的类型是否是整数
+                            if (exe1Type.getBasicType().equals(BasicType.INT)) {
+                                //确定索引大小
+                                int indexNum = (int) exeValue1[1];
+                                //执行表达式二
+                                Object[] exeValue2 = (Object[]) exe.Execute(AssignNodeList.get(4));
+                                DataType exeResultType = (DataType) exeValue2[0];
+                                DataType elementType= new DataType(NodeType.getBasicType(),TypeForm.SCALAR);
+                                //判断类型是否匹配
+                                if (env.assignCompatible(elementType, exeResultType)) {
+                                    //判断索引是否越界,首先获取节点的数组size
+                                    int arrayLength = (int) entry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
+                                    //如果索引大于等于0且小于等于length-1
+                                    if (indexNum >= 0 && (indexNum + 1) <= arrayLength)
                                     {
-                                    throw ExecutionError.newBadArrayBoundError(idName, (Integer) root.getAttribute(INode.INodeKey.LINE));
-                                }
+                                        Object[] array = (Object[]) entry.getValue(SymTbl.SymTblKey.VALUE);
+                                        array[indexNum]=exeValue2[1];
+                                        return exeValue2[1];
+                                    } else
+                                    {
+                                        throw ExecutionError.newBadArrayBoundError(idName, (Integer) root.getAttribute(INode.INodeKey.LINE));
+                                    }
 
+                                }
+                                //若不匹配则抛出错误
+                                else {
+                                    throw ExecutionError.newAssignUnmatchTypeError(NodeType, exeResultType, (Integer) AssignNodeList.get(1).getAttribute(INode.INodeKey.LINE));
+                                }
+                            } else {
+                                throw SemanticError.newReadWrongTypeError(exe1Type, (Integer) identifierNode.getAttribute(INode.INodeKey.LINE));
                             }
-                            //若不匹配则抛出错误
-                            else {
-                                throw ExecutionError.newAssignUnmatchTypeError(NodeType, exeResultType, (Integer) AssignNodeList.get(1).getAttribute(INode.INodeKey.LINE));
-                            }
-                        } else {
-                            throw SemanticError.newReadWrongTypeError(exe1Type, (Integer) identifierNode.getAttribute(INode.INodeKey.LINE));
-                        }
                     } else {
                         throw SemanticError.newWrongSubscriptedType(NodeType, (Integer) identifierNode.getAttribute(INode.INodeKey.LINE));
                     }

@@ -56,7 +56,7 @@ public class SemanticError extends InterpError {
     }
 
     public static SemanticError newReadWrongTypeError(DataType wrong, int line) {
-        return new SemanticError("READ REQUIRED A SCALAR BUT GET A " +
+        return new SemanticError("READ REQUIRED A SCALAR (NON VOID) BUT GET A " +
                 SemanticError.getTypeDesc(wrong), line, ErrorCode.READ_WRONG_TYPE);
     }
 
