@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class MButton {
     private MainWindow mainWindow;
     private INode rootNode = null;
+
     public MButton(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
     }
@@ -124,7 +125,7 @@ public class MButton {
     }
 
     private void startExecute(INode root) {
-        if(root == null){
+        if (root == null) {
             return;
         }
         new Thread(() -> {
@@ -148,11 +149,12 @@ public class MButton {
         JTextPane executePane = mainWindow.getExecuteOutputPane();
         Message message;
         StringBuilder sb;
-        boolean flag=true;
+        boolean flag = true;
 
-        private void paneTextAppend(String str){
-            executePane.setText(executePane.getText()+'\n'+str);
+        private void paneTextAppend(String str) {
+            executePane.setText(executePane.getText() + '\n' + str);
         }
+
         private void handleMessage() {
             Message.MessageType type = message.getType();
             String preContent = "";
@@ -160,6 +162,12 @@ public class MButton {
                 case READ_INPUT: {
                     sb = new StringBuilder();
                     executePane.setEditable(true);
+                    break;
+
+                }
+                case WRITE: {
+                    String string = (String) message.getBody();
+                    paneTextAppend(string);
                     break;
                 }
             }
@@ -179,12 +187,13 @@ public class MButton {
                 synchronized (message) {
                     message.setBody(sb.toString());
                     message.notify();
-                    System.out.println("notified "+sb.toString());
+                    System.out.println("notified " + sb.toString());
                 }
                 //追加内容
                 paneTextAppend(sb.toString());
-            }else{
+            } else {
                 sb.append(key);
+
             }
         }
 

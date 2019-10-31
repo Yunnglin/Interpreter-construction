@@ -12,6 +12,7 @@ public class MKeyListener implements KeyListener {
     private JTextPane editPane;
     private JTextPane rowPane;
     private MainWindow mainWindow;
+    StringBuilder stringBuilder = new StringBuilder();
 
     public MKeyListener(MainWindow mainWindow){
         this.mainWindow = mainWindow;
@@ -20,10 +21,20 @@ public class MKeyListener implements KeyListener {
     }
     @Override
     public void keyTyped(KeyEvent e) {
-//        char key = e.getKeyChar();
-//        if(key == '\n'){
-//            mainWindow.getExecuteOutputPane().setEditable(false);
-//        }
+        char key = e.getKeyChar();
+        if(key =='\n'){
+            System.out.println(stringBuilder.toString());
+            stringBuilder = new StringBuilder();
+        }
+        if(key == '\b'){
+            System.out.println(stringBuilder.toString());
+            System.out.println(stringBuilder.length());
+            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+            System.out.println(stringBuilder.length());
+            System.out.println(stringBuilder.toString());
+        }
+        stringBuilder.append(key);
+
     }
 
     @Override

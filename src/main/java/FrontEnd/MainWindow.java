@@ -84,6 +84,8 @@ public class MainWindow {
         GUIPrintStream.setMainWindow(this);
 //        System.setOut(GUIPrintStream.getPrintStream());
 //        System.out.println("Hello");
+//        executeOutputPane.addKeyListener(new MKeyListener(this));
+//        executeOutputPane.setEditable(true);
     }
 
 
