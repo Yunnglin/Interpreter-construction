@@ -10,6 +10,7 @@ import interpreter.intermediate.type.TypeForm;
 import message.MessageListener;
 import message.MessageProducer;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Env implements MessageProducer {
@@ -98,7 +99,7 @@ public class Env implements MessageProducer {
         }
     }
     public boolean whileCompatible(DataType test) {
-        if (test.getBasicType().equals(TypeForm.SCALAR))
+        if (test.getForm().equals(TypeForm.SCALAR)&&!test.getBasicType().equals(BasicType.VOID))
         {
             return true;
         }
@@ -164,6 +165,41 @@ public class Env implements MessageProducer {
         BasicType basicType = null;
         if ( (basicType = BasicType.getBasicType(type)) != null) {
             return new DataType(basicType, TypeForm.SCALAR);
+        }
+
+        return null;
+    }
+
+    public boolean defaultInitializer(SymTblEntry entry) {
+        DataType type = (DataType) entry.getValue(SymTbl.SymTblKey.TYPE);
+
+        if (type.getForm().equals(TypeForm.SCALAR)) {
+            // single value of basic type
+            entry.addValue(SymTbl.SymTblKey.VALUE, defaultBasicInitializer(type.getBasicType()));
+
+            return true;
+        } else if (type.getForm().equals(TypeForm.ARRAY)) {
+            // array initializing
+            Integer size = (Integer) entry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
+            ArrayList<Object> values = new ArrayList<>();
+            for (int i=0; i<size; ++i) {
+                values.add(defaultBasicInitializer(type.getBasicType()));
+            }
+            entry.addValue(SymTbl.SymTblKey.VALUE, values.toArray());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private Object defaultBasicInitializer(BasicType basicType) {
+        if (basicType.equals(BasicType.INT)) {
+            return 0;
+        } else if (basicType.equals(BasicType.REAL)) {
+            return 0.0;
+        } else if (basicType.equals(BasicType.VOID)) {
+            return null;
         }
 
         return null;

@@ -120,17 +120,14 @@ public class FuncDefinition extends BaseExecutor {
             }
             // set array size attribute
             newEntry.addValue(SymTbl.SymTblKey.ARRAY_SIZE, values[1]);
-
-            // set param initial value
-            newEntry.addValue(SymTbl.SymTblKey.VALUE, new Object[(Integer) values[1]]);
-            // TODO initialize
         } else {
             // type id
             paramType = env.getBasicDataType(typeName);
-
-            // TODO set param initial value
         }
         newEntry.addValue(SymTbl.SymTblKey.TYPE, paramType);
+        // set param initial value
+        env.defaultInitializer(newEntry);
+        // add to symbol table
         initialTbl.addEntry(newEntry);
 
         return paramType;

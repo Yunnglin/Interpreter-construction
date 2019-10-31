@@ -1,10 +1,14 @@
 package interpreter.executor.subExecutor;
 
+import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.grammar.GrammarSymbol;
+import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
+import interpreter.intermediate.sym.SymTbl;
+import interpreter.intermediate.type.DataType;
 
 public class Expr extends BaseExecutor {
 
@@ -15,9 +19,8 @@ public class Expr extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.EXPR)) {
-            System.out.println("parse error in expression at line " +
+            throw new Exception("parse error in expression at line " +
                     root.getAttribute(INode.INodeKey.LINE));
-            return null;
         }
 
         INode relExpr = root.getChild(0);
@@ -25,36 +28,67 @@ public class Expr extends BaseExecutor {
         return calExpr(relExpr);
     }
 
-    private Object calExpr(INode expr) throws Exception {
+    private Object[] calExpr(INode expr) throws Exception {
         GrammarSymbol nodeSymbol = expr.getSymbol();
 
         if (nodeSymbol.equals(LALRNonterminalSymbol.RELATIONAL_EXPR)
-        || nodeSymbol.equals(LALRNonterminalSymbol.SIMPLE_EXPR)
-        || nodeSymbol.equals(LALRNonterminalSymbol.TERM)) {
+                || nodeSymbol.equals(LALRNonterminalSymbol.SIMPLE_EXPR)
+                || nodeSymbol.equals(LALRNonterminalSymbol.TERM)) {
             // relational, add / subtract, multiplication or division expression calculation.
             // left-associative operation.
             INode leftExpr = expr.getChild(0);
             INode more = expr.getChild(1);
-            Object left = calExpr(leftExpr);
+            Object[] left = calExpr(leftExpr);
 
-            while(more.hasChild()) {
+            while (more.hasChild()) {
                 INode relOp = more.getChild(0);
                 INode rightExpr = more.getChild(1);
                 more = more.getChild(2);
 
-                Object right = calExpr(rightExpr);
+                Object[] right = calExpr(rightExpr);
                 INode op = relOp.getChild(0);
                 left = binaryOp(op, left, right);
             }
 
             return left;
         } else if (nodeSymbol.equals(LALRNonterminalSymbol.FACTOR)) {
+            Object[] result = new Object[2];
+            int childSize = expr.getChildren().size();
+            if (childSize == 1) {// factor->number
+                INode number = expr.getChild(0);
+                INode digit = number.getChild(0);
+                if (digit.getSymbol().equals(TokenTag.INTEGER)) {
+                    result[0] = DataType.PredefinedType.TYPE_INT;
+                } else if (digit.getSymbol().equals(TokenTag.REAL_NUMBER)) {
+                    result[0] = DataType.PredefinedType.TYPE_REAL;
+                }
+                result[1] = env.findSymTblEntry((String) digit.getAttribute(INode.INodeKey.NAME)).getValue(SymTbl.SymTblKey.VALUE);
+                return result;
+            } else if (childSize == 3) {// factor -> ( expr )
+                return (Object[]) executeNode(expr.getChild(1));
+            } else if (childSize == 2) {
+                INode preFix = expr.getChild(0);
+                if (preFix.getSymbol().equals(TokenTag.SUB)) {//factor -> - factor
+                    result = calExpr(expr.getChild(1));
+                    DataType dataType = (DataType) result[0];
+                    if (!env.whileCompatible(dataType)) {
+                        throw SemanticError.newWrongNegativeTpye(dataType, (Integer) expr.getChild(1).getAttribute(INode.INodeKey.LINE));
+                    }
+                    double res = (double)result[1];
+                    result[1] = -res;
+                    return result;
+                }
+                if(preFix.getSymbol().equals(TokenTag.IDENTIFIER)){// factor-> identifier more-identifier
+                    INode more = expr.getChild(1);
+
+                }
+            }
         }
 
         throw new Exception("Unknown expression");
     }
 
-    private Object binaryOp(INode op, Object left, Object right) throws Exception {
+    private Object[] binaryOp(INode op, Object left, Object right) throws Exception {
         GrammarSymbol opSymbol = op.getSymbol();
 
         // add op
