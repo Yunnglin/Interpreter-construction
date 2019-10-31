@@ -20,7 +20,7 @@ public enum BasicType {
 
     @Override
     public String toString() {
-        return this.toString().toLowerCase();
+        return super.toString().toLowerCase();
     }
 
     public static BasicType getBasicType(String type) {
