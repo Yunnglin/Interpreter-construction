@@ -74,8 +74,8 @@ public class FuncDefinition extends BaseExecutor {
         }
     }
 
-    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclarator) {
-
-    }
+//    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclarator) {
+//
+//    }
 
 }

@@ -98,7 +98,7 @@ public class Env implements MessageProducer {
         }
     }
     public boolean whileCompatible(DataType test) {
-        if (test.getBasicType().equals(TypeForm.SCALAR)&&!test.getBasicType().equals(BasicType.VOID))
+        if (test.getForm().equals(TypeForm.SCALAR)&&!test.getBasicType().equals(BasicType.VOID))
         {
             return true;
         }

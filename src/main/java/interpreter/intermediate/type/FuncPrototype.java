@@ -18,6 +18,7 @@ public class FuncPrototype {
             for (int i=0; i<paramTypes.length; ++i) {
 
             }
+            return true;
         } else {
             return false;
         }
