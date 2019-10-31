@@ -13,13 +13,13 @@ public class IfStmt extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.IF_STMT)) {
-            System.out.println("parse error in if stmt");
-            return null;
+            throw new Exception("parse error in if stmt");
         }
         // if ( expr ) compound_stmt more_ifelse
         INode expr = root.getChild(2);
-        //TODO use the return of expr
-        int result = (int)executeNode(expr);
+
+        Object[] exprRes = (Object[])executeNode(expr);
+        int result = (int)exprRes[1];
         if(result==1){
             INode compoundStmt = root.getChild(4);
             return executeNode(compoundStmt);

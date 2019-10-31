@@ -124,7 +124,9 @@ public class MButton {
 
     private void startExecute(INode root) {
         new Thread(()->{
-            BaseExecutor baseExecutor = new E(new Env());
+            Env env = new Env();
+            env.addMessageListener(new ExecutorMessageListener());
+            BaseExecutor baseExecutor = new E(env);
             try {
                 baseExecutor.Execute(root);
             } catch (Exception e) {
@@ -132,6 +134,13 @@ public class MButton {
             }
         }).start();
 
+    }
+
+    private class ExecutorMessageListener implements MessageListener{
+        @Override
+        public void onMessageReceived(Message message) {
+
+        }
     }
 
     private class ParserMessageListener implements MessageListener {
