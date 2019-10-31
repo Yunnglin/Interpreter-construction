@@ -6,20 +6,16 @@ PROG
 			DECLARATOR_LIST
 				DECLARATOR
 					IDENTIFIER
-				COMMA
-				DECLARATOR_LIST
-					DECLARATOR
-						IDENTIFIER
-						INITIALIZER
-							ASSIGN
-							EXPR
-								RELATIONAL_EXPR
-									SIMPLE_EXPR
-										TERM
-											FACTOR
-												NUMBER
-													INTEGER
-											MORE_FACTOR
-										MORE_TERM
-									RELATIONAL_EXPR_MORE
+					INITIALIZER
+						ASSIGN
+						EXPR
+							RELATIONAL_EXPR
+								SIMPLE_EXPR
+									TERM
+										FACTOR
+											NUMBER
+												INTEGER
+										MORE_FACTOR
+									MORE_TERM
+								RELATIONAL_EXPR_MORE
 			SEMICOLON

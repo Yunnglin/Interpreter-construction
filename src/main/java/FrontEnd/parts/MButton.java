@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class MButton {
     private MainWindow mainWindow;
-
+    private INode rootNode = null;
     public MButton(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
     }
@@ -115,6 +115,7 @@ public class MButton {
                 myParser.addMessageListener(new ParserMessageListener());
                 mainWindow.getFileOperation().setOutputEmpty();
                 myParser.parse();
+                startExecute(rootNode);
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
                 e1.printStackTrace();
@@ -123,6 +124,9 @@ public class MButton {
     }
 
     private void startExecute(INode root) {
+        if(root == null){
+            return;
+        }
         new Thread(() -> {
             Env env = new Env();
             ExecutorMessageListener executorMessageListener = new ExecutorMessageListener();
@@ -144,10 +148,13 @@ public class MButton {
         JTextPane executePane = mainWindow.getExecuteOutputPane();
         Message message;
         StringBuilder sb;
+        boolean flag=true;
 
+        private void paneTextAppend(String str){
+            executePane.setText(executePane.getText()+'\n'+str);
+        }
         private void handleMessage() {
             Message.MessageType type = message.getType();
-            String curContent = executePane.getText();
             String preContent = "";
             switch (type) {
                 case READ_INPUT: {
@@ -174,8 +181,8 @@ public class MButton {
                     message.notify();
                     System.out.println("notified "+sb.toString());
                 }
-                //设置内容
-                executePane.setText(executePane.getText()+'\n'+sb.toString());
+                //追加内容
+                paneTextAppend(sb.toString());
             }else{
                 sb.append(key);
             }
@@ -224,12 +231,12 @@ public class MButton {
                     INode root = (INode) body[1];
 
                     //执行
-                    startExecute(root);
+                    rootNode = root;
 
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
                     stringBuilder.append("---- Tree----\n ").append(root.getAllChild()).append("\n");
-                    System.out.println(root.getSymbol().getSelfText());
+//                    System.out.println(root.getSymbol().getSelfText());
                     preContent = stringBuilder.toString();
                     mainWindow.getParseOutputPane().setText(preContent);
                     mainWindow.getFileOperation().writeFile("src/test/res/GrammarTree.txt", root.getAllChild());
