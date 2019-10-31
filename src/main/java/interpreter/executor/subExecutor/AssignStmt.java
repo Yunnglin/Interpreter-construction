@@ -110,6 +110,6 @@ public class AssignStmt extends BaseExecutor {
             System.out.println("parse error in assign stmt");
             return null;
         }
-        
+
     }
 }
