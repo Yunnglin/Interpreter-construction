@@ -6,6 +6,7 @@ public class DataType {
         public static DataType TYPE_INT = new DataType(BasicType.INT, TypeForm.SCALAR);
         public static DataType TYPE_REAL = new DataType(BasicType.REAL, TypeForm.SCALAR);
         public static DataType TYPE_VOID = new DataType(BasicType.VOID, TypeForm.SCALAR);
+        public static DataType TYPE_FUNC = new DataType(BasicType.FUNC_POINTER, TypeForm.SCALAR);
     }
 
     private TypeForm form;

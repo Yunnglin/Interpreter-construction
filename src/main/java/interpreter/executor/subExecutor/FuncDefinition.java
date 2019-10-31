@@ -65,6 +65,8 @@ public class FuncDefinition extends BaseExecutor {
         }
 
         SymTblEntry newEntry = new SymTblEntry(idName);
+        // set type
+        newEntry.addValue(SymTbl.SymTblKey.TYPE, DataType.PredefinedType.TYPE_FUNC);
         // set prototype
         newEntry.addValue(SymTbl.SymTblKey.FUNC_PROTOTYPE, prototype);
         // set line to entry

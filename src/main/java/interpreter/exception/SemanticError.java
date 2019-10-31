@@ -67,4 +67,8 @@ public class SemanticError extends InterpError {
     public static SemanticError newWrongNegativeTpye(DataType wrong, int line) {
         return new SemanticError("CANNOT BE NEGATIVE " + SemanticError.getTypeDesc(wrong), line, ErrorCode.WRONG_NEGATIVE_TYPE);
     }
+
+    public static SemanticError newSymbolNotCallableError(String lex, int line) {
+        return new SemanticError("SYMBOL '" + lex + "' IS NOT CALLABLE", line, ErrorCode.SYMBOL_NOT_CALLABLE);
+    }
 }
