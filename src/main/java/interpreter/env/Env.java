@@ -63,6 +63,10 @@ public class Env implements MessageProducer {
         return null;
     }
 
+    public int getCurNestingLevel() {
+        return curNestingLevel;
+    }
+
     public SymTbl getCurScopeSymTbl() {
         return this.symTblStack.get(curNestingLevel);
     }

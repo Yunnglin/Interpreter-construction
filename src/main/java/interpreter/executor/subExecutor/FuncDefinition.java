@@ -1,11 +1,14 @@
 package interpreter.executor.subExecutor;
 
+import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.env.Env;
+import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTbl;
 import interpreter.intermediate.sym.SymTblEntry;
+import interpreter.intermediate.type.DataType;
 import interpreter.utils.List2Array;
 
 import java.util.ArrayList;
@@ -33,9 +36,11 @@ public class FuncDefinition extends BaseExecutor {
         funcDeclare(typeName, declarator);
 
         ArrayList<INode> procedure = List2Array.getArray(stmts);
+
+        return null;
     }
 
-    private void funcDeclare(String type, INode declarator) {
+    private void funcDeclare(String type, INode declarator) throws SemanticError {
         // func-declarator -> identifier() | identifier(param-list)
         INode identifier = declarator.getChild(0);
         INode more = declarator.getChild(2);
@@ -45,7 +50,32 @@ public class FuncDefinition extends BaseExecutor {
 
         if (entry != null) {
             // a duplicate function definition
+            throw SemanticError.newDupFuncDefinitionError(idName,
+                    (Integer) declarator.getAttribute(INode.INodeKey.LINE),
+                    (Integer) entry.getValue(SymTbl.SymTblKey.LINE));
         }
+
+        SymTblEntry newEntry = new SymTblEntry(idName);
+        // set line to entry
+        newEntry.addValue(SymTbl.SymTblKey.LINE, declarator.getAttribute(INode.INodeKey.LINE));
+        // initialize symbol table of function
+        SymTbl symTbl = new SymTbl();
+        newEntry.addValue(SymTbl.SymTblKey.SYMTBL, symTbl);
+
+        if (more.getSymbol().equals(TokenTag.R_PARENTHESES)) {
+            // terminated, no param
+
+        } else {
+            // has params
+            ArrayList<INode> paramDeclarations = List2Array.getArray(more);
+
+            for (INode paramDecl : paramDeclarations) {
+            }
+        }
+    }
+
+    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclarator) {
+
     }
 
 }
