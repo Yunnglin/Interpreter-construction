@@ -55,9 +55,9 @@ public class MButton {
         button.addActionListener(e -> {
             // 多线程
             new Thread(() -> {
-                if(mainWindow.getEditPane().getText().isEmpty())//输入区为空，返回
+                if (mainWindow.getEditPane().getText().isEmpty())//输入区为空，返回
                     return;
-                if(!mainWindow.getFileOperation().save())//保存
+                if (!mainWindow.getFileOperation().save())//保存
                     return;
                 mainWindow.getFileOperation().setOutputEmpty();//清空输出区
 
@@ -82,9 +82,9 @@ public class MButton {
 
     private void setParserButton(JButton button) {
         button.addActionListener(e -> new Thread(() -> {
-            if(mainWindow.getEditPane().getText().isEmpty())
+            if (mainWindow.getEditPane().getText().isEmpty())
                 return;
-            if(!mainWindow.getFileOperation().save())//保存
+            if (!mainWindow.getFileOperation().save())//保存
                 return;
             String path = mainWindow.getPathLabel().getText();
             //initialize a lexer
@@ -103,9 +103,9 @@ public class MButton {
 
     private void setExecuteButton(JButton button) {
         button.addActionListener(e -> new Thread(() -> {
-            if(mainWindow.getEditPane().getText().isEmpty())
+            if (mainWindow.getEditPane().getText().isEmpty())
                 return;
-            if(!mainWindow.getFileOperation().save())//保存
+            if (!mainWindow.getFileOperation().save())//保存
                 return;
             String path = mainWindow.getPathLabel().getText();
             //initialize a lexer
@@ -123,20 +123,78 @@ public class MButton {
     }
 
     private void startExecute(INode root) {
-        new Thread(()->{
-            BaseExecutor baseExecutor = new E(new Env());
+        new Thread(() -> {
+            Env env = new Env();
+            ExecutorMessageListener executorMessageListener = new ExecutorMessageListener();
+            env.addMessageListener(executorMessageListener);
+            mainWindow.getExecuteOutputPane().addKeyListener(executorMessageListener);
+            BaseExecutor baseExecutor = new E(env);
             try {
                 baseExecutor.Execute(root);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            mainWindow.getExecuteOutputPane().removeKeyListener(executorMessageListener);
         }).start();
 
     }
 
+    private class ExecutorMessageListener implements MessageListener, KeyListener {
+        JTextPane executePane = mainWindow.getExecuteOutputPane();
+        Message message;
+        StringBuilder sb;
+
+        private void handleMessage() {
+            Message.MessageType type = message.getType();
+            String curContent = executePane.getText();
+            String preContent = "";
+            switch (type) {
+                case READ_INPUT: {
+                    sb = new StringBuilder();
+                    executePane.setEditable(true);
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onMessageReceived(Message message) {
+            this.message = message;
+            handleMessage();
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            char key = e.getKeyChar();
+            if (key == '\n' && message.getType().equals(Message.MessageType.READ_INPUT)) {
+                executePane.setEditable(false);
+                synchronized (message) {
+                    message.setBody(sb.toString());
+                    message.notify();
+                    System.out.println("notified "+sb.toString());
+                }
+                //设置内容
+                executePane.setText(executePane.getText()+'\n'+sb.toString());
+            }else{
+                sb.append(key);
+            }
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
+        }
+    }
+
     private class ParserMessageListener implements MessageListener {
         @Override
-        public void onMessageReceived(Message message){
+        public void onMessageReceived(Message message) {
             //消息种类
             Message.MessageType type = message.getType();
             //当前输出框内容
@@ -174,7 +232,7 @@ public class MButton {
                     System.out.println(root.getSymbol().getSelfText());
                     preContent = stringBuilder.toString();
                     mainWindow.getParseOutputPane().setText(preContent);
-                    mainWindow.getFileOperation().writeFile("src/test/res/GrammarTree.txt",root.getAllChild());
+                    mainWindow.getFileOperation().writeFile("src/test/res/GrammarTree.txt", root.getAllChild());
                     break;
                 }
                 case IO_ERROR: {

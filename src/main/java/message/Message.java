@@ -9,6 +9,14 @@ public class Message {
     private MessageType type;
     private Object body;
 
+    public void setType(MessageType type) {
+        this.type = type;
+    }
+
+    public void setBody(Object body) {
+        this.body = body;
+    }
+
     /**
      * Constructor
      * @param type the type of the message

@@ -17,8 +17,7 @@ public class CompoundStmt extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.COMPOUND_STMT)) {
-            System.out.println("parse error in compound stmt");
-            return null;
+            throw new Exception("parse error in compound stmt");
         }
         int childSize = root.getChildren().size();
         if (childSize == 2) {//{}

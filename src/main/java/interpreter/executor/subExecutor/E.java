@@ -15,8 +15,7 @@ public class E extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.E)) {
-            System.out.println("parse error in E");
-            return null;
+            throw new Exception("parse error in E");
         }
         INode prog = root.getChild(0);
         progress(prog);

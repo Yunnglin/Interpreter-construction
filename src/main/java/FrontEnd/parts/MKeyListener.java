@@ -21,8 +21,8 @@ public class MKeyListener implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
 //        char key = e.getKeyChar();
-//        if(key == '\n' || key == '\b'){
-//            mainWindow.getmScrollPane().updateLineNum();
+//        if(key == '\n'){
+//            mainWindow.getExecuteOutputPane().setEditable(false);
 //        }
     }
 

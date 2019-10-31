@@ -2,6 +2,7 @@ package interpreter.executor.subExecutor;
 
 import interpreter.executor.BaseExecutor;
 import interpreter.env.Env;
+import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 
 public class Stmt extends BaseExecutor {
@@ -11,9 +12,11 @@ public class Stmt extends BaseExecutor {
     }
     @Override
     public Object Execute(INode root) throws Exception {
-//        Executor executor = getSpecExecutor(root.getChild(0));
-//        executor.Execute(root.getChild(0));
-       return executeNode(root.getChild(0));
+        if (!root.getSymbol().equals(LALRNonterminalSymbol.STMT)) {
+            throw new Exception("parse error in stmt");
+        }
+       executeNode(root.getChild(0));
+        return null;
 
     }
 }

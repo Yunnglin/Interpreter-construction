@@ -36,7 +36,7 @@ public class MTextPane {
         editPane.setFont(MFont.codeFont);
         editPane.setBackground(MColor.editAreaColor);
         editPane.getDocument().addDocumentListener(new MDocumentListener(this.mainWindow));
-        editPane.addKeyListener(new MKeyListener(this.mainWindow));
+        //editPane.addKeyListener(new MKeyListener(this.mainWindow));
         editPane.add(jPopMenu);
         editPane.addMouseListener(new MyMouseListener());
     }
@@ -48,6 +48,7 @@ public class MTextPane {
             outputPane.setFont(MFont.consoleFont);
             outputPane.setEditable(false);
         }
+       // mainWindow.getExecuteOutputPane().addKeyListener(new MKeyListener(this.mainWindow));
 
     }
 
