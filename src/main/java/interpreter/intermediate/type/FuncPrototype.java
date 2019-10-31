@@ -5,6 +5,24 @@ public class FuncPrototype {
     private DataType retType;
     private DataType[] paramTypes;
 
+    @Override
+    public boolean equals(Object obj) {
+        if(super.equals(obj)) {
+            return true;
+        }
+
+        FuncPrototype prototype = (FuncPrototype) obj;
+
+        if (retType.equals(prototype.retType)) {
+
+            for (int i=0; i<paramTypes.length; ++i) {
+
+            }
+        } else {
+            return false;
+        }
+    }
+
     public FuncPrototype(DataType retType, DataType[] parmTypes) {
         this.retType = retType;
         this.paramTypes = parmTypes;
