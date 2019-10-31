@@ -5,6 +5,7 @@ import interpreter.exception.SyntaxError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.subExecutor.E;
 import interpreter.env.Env;
+import interpreter.executor.subExecutor.ReturnStmt;
 import interpreter.intermediate.node.INode;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
@@ -136,8 +137,8 @@ public class MButton {
             BaseExecutor baseExecutor = new E(env);
             try {
                 baseExecutor.Execute(root);
-
-            } catch (Exception e) {
+                env.runProgram();
+            } catch (Exception | ReturnStmt.ReturnSignal e) {
                 e.printStackTrace();
             }
             mainWindow.getExecuteOutputPane().removeKeyListener(executorMessageListener);
