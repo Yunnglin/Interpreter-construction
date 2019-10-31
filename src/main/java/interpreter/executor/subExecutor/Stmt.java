@@ -15,7 +15,8 @@ public class Stmt extends BaseExecutor {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.STMT)) {
             throw new Exception("parse error in stmt");
         }
-       return executeNode(root.getChild(0));
+       executeNode(root.getChild(0));
+        return null;
 
     }
 }
