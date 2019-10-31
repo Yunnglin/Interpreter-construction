@@ -1,6 +1,11 @@
 package interpreter.env;
 
 import interpreter.exception.ExecutionError;
+import interpreter.exception.SemanticError;
+import interpreter.executor.subExecutor.FuncCaller;
+import interpreter.executor.subExecutor.ReturnStmt;
+import interpreter.grammar.lalr.LALRNonterminalSymbol;
+import interpreter.intermediate.node.INode;
 import interpreter.intermediate.type.FuncPrototype;
 import message.Message;
 import message.MessageHandler;
@@ -210,6 +215,12 @@ public class Env implements MessageProducer {
 
     public void setMainEntry(SymTblEntry entry) {
         FuncPrototype mainFuncProto = (FuncPrototype) entry.getValue(SymTbl.SymTblKey.FUNC_PROTOTYPE);
+        DataType type = (DataType) entry.getValue(SymTbl.SymTblKey.TYPE);
+
+        // main should be a function
+        if (!type.equals(DataType.PredefinedType.TYPE_FUNC)) {
+            return;
+        }
 //        DataType retType = mainFuncProto.getRetType();
 //        // the return type of main should be void or int
 //        if (!(retType.equals(DataType.PredefinedType.TYPE_INT) ||
@@ -220,10 +231,44 @@ public class Env implements MessageProducer {
     }
 
     public Integer runProgram() {
+        Message message = new Message();
+        int statusCode = 0;
         if (mainEntry == null) {
-
-            sendMessage();
+            message.setType(Message.MessageType.EXECUTION_ERROR);
+            message.setBody("PROGRAM ENTRY 'main' FUNCTION NOT FOUND");
+        } else {
+            INode callerNode = new INode(LALRNonterminalSymbol.E);
+            callerNode.setAttribute(INode.INodeKey.LINE, 0);
+            // call main
+            FuncCaller caller = new FuncCaller(this);
+            try {
+                long exeStartTime = System.currentTimeMillis();
+                caller.callFunc(mainEntry.getName(), new INode[0], callerNode);
+                float exeElapsedTime = (System.currentTimeMillis() - exeStartTime) / 1000f;
+                statusCode = 0;
+                Object[] exeMsgBody = new Object[] {exeElapsedTime, statusCode};
+                message.setType(Message.MessageType.INTERPRETER_SUMMARY);
+                message.setBody(exeMsgBody);
+            } catch (SemanticError se) {
+                message.setType(Message.MessageType.SEMANTIC_ERROR);
+                message.setBody(se);
+                statusCode = -1;
+            } catch (ExecutionError ee) {
+                message.setType(Message.MessageType.EXECUTION_ERROR);
+                message.setBody(ee);
+                statusCode = -1;
+            } catch (Exception | ReturnStmt.ReturnSignal e) {
+                e.printStackTrace();
+                System.out.println(e);
+                message.setType(Message.MessageType.INTERPRETER_SUMMARY);
+                message.setBody(new Object[]{0, -1});
+                statusCode = -1;
+            } finally {
+                sendMessage(message);
+            }
         }
+
+        return statusCode;
     }
 
 }

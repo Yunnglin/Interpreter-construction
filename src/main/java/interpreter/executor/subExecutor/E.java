@@ -13,12 +13,16 @@ public class E extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.E)) {
             throw new Exception("parse error in E");
         }
         INode prog = root.getChild(0);
-        progress(prog);
+        try {
+            progress(prog);
+        } catch (ReturnStmt.ReturnSignal returnSignal) {
+            throw new Exception("unknown error, the return value not catched");
+        }
         return null;
     }
 

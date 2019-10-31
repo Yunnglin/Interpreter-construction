@@ -19,6 +19,11 @@ public class Message {
 
     /**
      * Constructor
+     */
+    public Message() {}
+
+    /**
+     * Constructor
      * @param type the type of the message
      * @param body the content of the message
      */
