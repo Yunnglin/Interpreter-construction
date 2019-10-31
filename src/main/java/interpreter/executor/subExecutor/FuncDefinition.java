@@ -8,7 +8,10 @@ import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTbl;
 import interpreter.intermediate.sym.SymTblEntry;
+import interpreter.intermediate.type.BasicType;
 import interpreter.intermediate.type.DataType;
+import interpreter.intermediate.type.FuncPrototype;
+import interpreter.intermediate.type.TypeForm;
 import interpreter.utils.List2Array;
 
 import java.util.ArrayList;
@@ -33,20 +36,26 @@ public class FuncDefinition extends BaseExecutor {
         String typeName = (String) type.getAttribute(INode.INodeKey.NAME);
 
         // declare the function
-        funcDeclare(typeName, declarator);
+        SymTblEntry entry = funcDeclare(typeName, declarator);
+        ArrayList<INode> body = List2Array.getArray(stmts);
 
-        ArrayList<INode> procedure = List2Array.getArray(stmts);
+        // set function body
+        entry.addValue(SymTbl.SymTblKey.FUNC_BODY, body.toArray());
 
         return null;
     }
 
-    private void funcDeclare(String type, INode declarator) throws SemanticError {
+    private SymTblEntry funcDeclare(String type, INode declarator) throws Exception {
         // func-declarator -> identifier() | identifier(param-list)
         INode identifier = declarator.getChild(0);
         INode more = declarator.getChild(2);
         String idName = (String) identifier.getAttribute(INode.INodeKey.NAME);
         SymTbl curScopeSymTbl = env.getCurScopeSymTbl();
         SymTblEntry entry = curScopeSymTbl.find(idName);
+        // construct prototype
+        DataType retType = env.getBasicDataType(type);
+        FuncPrototype prototype = new FuncPrototype();
+        prototype.setRetType(retType);
 
         if (entry != null) {
             // a duplicate function definition
@@ -56,6 +65,8 @@ public class FuncDefinition extends BaseExecutor {
         }
 
         SymTblEntry newEntry = new SymTblEntry(idName);
+        // set prototype
+        newEntry.addValue(SymTbl.SymTblKey.FUNC_PROTOTYPE, prototype);
         // set line to entry
         newEntry.addValue(SymTbl.SymTblKey.LINE, declarator.getAttribute(INode.INodeKey.LINE));
         // initialize symbol table of function
@@ -64,18 +75,65 @@ public class FuncDefinition extends BaseExecutor {
 
         if (more.getSymbol().equals(TokenTag.R_PARENTHESES)) {
             // terminated, no param
-
+            prototype.setParamTypes(new DataType[0]);
         } else {
             // has params
             ArrayList<INode> paramDeclarations = List2Array.getArray(more);
+            ArrayList<DataType> paramTypes = new ArrayList<>();
 
             for (INode paramDecl : paramDeclarations) {
+                paramTypes.add(paramDeclare(symTbl, paramDecl));
             }
+            prototype.setParamTypes((DataType[]) paramTypes.toArray());
         }
+
+        // declare function in symbol table
+        curScopeSymTbl.addEntry(newEntry);
+
+        return newEntry;
     }
 
-    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclarator) {
+    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclaration) throws Exception {
+        INode type = paramDeclaration.getChild(0);
+        INode identifier = paramDeclaration.getChild(1);
+        SymTblEntry newEntry = new SymTblEntry((String) identifier.getAttribute(INode.INodeKey.NAME));
+        String typeName = (String) type.getChild(0).getAttribute(INode.INodeKey.NAME);
+        DataType paramType;
 
+        if (paramDeclaration.getChildren().size() > 2) {
+            // type id [expr]
+            paramType = new DataType(BasicType.getBasicType(typeName), TypeForm.ARRAY);
+            INode exprNode = paramDeclaration.getChild(3);
+            Object[] values = (Object[]) executeNode(exprNode);
+            DataType lenType = (DataType) values[0];
+
+            // check type to be integer
+            if (!lenType.getBasicType().equals(BasicType.INT)) {
+                throw SemanticError.newNonIntegerArraySizeError((String) identifier.getAttribute(INode.INodeKey.NAME),
+                        (Integer) identifier.getAttribute(INode.INodeKey.LINE));
+            }
+            Integer arrSize = (Integer) values[1];
+            // check type to be non-negative
+            if (arrSize < 0) {
+                throw SemanticError.newNegativeArraySizeError((String) identifier.getAttribute(INode.INodeKey.NAME),
+                        (Integer) identifier.getAttribute(INode.INodeKey.LINE));
+            }
+            // set array size attribute
+            newEntry.addValue(SymTbl.SymTblKey.ARRAY_SIZE, values[1]);
+
+            // set param initial value
+            newEntry.addValue(SymTbl.SymTblKey.VALUE, new Object[(Integer) values[1]]);
+            // TODO initialize
+        } else {
+            // type id
+            paramType = env.getBasicDataType(typeName);
+
+            // TODO set param initial value
+        }
+        newEntry.addValue(SymTbl.SymTblKey.TYPE, paramType);
+        initialTbl.addEntry(newEntry);
+
+        return paramType;
     }
 
 }

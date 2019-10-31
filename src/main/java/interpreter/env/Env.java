@@ -160,13 +160,13 @@ public class Env implements MessageProducer {
         this.ioHandler.sendMessage(message);
     }
 
-//    public DataType str2DataType(String type) {
-//        BasicType basicType = null;
-//        if ( (basicType = BasicType.getBasicType(type)) != null) {
-//            return new DataType(basicType, TypeForm.SCALAR);
-//        }
-//
-//        return null;
-//    }
+    public DataType getBasicDataType(String type) {
+        BasicType basicType = null;
+        if ( (basicType = BasicType.getBasicType(type)) != null) {
+            return new DataType(basicType, TypeForm.SCALAR);
+        }
+
+        return null;
+    }
 
 }

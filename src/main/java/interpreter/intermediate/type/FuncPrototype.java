@@ -13,11 +13,21 @@ public class FuncPrototype {
 
         FuncPrototype prototype = (FuncPrototype) obj;
 
+        // check return type
         if (retType.equals(prototype.retType)) {
-
-            for (int i=0; i<paramTypes.length; ++i) {
-
+            // check amount of params
+            if (paramTypes.length != prototype.getParamTypes().length) {
+                return false;
             }
+
+            // check each param
+            for (int i=0; i<paramTypes.length; ++i) {
+                if (!paramTypes[i].equals(prototype.getParamTypes()[i])) {
+                    return false;
+                }
+            }
+
+            return true;
         } else {
             return false;
         }
