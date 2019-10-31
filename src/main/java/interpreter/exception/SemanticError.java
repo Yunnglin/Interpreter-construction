@@ -10,7 +10,7 @@ public class SemanticError extends InterpError {
 
     @Override
     public String getMessage() {
-        return "Semantic error (" + getCode() + ") at line "+this.getLine()+": "+this.getInnerMsg();
+        return "Semantic error (" + getCode() + ") at line " + this.getLine() + ": " + this.getInnerMsg();
     }
 
     @Override
@@ -48,6 +48,8 @@ public class SemanticError extends InterpError {
                 "AND TYPE " + SemanticError.getTypeDesc(value) +
                 "ARE INCOMPATIBLE WHEN INITIALIZING", line, ErrorCode.INITIAL_INCOMPATIBLE_TYPE);
     }
+
+
 
     public static SemanticError newSymbolUndeclaredError(String lex, int line) {
         return new SemanticError("'" + lex + "' UNDECLARED", line, ErrorCode.SYMBOL_UNDECLARED);

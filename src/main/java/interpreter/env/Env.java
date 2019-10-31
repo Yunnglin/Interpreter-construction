@@ -69,18 +69,39 @@ public class Env implements MessageProducer {
 
     public boolean assignCompatible(DataType target, DataType value) {
         if (target.getBasicType().equals(BasicType.VOID)
-            || value.getBasicType().equals(BasicType.VOID)) {
+                || value.getBasicType().equals(BasicType.VOID)) {
             return false;
         }
 
         if ((target.equals(value)) && (target.getForm().equals(TypeForm.SCALAR))) {
             return true;
         } else if ((target.equals(DataType.PredefinedType.TYPE_REAL))
-        && (value.equals(DataType.PredefinedType.TYPE_INT))) {
+                && (value.equals(DataType.PredefinedType.TYPE_INT))) {
             return true;
         }
 
         return false;
+    }
+
+    public boolean writeCompatible(DataType test) {
+        if (test.getBasicType().equals(BasicType.VOID))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public boolean whileCompatible(DataType test) {
+        if (test.getBasicType().equals(TypeForm.SCALAR))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public boolean compareCompatible(DataType type1, DataType type2) {
@@ -91,11 +112,11 @@ public class Env implements MessageProducer {
 
         if (type1.getForm().equals(TypeForm.SCALAR) && type2.getForm().equals(TypeForm.SCALAR)) {
             // one integer and one real number
-            if ( (type1 == type2)
+            if ((type1 == type2)
                     || (type1.equals(DataType.PredefinedType.TYPE_INT) &&
-                            type2.equals(DataType.PredefinedType.TYPE_REAL))
+                    type2.equals(DataType.PredefinedType.TYPE_REAL))
                     || (type1.equals(DataType.PredefinedType.TYPE_REAL) &&
-                            type2.equals(DataType.PredefinedType.TYPE_INT))) {
+                    type2.equals(DataType.PredefinedType.TYPE_INT))) {
                 return true;
             }
         }
@@ -109,7 +130,7 @@ public class Env implements MessageProducer {
             // can assign to target
             return true;
         } else if (target.getForm().equals(TypeForm.ARRAY)
-            && value.getForm().equals(TypeForm.ARRAY)) {
+                && value.getForm().equals(TypeForm.ARRAY)) {
             // array initialization
             DataType targetScalar = new DataType(target.getBasicType(), TypeForm.SCALAR);
             DataType valueScalar = new DataType(value.getBasicType(), TypeForm.SCALAR);

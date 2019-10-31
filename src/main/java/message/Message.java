@@ -3,7 +3,7 @@ package message;
 public class Message {
     public enum MessageType {
         SROUCE_CHAR, TOKEN, PARSER_SUMMARY, INTERPRETER_SUMMARY, LEXER_SUMMARY,
-        SYNTAX_ERROR, IO_ERROR, READ_INPUT
+        SYNTAX_ERROR, IO_ERROR, READ_INPUT,WRITE
     }
 
     private MessageType type;
