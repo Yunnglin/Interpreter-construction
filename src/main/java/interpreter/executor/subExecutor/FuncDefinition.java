@@ -59,7 +59,7 @@ public class FuncDefinition extends BaseExecutor {
 
         if (entry != null) {
             // a duplicate function definition
-            throw SemanticError.newDupFuncDefinitionError(idName,
+            throw SemanticError.newDupDeclareError(idName,
                     (Integer) declarator.getAttribute(INode.INodeKey.LINE),
                     (Integer) entry.getValue(SymTbl.SymTblKey.LINE));
         }
