@@ -156,7 +156,7 @@ public class Expr extends BaseExecutor {
         throw new Exception("Unknown expression");
     }
 
-    private Object[] binaryOp(INode op, Object left, Object right) throws Exception {
+    public Object[] binaryOp(INode op, Object left, Object right) throws Exception {
         GrammarSymbol opSymbol = op.getSymbol();
         Object[] LeftArray = (Object[]) left;
         Object[] RightArray = (Object[]) right;
@@ -175,7 +175,7 @@ public class Expr extends BaseExecutor {
                 // add op
                 if (opSymbol.equals(TokenTag.SUM) || opSymbol.equals(TokenTag.SUB) || opSymbol.equals(TokenTag.MULTIPLY) || opSymbol.equals(TokenTag.DIVIDE))
                 {
-                    if(opSymbol.equals(TokenTag.SUM)&&rightValue==0)
+                    if(opSymbol.equals(TokenTag.DIVIDE)&&rightValue==0)
                     {
                         throw ExecutionError.newDivByZeroError((Integer) op.getAttribute(INode.INodeKey.LINE));
                     }
@@ -240,7 +240,7 @@ public class Expr extends BaseExecutor {
                 double rightValue = Double.parseDouble((String) RightArray[1]);
                 if (opSymbol.equals(TokenTag.SUM) || opSymbol.equals(TokenTag.SUB) || opSymbol.equals(TokenTag.MULTIPLY) || opSymbol.equals(TokenTag.DIVIDE))
                 {
-                    if(opSymbol.equals(TokenTag.SUM)&&rightValue==0)
+                    if(opSymbol.equals(TokenTag.DIVIDE)&&rightValue==0)
                     {
                         throw ExecutionError.newDivByZeroError((Integer) op.getAttribute(INode.INodeKey.LINE));
                     }
