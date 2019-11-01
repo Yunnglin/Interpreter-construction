@@ -269,7 +269,7 @@ public class Env implements MessageProducer {
                 statusCode = -1;
             } finally {
                 sendMessage(message);
-                System.out.println(message);
+                System.out.println(message.toString());
             }
         }
 

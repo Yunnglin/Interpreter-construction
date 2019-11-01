@@ -9,6 +9,14 @@ public class Message {
     private MessageType type;
     private Object body;
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "type=" + type +
+                ", body=" + body +
+                '}';
+    }
+
     public void setType(MessageType type) {
         this.type = type;
     }
