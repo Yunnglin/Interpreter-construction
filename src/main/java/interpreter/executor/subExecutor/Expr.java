@@ -171,6 +171,10 @@ public class Expr extends BaseExecutor {
         Object[] result = new Object[2];
 
         //尝试进行类型转换
+        if (leftType.getForm().equals(TypeForm.ARRAY)||rightType.getForm().equals(TypeForm.ARRAY))
+        {
+            throw ExecutionError.newWrongOpeTypeError(leftType,rightType,(Integer) op.getAttribute(INode.INodeKey.LINE));
+        }
         if ((leftType.getBasicType().equals(BasicType.REAL) && rightType.getBasicType().equals(BasicType.REAL)) ||
                 (leftType.getBasicType().equals(BasicType.REAL) && rightType.getBasicType().equals(BasicType.INT)) ||
                 (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.REAL)) ||
