@@ -5,6 +5,7 @@ public class ExecutorTest {
     @Test
     public void typeTest() {
         Integer i = 9;
+        Double d = 0.9;
         System.out.println(i.doubleValue());
     }
 
