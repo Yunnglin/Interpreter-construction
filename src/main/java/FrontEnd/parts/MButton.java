@@ -141,6 +141,7 @@ public class MButton {
                 baseExecutor.Execute(root);
                 env.runProgram();
             } catch (Exception | ReturnStmt.ReturnSignal e) {
+                System.out.println(e.getMessage());
                 e.printStackTrace();
             }
             mainWindow.getExecuteOutputPane().removeKeyListener(executorMessageListener);
