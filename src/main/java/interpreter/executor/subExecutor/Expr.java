@@ -82,8 +82,14 @@ public class Expr extends BaseExecutor {
                     if (!env.whileCompatible(dataType)) {
                         throw SemanticError.newWrongNegativeTpye(dataType, (Integer) expr.getChild(1).getAttribute(INode.INodeKey.LINE));
                     }
-                    double res = (double) result[1];
-                    result[1] = -res;
+                    Double res = (Double) result[1];
+                    if(dataType.getBasicType().equals(BasicType.INT)){
+                        result[1] = -res.intValue();
+                    }else if(dataType.getBasicType().equals(BasicType.REAL)){
+                        result[1] = -res;
+                    }
+
+
                     return result;
                 }
                 if (preFix.getSymbol().equals(TokenTag.IDENTIFIER)) {// factor-> identifier more-identifier
