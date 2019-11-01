@@ -6,6 +6,7 @@ import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
+import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTbl;
@@ -25,8 +26,7 @@ public class AssignStmt extends BaseExecutor {
     @Override
     public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.ASSIGN_STMT)) {
-            System.out.println("parse error in assign stmt");
-            return null;
+            throw new Exception("parse error in assign stmt");
         }
         //获取当前符号表
         ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
@@ -35,15 +35,14 @@ public class AssignStmt extends BaseExecutor {
         String idName = (String) identifierNode.getAttribute(INode.INodeKey.NAME);
         //获取标识符的类型
         SymTblEntry entry = env.findSymTblEntry(idName);
-        DataType NodeType = (DataType) entry.getValue(SymTbl.SymTblKey.TYPE);
-
         //判断赋值语句第一个节点是否为标识符
-        if (identifierNode.getSymbol().equals(LALRNonterminalSymbol.MORE_IDENTIFIER)) {
+        if (identifierNode.getSymbol().equals(TokenTag.IDENTIFIER)) {
             INode otherAssignNode = root.getChild(1);
             ArrayList<INode> AssignNodeList = otherAssignNode.getChildren();
             int AssignListLength = AssignNodeList.size();
             // 当前赋值变量已经存在，只是为他重新赋值
             if (entry != null) {
+                DataType NodeType = (DataType) entry.getValue(SymTbl.SymTblKey.TYPE);
                 //other-assign->=expr;
                 if (AssignListLength == 3) {
                     Executor exe = factory.getExecutor(AssignNodeList.get(1), env);
@@ -51,6 +50,7 @@ public class AssignStmt extends BaseExecutor {
                     DataType exeResultType = (DataType) exeValue[0];
                     //如果标识符与表达式的结果类型匹配
                     if (env.assignCompatible(NodeType, exeResultType)) {
+                        entry.addValue(SymTbl.SymTblKey.VALUE, exeValue[1]);
                        return exeValue[1];
                     }
                     //若不匹配则抛出错误

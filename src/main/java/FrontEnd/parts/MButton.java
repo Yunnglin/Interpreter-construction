@@ -2,6 +2,7 @@ package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
 import interpreter.exception.ExecutionError;
+import interpreter.exception.SemanticError;
 import interpreter.exception.SyntaxError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.subExecutor.E;
@@ -151,7 +152,6 @@ public class MButton {
         JTextPane executePane = mainWindow.getExecuteOutputPane();
         Message message;
         StringBuilder sb;
-        boolean flag = true;
 
         private void paneTextAppend(String str) {
             executePane.setText(executePane.getText() + str + '\n');
@@ -179,9 +179,14 @@ public class MButton {
                     paneTextAppend(stringBuilder);
                     break;
                 }
-                case EXECUTION_ERROR:
-                case SEMANTIC_ERROR: {
+                case EXECUTION_ERROR:{
                     ExecutionError error = (ExecutionError)message.getBody();
+                    String s = error.toString();
+                    paneTextAppend(s);
+                    break;
+                }
+                case SEMANTIC_ERROR: {
+                    SemanticError error = (SemanticError) message.getBody();
                     String s = error.toString();
                     paneTextAppend(s);
                     break;

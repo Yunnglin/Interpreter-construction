@@ -31,7 +31,7 @@ public class IfStmt extends BaseExecutor {
 
         boolean result = false;
         if (type.getBasicType().equals(BasicType.INT)) {
-            if ((int) exprRes[1] == 1)
+            if ((int) exprRes[1] != 0)
                 result = true;
         } else {
             if ((double) exprRes[1] != 0)

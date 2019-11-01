@@ -219,6 +219,20 @@ PROG
 																						INTEGER
 																				MORE_FACTOR
 																			MORE_TERM
+																				ADD_OP
+																					SUM
+																				TERM
+																					FACTOR
+																						NUMBER
+																							INTEGER
+																					MORE_FACTOR
+																						MUL_OP
+																							MULTIPLY
+																						FACTOR
+																							NUMBER
+																								INTEGER
+																						MORE_FACTOR
+																				MORE_TERM
 																		RELATIONAL_EXPR_MORE
 													SEMICOLON
 											STMT_LIST
@@ -517,33 +531,48 @@ PROG
 																						L_BRACES
 																						STMT_LIST
 																							STMT
-																								ASSIGN_STMT
-																									IDENTIFIER
-																									OTHER_ASSIGN
-																										L_SQUARE_BRACKETS
-																										EXPR
-																											RELATIONAL_EXPR
-																												SIMPLE_EXPR
-																													TERM
-																														FACTOR
-																															NUMBER
-																																INTEGER
-																														MORE_FACTOR
-																													MORE_TERM
-																												RELATIONAL_EXPR_MORE
-																										R_SQUARE_BRACKETS
-																										ASSIGN
-																										EXPR
-																											RELATIONAL_EXPR
-																												SIMPLE_EXPR
-																													TERM
-																														FACTOR
-																															NUMBER
-																																INTEGER
-																														MORE_FACTOR
-																													MORE_TERM
-																												RELATIONAL_EXPR_MORE
-																										SEMICOLON
+																								WRITE_STMT
+																									WRITE
+																									EXPR
+																										RELATIONAL_EXPR
+																											SIMPLE_EXPR
+																												TERM
+																													FACTOR
+																														NUMBER
+																															INTEGER
+																													MORE_FACTOR
+																												MORE_TERM
+																											RELATIONAL_EXPR_MORE
+																									SEMICOLON
+																							STMT_LIST
+																								STMT
+																									ASSIGN_STMT
+																										IDENTIFIER
+																										OTHER_ASSIGN
+																											L_SQUARE_BRACKETS
+																											EXPR
+																												RELATIONAL_EXPR
+																													SIMPLE_EXPR
+																														TERM
+																															FACTOR
+																																NUMBER
+																																	INTEGER
+																															MORE_FACTOR
+																														MORE_TERM
+																													RELATIONAL_EXPR_MORE
+																											R_SQUARE_BRACKETS
+																											ASSIGN
+																											EXPR
+																												RELATIONAL_EXPR
+																													SIMPLE_EXPR
+																														TERM
+																															FACTOR
+																																NUMBER
+																																	INTEGER
+																															MORE_FACTOR
+																														MORE_TERM
+																													RELATIONAL_EXPR_MORE
+																											SEMICOLON
 																						R_BRACES
 																					MORE_IF_ELSE
 																			STMT_LIST

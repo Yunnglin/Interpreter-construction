@@ -104,16 +104,16 @@ public class FileOperation {
         String path = mainWindow.getPathLabel().getText();
         if (path.equals("")) {
             if (JFileChooser.APPROVE_OPTION == jfc.showSaveDialog(mainWindow.getEditPane())) {
-                File newFile;
+               // File newFile;
                 File file = jfc.getSelectedFile();
-                MFileFilter filter = (MFileFilter) jfc.getFileFilter();
-                String ends = filter.getEnds();
-                if (file.toString().contains(ends)) {
-                    newFile = file;
-                } else {
-                    newFile = new File(file.getAbsolutePath() + ends);
-                }
-                String newPath = newFile.toString();
+                //MFileFilter filter = (MFileFilter) jfc.getFileFilter();
+//                String ends = filter.getEnds();
+//                if (file.toString().contains(ends)) {
+//                    newFile = file;
+//                } else {
+//                    newFile = new File(file.getAbsolutePath() + ends);
+//                }
+                String newPath = file.toString();
                 writeFile(newPath, mainWindow.getEditPane().getText());
                 mainWindow.getPathLabel().setText(newPath);
                 return true;
