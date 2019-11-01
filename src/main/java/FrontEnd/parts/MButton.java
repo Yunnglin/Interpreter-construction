@@ -1,6 +1,7 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
+import FrontEnd.parts.conf.MColor;
 import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.exception.SyntaxError;
@@ -93,6 +94,7 @@ public class MButton {
             String path = mainWindow.getPathLabel().getText();
             //initialize a lexer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
+                mainWindow.getOutputTabbedPane().setSelectedComponent(mainWindow.getParseOutputJSP());
                 Lexer lex = new Lexer(reader);
                 Parser myParser = new Parser(lex);
                 myParser.addMessageListener(new ParserMessageListener());
@@ -114,6 +116,7 @@ public class MButton {
             String path = mainWindow.getPathLabel().getText();
             //initialize a lexer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
+                mainWindow.getOutputTabbedPane().setSelectedComponent(mainWindow.getExecuteJPanel());
                 Lexer lex = new Lexer(reader);
                 Parser myParser = new Parser(lex);
                 myParser.addMessageListener(new ParserMessageListener());
@@ -135,7 +138,7 @@ public class MButton {
             Env env = new Env();
             ExecutorMessageListener executorMessageListener = new ExecutorMessageListener();
             env.addMessageListener(executorMessageListener);
-            mainWindow.getExecuteOutputPane().addKeyListener(executorMessageListener);
+            mainWindow.getParamTextField().addKeyListener(executorMessageListener);
             BaseExecutor baseExecutor = new E(env);
             try {
                 baseExecutor.Execute(root);
@@ -144,7 +147,7 @@ public class MButton {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
-            mainWindow.getExecuteOutputPane().removeKeyListener(executorMessageListener);
+            mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
         }).start();
 
     }
@@ -153,6 +156,7 @@ public class MButton {
         JTextPane executePane = mainWindow.getExecuteOutputPane();
         Message message;
         StringBuilder sb;
+        JTextField paramField = mainWindow.getParamTextField();
 
         private void paneTextAppend(String str) {
             executePane.setText(executePane.getText() + str + '\n');
@@ -162,8 +166,9 @@ public class MButton {
             Message.MessageType type = message.getType();
             switch (type) {
                 case READ_INPUT: {
-                    sb = new StringBuilder();
-                    executePane.setEditable(true);
+                    paramField.setEditable(true);
+                    paramField.setText("");
+                    paramField.setBackground(MColor.paramTextFiledWaitColor);
                     break;
                 }
                 case WRITE: {
@@ -205,17 +210,15 @@ public class MButton {
         public void keyTyped(KeyEvent e) {
             char key = e.getKeyChar();
             if (key == '\n' && message.getType().equals(Message.MessageType.READ_INPUT)) {
-                executePane.setEditable(false);
+                paramField.setEditable(false);
                 synchronized (message) {
-                    message.setBody(sb.toString());
+                    paramField.setBackground(MColor.paramTextFiledRunColor);
+                    message.setBody(paramField.getText());
                     message.notify();
-                    System.out.println("notified " + sb.toString());
+                    System.out.println("notified " + paramField.getText());
                 }
                 //追加内容
-//                paneTextAppend(sb.toString());
-            } else {
-                sb.append(key);
-
+                   paneTextAppend(paramField.getText());
             }
         }
 

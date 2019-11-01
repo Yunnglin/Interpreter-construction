@@ -10,6 +10,8 @@ public class MColor {
     public static Color editAreaColor = new Color(222,233,207);
     public static Color lineAreaColor = new Color(224, 199, 161);
     public static Color consoleAreaColor = new Color(253, 243, 216);
+    public static Color paramTextFiledWaitColor = new Color(210, 240, 203); //等待输入
+    public static Color paramTextFiledRunColor = new Color(240, 203, 183); //运行中
 
     //标识符颜色
     public static Color symbolColor = new Color(73, 113, 201);
