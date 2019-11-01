@@ -1,6 +1,7 @@
 package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
+import interpreter.exception.ExecutionError;
 import interpreter.exception.SyntaxError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.subExecutor.E;
@@ -153,22 +154,36 @@ public class MButton {
         boolean flag = true;
 
         private void paneTextAppend(String str) {
-            executePane.setText(executePane.getText() + '\n' + str);
+            executePane.setText(executePane.getText() + str + '\n');
         }
 
         private void handleMessage() {
             Message.MessageType type = message.getType();
-            String preContent = "";
             switch (type) {
                 case READ_INPUT: {
                     sb = new StringBuilder();
                     executePane.setEditable(true);
                     break;
-
                 }
                 case WRITE: {
                     String string = message.getBody().toString();
                     paneTextAppend(string);
+                    break;
+                }
+                case INTERPRETER_SUMMARY: {
+                    Object[] body = (Object[]) message.getBody();
+                    float exeElapsedTime = (float)body[0];
+                    int statusCode = (int)body[1];
+                    String stringBuilder = "----Execute Elapsed Time: " + exeElapsedTime + "s -----\n" +
+                            "---- Return Status Code----\n " + statusCode;
+                    paneTextAppend(stringBuilder);
+                    break;
+                }
+                case EXECUTION_ERROR:
+                case SEMANTIC_ERROR: {
+                    ExecutionError error = (ExecutionError)message.getBody();
+                    String s = error.toString();
+                    paneTextAppend(s);
                     break;
                 }
             }
@@ -191,7 +206,7 @@ public class MButton {
                     System.out.println("notified " + sb.toString());
                 }
                 //追加内容
-                paneTextAppend(sb.toString());
+//                paneTextAppend(sb.toString());
             } else {
                 sb.append(key);
 
