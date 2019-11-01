@@ -45,7 +45,7 @@ public class SemanticError extends InterpError {
 
     public static SemanticError newInitialIncompatibleTypeError(DataType target, DataType value, int line) {
         return new SemanticError("TYPE " + SemanticError.getTypeDesc(target) +
-                "AND TYPE " + SemanticError.getTypeDesc(value) +
+                " AND TYPE " + SemanticError.getTypeDesc(value) +
                 "ARE INCOMPATIBLE WHEN INITIALIZING", line, ErrorCode.INITIAL_INCOMPATIBLE_TYPE);
     }
 

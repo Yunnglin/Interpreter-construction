@@ -70,7 +70,7 @@ public class Expr extends BaseExecutor {
                 } else if (digit.getSymbol().equals(TokenTag.REAL_NUMBER)) {
                     result[0] = DataType.PredefinedType.TYPE_REAL;
                 }
-                result[1] = env.findSymTblEntry((String) digit.getAttribute(INode.INodeKey.NAME)).getValue(SymTbl.SymTblKey.VALUE);
+                result[1] = digit.getAttribute(INode.INodeKey.VALUE);
                 return result;
             } else if (childSize == 3) {// factor -> ( expr )
                 return (Object[]) executeNode(expr.getChild(1));
@@ -142,9 +142,10 @@ public class Expr extends BaseExecutor {
                             // make params a list
                             INode paramValues = more.getChild(1);
                             ArrayList<INode> params = List2Array.getArray(paramValues);
+                            int size = params.size();
                             // call function
                             FuncCaller caller = new FuncCaller(env);
-                            return caller.callFunc(idName, (INode[]) params.toArray(), preFix);
+                            return caller.callFunc(idName, (INode[]) params.toArray(new INode[size]), preFix);
                         }
                     }
                 }

@@ -22,6 +22,8 @@ import java.util.Stack;
 
 public class Env implements MessageProducer {
 
+    public static String mainEntryName = "main";
+
     private Stack<SymTbl> symTblStack;
     private int curNestingLevel;
     private MessageHandler ioHandler;
@@ -235,7 +237,7 @@ public class Env implements MessageProducer {
         int statusCode = 0;
         if (mainEntry == null) {
             message.setType(Message.MessageType.EXECUTION_ERROR);
-            message.setBody("PROGRAM ENTRY 'main' FUNCTION NOT FOUND");
+            message.setBody("PROGRAM ENTRY '" + Env.mainEntryName + "' FUNCTION NOT FOUND");
         } else {
             INode callerNode = new INode(LALRNonterminalSymbol.E);
             callerNode.setAttribute(INode.INodeKey.LINE, 0);
@@ -250,10 +252,12 @@ public class Env implements MessageProducer {
                 message.setType(Message.MessageType.INTERPRETER_SUMMARY);
                 message.setBody(exeMsgBody);
             } catch (SemanticError se) {
+                System.out.println(se);
                 message.setType(Message.MessageType.SEMANTIC_ERROR);
                 message.setBody(se);
                 statusCode = -1;
             } catch (ExecutionError ee) {
+                System.out.println(ee);
                 message.setType(Message.MessageType.EXECUTION_ERROR);
                 message.setBody(ee);
                 statusCode = -1;

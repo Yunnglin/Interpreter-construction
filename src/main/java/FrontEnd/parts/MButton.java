@@ -167,7 +167,7 @@ public class MButton {
 
                 }
                 case WRITE: {
-                    String string = (String) message.getBody();
+                    String string = message.getBody().toString();
                     paneTextAppend(string);
                     break;
                 }

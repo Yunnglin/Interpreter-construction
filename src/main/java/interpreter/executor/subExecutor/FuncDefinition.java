@@ -24,13 +24,13 @@ public class FuncDefinition extends BaseExecutor {
 
     @Override
     public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
-        if (root.getSymbol().equals(LALRNonterminalSymbol.FUNC_DEFINITION)) {
+        if (!root.getSymbol().equals(LALRNonterminalSymbol.FUNC_DEFINITION)) {
             throw new Exception("parse error in function definition at line " +
                     root.getAttribute(INode.INodeKey.LINE));
         }
 
         // type func-declarator { stmt-list }
-        INode type = root.getChild(0);
+        INode type = root.getChild(0).getChild(0);
         INode declarator = root.getChild(1);
         INode stmts = root.getChild(3);
         String typeName = (String) type.getAttribute(INode.INodeKey.NAME);
@@ -38,9 +38,14 @@ public class FuncDefinition extends BaseExecutor {
         // declare the function
         SymTblEntry entry = funcDeclare(typeName, declarator);
         ArrayList<INode> body = List2Array.getArray(stmts);
+        int stmtLen = body.size();
 
         // set function body
-        entry.addValue(SymTbl.SymTblKey.FUNC_BODY, body.toArray());
+        entry.addValue(SymTbl.SymTblKey.FUNC_BODY, body.toArray(new INode[stmtLen]));
+
+        if (entry.getName().equals(Env.mainEntryName)) {
+            env.setMainEntry(entry);
+        }
 
         return null;
     }
@@ -82,11 +87,12 @@ public class FuncDefinition extends BaseExecutor {
             // has params
             ArrayList<INode> paramDeclarations = List2Array.getArray(more);
             ArrayList<DataType> paramTypes = new ArrayList<>();
+            int paramLen = paramTypes.size();
 
             for (INode paramDecl : paramDeclarations) {
                 paramTypes.add(paramDeclare(symTbl, paramDecl));
             }
-            prototype.setParamTypes((DataType[]) paramTypes.toArray());
+            prototype.setParamTypes((DataType[]) paramTypes.toArray(new DataType[paramLen]));
         }
 
         // declare function in symbol table
