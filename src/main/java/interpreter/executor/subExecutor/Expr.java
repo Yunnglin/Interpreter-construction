@@ -137,6 +137,7 @@ public class Expr extends BaseExecutor {
                             // TODO scalar only now, may add a new column element type
                             exprValue[0] = new DataType(idType.getBasicType(), TypeForm.SCALAR);
                             exprValue[1] = values[idx];
+                            return exprValue;
                         } else {
                             // return the return value of call function
                             // make params a list
