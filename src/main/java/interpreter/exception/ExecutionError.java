@@ -51,7 +51,7 @@ public class ExecutionError extends InterpError {
     }
 
     public static ExecutionError newWrongOpeTypeError(DataType value, DataType aim, int line) {
-        return new ExecutionError("TYPE " + ExecutionError.getTypeDesc(aim) + "AND TYPE" +
+        return new ExecutionError("TYPE " + ExecutionError.getTypeDesc(aim) + " AND TYPE" +
                 ExecutionError.getTypeDesc(value) + "ARE WORNG OPERATE TYPE", line, ErrorCode.WRONG_OPERATE_TYPE);
     }
 

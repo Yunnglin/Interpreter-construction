@@ -31,11 +31,25 @@ public class MainWindow {
     private JButton editButton;
     private JSplitPane splitTreeEdit;
     private JSplitPane splitInOut;
+
+    public JTabbedPane getOutputTabbedPane() {
+        return outputTabbedPane;
+    }
+
     private JTabbedPane outputTabbedPane;
+
+    public JScrollPane getParseOutputJSP() {
+        return parseOutputJSP;
+    }
+
     private JScrollPane parseOutputJSP;
     private JTextPane parseOutputPane;
     private JScrollPane excuteOutputJSP;
     private JTextPane executeOutputPane;
+    private JPanel executeJPanel;
+    private JPanel paramJPanel;
+    private JTextField paramTextField;
+    private JLabel promptLabel;
 
 
     private MTextPane mTextPane;
@@ -86,6 +100,7 @@ public class MainWindow {
 //        System.out.println("Hello");
 //        executeOutputPane.addKeyListener(new MKeyListener(this));
 //        executeOutputPane.setEditable(true);
+//        outputTabbedPane.setSelectedComponent(executeJPanel);
     }
 
 
@@ -175,6 +190,19 @@ public class MainWindow {
 
     public JTextPane getExecuteOutputPane() {
         return executeOutputPane;
+    }
+
+
+    public JPanel getExecuteJPanel() {
+        return executeJPanel;
+    }
+
+    public JTextField getParamTextField() {
+        return paramTextField;
+    }
+
+    public JLabel getPromptLabel() {
+        return promptLabel;
     }
 
     public static void main(String[] args) {

@@ -17,6 +17,7 @@ public class MTextPane {
     private JPopupMenu jPopMenu;
     private JTextPane editPane;
     private JTextPane[] outputPanes;
+    private JTextField paramTextField;
 
 
     public MTextPane(MainWindow mainWindow){
@@ -28,7 +29,13 @@ public class MTextPane {
     public void init(){
         setTextPane();
         setOutputPane();
+        setParamTextField();
+    }
 
+    private void setParamTextField(){
+        this.paramTextField = mainWindow.getParamTextField();
+        this.paramTextField.setBackground(MColor.paramTextFiledRunColor);
+        this.paramTextField.setEditable(false);
     }
 
 
