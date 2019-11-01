@@ -170,8 +170,8 @@ public class Expr extends BaseExecutor {
                 (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.REAL)) ||
                 (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.INT))) {
             if (leftType.getBasicType().equals(BasicType.INT) && rightType.getBasicType().equals(BasicType.INT)) {
-                int leftValue = Integer.parseInt((String) LeftArray[1]);
-                int rightValue = Integer.parseInt((String) RightArray[1]);
+                int leftValue = (Integer) LeftArray[1];
+                int rightValue = (Integer)RightArray[1];
                 // add op
                 if (opSymbol.equals(TokenTag.SUM) || opSymbol.equals(TokenTag.SUB) || opSymbol.equals(TokenTag.MULTIPLY) || opSymbol.equals(TokenTag.DIVIDE))
                 {
@@ -236,8 +236,9 @@ public class Expr extends BaseExecutor {
                     return result;
                 }
             } else {
-                double leftValue = Double.parseDouble((String) LeftArray[1]);
-                double rightValue = Double.parseDouble((String) RightArray[1]);
+
+                double leftValue = Double.valueOf( LeftArray[1].toString());
+                double rightValue = Double.valueOf( RightArray[1].toString());
                 if (opSymbol.equals(TokenTag.SUM) || opSymbol.equals(TokenTag.SUB) || opSymbol.equals(TokenTag.MULTIPLY) || opSymbol.equals(TokenTag.DIVIDE))
                 {
                     if(opSymbol.equals(TokenTag.DIVIDE)&&rightValue==0)
