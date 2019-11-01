@@ -71,7 +71,7 @@ public class MButton {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                     Lexer lex = new Lexer(reader);
                     StringBuilder stringBuilder = new StringBuilder();
-                    ArrayList<Token> tokens = lex.getAllToken();
+                    ArrayList<Token> tokens = lex.lex();
                     for (Token token : tokens) {
                         stringBuilder.append(token.toString()).append('\n');
                     }

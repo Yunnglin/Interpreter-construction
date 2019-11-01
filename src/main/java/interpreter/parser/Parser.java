@@ -32,6 +32,7 @@ public class Parser implements MessageProducer {
     private MessageHandler handler;
     private LALRParseManager parseManager;
     private Lexer lexer;
+    private ArrayList<Token> tokens;
 
     @Override
     public void addMessageListener(MessageListener listener) {
@@ -75,25 +76,30 @@ public class Parser implements MessageProducer {
     /**
      * start lexing and parsing, and send the information to listeners
      */
-    public void parse() {
+    public INode parse() {
         try {
             // measure how much time lexer spent
             long lexStartTime = System.currentTimeMillis();
 
-            // lexer part
-            ArrayList<Token> tokens = lexer.getAllToken();
-            // lexical part finished, sending summary message.
-            float lexElapsedTime = (System.currentTimeMillis() - lexStartTime) / 1000f;
-            Object[] lexMsgBody = new Object[] {lexElapsedTime, tokens};
-            this.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
+            if (tokens == null) {
+                // lexer part
+                ArrayList<Token> tokens = lexer.lex();
+                this.tokens = tokens;
+                // lexical part finished, sending summary message.
+                double lexElapsedTime = (System.currentTimeMillis() - lexStartTime) / 1000.0;
+                Object[] lexMsgBody = new Object[] {lexElapsedTime, tokens};
+                this.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
+            }
 
             // measure how much time parser spent
             long parseStartTime = System.currentTimeMillis();
             // parser part
             INode root = parseTokens(tokens);
-            float parseElapsedTime = (System.currentTimeMillis() - parseStartTime) / 1000f;
+            double parseElapsedTime = (System.currentTimeMillis() - parseStartTime) / 1000.0;
             Object[] parseMsgBody = new Object[] {parseElapsedTime, root};
             this.sendMessage(new Message(Message.MessageType.PARSER_SUMMARY, parseMsgBody));
+
+            return root;
         } catch (IOException e) {
             Message errorMsg = new Message(Message.MessageType.IO_ERROR, e);
             this.sendMessage(errorMsg);
@@ -106,6 +112,8 @@ public class Parser implements MessageProducer {
             System.out.println(e);
             e.printStackTrace();
         }
+
+        return null;
     }
 
     /**

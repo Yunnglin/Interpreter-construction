@@ -22,7 +22,7 @@ import java.util.Stack;
 
 public class Env implements MessageProducer {
 
-    public static String defaultMainEntryName = "main";
+    public static String defaultMainEntranceName = "main";
 
     private Stack<SymTbl> symTblStack;
     private int curNestingLevel;
@@ -249,7 +249,7 @@ public class Env implements MessageProducer {
         int statusCode = 0;
         if (mainEntry == null) {
             message.setType(Message.MessageType.EXECUTION_ERROR);
-            message.setBody("PROGRAM ENTRY '" + Env.defaultMainEntryName + "' FUNCTION NOT FOUND");
+            message.setBody("PROGRAM ENTRY '" + Env.defaultMainEntranceName + "' FUNCTION NOT FOUND");
         } else {
             INode callerNode = new INode(LALRNonterminalSymbol.E);
             callerNode.setAttribute(INode.INodeKey.LINE, 0);

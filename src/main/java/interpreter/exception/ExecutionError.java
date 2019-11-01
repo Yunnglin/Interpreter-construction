@@ -1,5 +1,6 @@
 package interpreter.exception;
 
+import interpreter.env.Env;
 import interpreter.intermediate.type.DataType;
 
 public class ExecutionError extends InterpError {
@@ -10,7 +11,11 @@ public class ExecutionError extends InterpError {
 
     @Override
     public String getMessage() {
-        return "Execution error (" + getCode() + ") at line " + this.getLine() + ": " + this.getInnerMsg();
+        if (this.getLine() > 0) {
+            return "Execution error (" + getCode() + ") at line " + this.getLine() + ": " + this.getInnerMsg();
+        } else {
+            return "Execution error (" + getCode() + "): " + this.getInnerMsg();
+        }
     }
 
     private static String getTypeDesc(DataType type) {
@@ -78,6 +83,11 @@ public class ExecutionError extends InterpError {
         return new ExecutionError("TYPE OF" + getParamPositionStr(argPos) + " ARGUMENT OF '" +
                 lex + "' " + getTypeDesc(argType) + " IS INCOMPATIBLE WITH" + getTypeDesc(valType),
                 line, ErrorCode.INCOMPATIBLE_ARG_VAL);
+    }
+
+    public static ExecutionError newProgEntranceNotFound(String lex) {
+        return new ExecutionError("PROGRAM ENTRY '" + lex + "' FUNCTION NOT FOUND",
+                -1, ErrorCode.PROG_ENTRANCE_NOT_FOUND);
     }
 
 }

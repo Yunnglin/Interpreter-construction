@@ -90,12 +90,12 @@ public class Lexer {
     }
 
     /**
-     * get all tokens lexed from source code
+     * do lexing, get all tokens lexed from source code
      * @return the list of tokens
      * @throws IOException
      * @throws SyntaxError the error occurred while lexing
      */
-    public ArrayList<Token> getAllToken() throws IOException, SyntaxError {
+    public ArrayList<Token> lex() throws IOException, SyntaxError {
         ArrayList<Token> tokens = new ArrayList<Token>();
         Token token = null;
         while((token = this.getNextToken()).getTag() != TokenTag.PROG_END) {

@@ -55,7 +55,7 @@ public class LexerTest {
             reader = new BufferedReader(new FileReader(filepath));
             Lexer myLexer = new Lexer(reader);
             try {
-                ArrayList<Token> tokens = myLexer.getAllToken();
+                ArrayList<Token> tokens = myLexer.lex();
                 for(Token token : tokens){
                     System.out.println(token);
                 }

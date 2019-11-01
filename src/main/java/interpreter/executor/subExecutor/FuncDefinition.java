@@ -45,7 +45,7 @@ public class FuncDefinition extends BaseExecutor {
         // set function body
         entry.addValue(SymTbl.SymTblKey.FUNC_BODY, body.toArray(new INode[stmtLen]));
 
-        if (entry.getName().equals(Env.defaultMainEntryName)) {
+        if (entry.getName().equals(Env.defaultMainEntranceName)) {
             env.setMainEntry(entry);
         }
 
