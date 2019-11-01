@@ -215,24 +215,60 @@ PROG
 																		SIMPLE_EXPR
 																			TERM
 																				FACTOR
-																					NUMBER
-																						INTEGER
+																					SUB
+																					FACTOR
+																						L_PARENTHESES
+																						EXPR
+																							RELATIONAL_EXPR
+																								SIMPLE_EXPR
+																									TERM
+																										FACTOR
+																											L_PARENTHESES
+																											EXPR
+																												RELATIONAL_EXPR
+																													SIMPLE_EXPR
+																														TERM
+																															FACTOR
+																																NUMBER
+																																	INTEGER
+																															MORE_FACTOR
+																														MORE_TERM
+																															ADD_OP
+																																SUM
+																															TERM
+																																FACTOR
+																																	NUMBER
+																																		INTEGER
+																																MORE_FACTOR
+																															MORE_TERM
+																													RELATIONAL_EXPR_MORE
+																											R_PARENTHESES
+																										MORE_FACTOR
+																											MUL_OP
+																												MULTIPLY
+																											FACTOR
+																												NUMBER
+																													INTEGER
+																											MORE_FACTOR
+																									MORE_TERM
+																										ADD_OP
+																											SUB
+																										TERM
+																											FACTOR
+																												NUMBER
+																													INTEGER
+																											MORE_FACTOR
+																												MUL_OP
+																													DIVIDE
+																												FACTOR
+																													NUMBER
+																														INTEGER
+																												MORE_FACTOR
+																										MORE_TERM
+																								RELATIONAL_EXPR_MORE
+																						R_PARENTHESES
 																				MORE_FACTOR
 																			MORE_TERM
-																				ADD_OP
-																					SUM
-																				TERM
-																					FACTOR
-																						NUMBER
-																							INTEGER
-																					MORE_FACTOR
-																						MUL_OP
-																							MULTIPLY
-																						FACTOR
-																							NUMBER
-																								INTEGER
-																						MORE_FACTOR
-																				MORE_TERM
 																		RELATIONAL_EXPR_MORE
 													SEMICOLON
 											STMT_LIST

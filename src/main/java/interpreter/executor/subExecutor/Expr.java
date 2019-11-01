@@ -82,7 +82,7 @@ public class Expr extends BaseExecutor {
                     if (!env.whileCompatible(dataType)) {
                         throw SemanticError.newWrongNegativeTpye(dataType, (Integer) expr.getChild(1).getAttribute(INode.INodeKey.LINE));
                     }
-                    Double res = (Double) result[1];
+                    Double res = Double.parseDouble(result[1].toString());
                     if(dataType.getBasicType().equals(BasicType.INT)){
                         result[1] = -res.intValue();
                     }else if(dataType.getBasicType().equals(BasicType.REAL)){
