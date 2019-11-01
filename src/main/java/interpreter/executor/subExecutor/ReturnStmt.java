@@ -12,9 +12,11 @@ public class ReturnStmt extends BaseExecutor {
     public class ReturnSignal extends Throwable {
 
         private Object[] retValue;
+        private int line;
 
-        public ReturnSignal() {
+        public ReturnSignal(int line) {
             this.retValue = new Object[] {DataType.PredefinedType.TYPE_VOID, null};
+            this.line = line;
         }
 
         public Object[] getRetValue() {
@@ -25,16 +27,25 @@ public class ReturnStmt extends BaseExecutor {
             this.retValue = retValue;
         }
 
-        public ReturnSignal(Object[] retValue) {
+        public ReturnSignal(Object[] retValue, int line) {
             this.retValue = retValue;
+            this.line = line;
         }
 
-        public ReturnSignal(ReturnSignal cause) {
-            this(cause.getRetValue());
+        public ReturnSignal(ReturnSignal cause, int line) {
+            this(cause.getRetValue(), line);
         }
 
         public DataType getType() {
             return (DataType) this.retValue[0];
+        }
+
+        public int getLine() {
+            return line;
+        }
+
+        public void setLine(int line) {
+            this.line = line;
         }
     }
 
@@ -53,11 +64,11 @@ public class ReturnStmt extends BaseExecutor {
 
         if (more.getSymbol().equals(TokenTag.SEMICOLON)) {
             // terminated, return nothing
-            throw new ReturnSignal();
+            throw new ReturnSignal((Integer) root.getAttribute(INode.INodeKey.LINE));
         } else {
             // not terminated, return a expr value
             Object[] value = (Object[]) executeNode(more);
-            throw new ReturnSignal(value);
+            throw new ReturnSignal(value, (Integer) root.getAttribute(INode.INodeKey.LINE));
         }
     }
 }

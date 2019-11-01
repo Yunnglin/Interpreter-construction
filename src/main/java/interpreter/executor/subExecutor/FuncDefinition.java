@@ -12,7 +12,7 @@ import interpreter.intermediate.type.BasicType;
 import interpreter.intermediate.type.DataType;
 import interpreter.intermediate.type.FuncPrototype;
 import interpreter.intermediate.type.TypeForm;
-import interpreter.utils.List2Array;
+import interpreter.utils.INodeUtils;
 
 import java.util.ArrayList;
 
@@ -37,13 +37,15 @@ public class FuncDefinition extends BaseExecutor {
 
         // declare the function
         SymTblEntry entry = funcDeclare(typeName, declarator);
-        ArrayList<INode> body = List2Array.getArray(stmts);
+        ArrayList<INode> body = stmts.getSymbol().equals(LALRNonterminalSymbol.STMT_LIST)
+                ? INodeUtils.getLeftMostNodes(stmts)
+                : new ArrayList<>();
         int stmtLen = body.size();
 
         // set function body
         entry.addValue(SymTbl.SymTblKey.FUNC_BODY, body.toArray(new INode[stmtLen]));
 
-        if (entry.getName().equals(Env.mainEntryName)) {
+        if (entry.getName().equals(Env.defaultMainEntryName)) {
             env.setMainEntry(entry);
         }
 
@@ -85,7 +87,7 @@ public class FuncDefinition extends BaseExecutor {
             prototype.setParamTypes(new DataType[0]);
         } else {
             // has params
-            ArrayList<INode> paramDeclarations = List2Array.getArray(more);
+            ArrayList<INode> paramDeclarations = INodeUtils.getLeftMostNodes(more);
             ArrayList<DataType> paramTypes = new ArrayList<>();
             int paramLen = paramTypes.size();
 

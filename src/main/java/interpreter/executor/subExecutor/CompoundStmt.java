@@ -5,7 +5,7 @@ import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTbl;
-import interpreter.utils.List2Array;
+import interpreter.utils.INodeUtils;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class CompoundStmt extends BaseExecutor {
             INode stmtList = root.getChild(1);
 
             env.pushSymTbl(new SymTbl());//push a deeper sym table
-            ArrayList<INode> stmts = List2Array.getArray(stmtList);
+            ArrayList<INode> stmts = INodeUtils.getLeftMostNodes(stmtList);
             try {
                 for (INode stmt : stmts) {
                     executeNode(stmt);

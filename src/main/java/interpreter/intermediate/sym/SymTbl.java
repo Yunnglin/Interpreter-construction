@@ -12,6 +12,23 @@ public class SymTbl {
     private int nestingLevel;
 
     /**
+     * copy this symbol table
+     * @return a new symbol table initialized with this
+     */
+    public SymTbl copy() {
+        SymTbl symTbl = new SymTbl();
+        symTbl.setNestingLevel(nestingLevel);
+        LinkedHashMap<String, SymTblEntry> entries = this.getEntries();
+
+        for (String key : entries.keySet()) {
+            SymTblEntry entry = find(key);
+            symTbl.addEntry(entry.copy());
+        }
+
+        return symTbl;
+    }
+
+    /**
      * Constructor
      * @param level nesting level
      */

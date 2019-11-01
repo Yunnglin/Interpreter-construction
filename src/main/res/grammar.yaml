@@ -38,6 +38,11 @@ FUNC_DEFINITION:
     - L_BRACES
     - STMT_LIST
     - R_BRACES
+  -
+    - TYPE
+    - FUNC_DECLARATOR
+    - L_BRACES
+    - R_BRACES
 #FUNC_DEFINITION:
 #  -
 #    - POINTER_DECLARATOR
@@ -162,6 +167,8 @@ TYPE:
     - INT
   -
     - REAL
+  -
+    - VOID
 DECLARATOR:
   -
     - IDENTIFIER

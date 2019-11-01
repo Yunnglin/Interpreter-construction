@@ -12,7 +12,7 @@ import interpreter.intermediate.sym.SymTblEntry;
 import interpreter.intermediate.type.BasicType;
 import interpreter.intermediate.type.DataType;
 import interpreter.intermediate.type.TypeForm;
-import interpreter.utils.List2Array;
+import interpreter.utils.INodeUtils;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class DeclareStmt extends BaseExecutor {
         INode declaratorList = root.getChild(1);
 
         String typeName = (String) type.getChild(0).getAttribute(INodeKey.NAME);
-        ArrayList<INode> declarators = List2Array.getArray(declaratorList);
+        ArrayList<INode> declarators = INodeUtils.getLeftMostNodes(declaratorList);
 
         for (INode declarator : declarators) {
             declare(typeName, declarator);
@@ -140,7 +140,7 @@ public class DeclareStmt extends BaseExecutor {
                 entry.addValue(SymTblKey.VALUE, exprValue);
             } else {
                 INode initList = children.get(2);
-                ArrayList<INode> exprArr = List2Array.getArray(initList);
+                ArrayList<INode> exprArr = INodeUtils.getLeftMostNodes(initList);
 
                 if (!entryType.getForm().equals(TypeForm.ARRAY)) {
                     // invalid initializer

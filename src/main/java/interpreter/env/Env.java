@@ -22,7 +22,7 @@ import java.util.Stack;
 
 public class Env implements MessageProducer {
 
-    public static String mainEntryName = "main";
+    public static String defaultMainEntryName = "main";
 
     private Stack<SymTbl> symTblStack;
     private int curNestingLevel;
@@ -82,6 +82,10 @@ public class Env implements MessageProducer {
         return this.symTblStack.get(curNestingLevel);
     }
 
+    public SymTblEntry getMainEntry() {
+        return mainEntry;
+    }
+
     public boolean assignCompatible(DataType target, DataType value) {
         if (target.getBasicType().equals(BasicType.VOID)
                 || value.getBasicType().equals(BasicType.VOID)) {
@@ -96,6 +100,14 @@ public class Env implements MessageProducer {
         }
 
         return false;
+    }
+
+    public boolean returnCompatible(DataType proto, DataType value) {
+        if (proto.equals(value)) {
+            return true;
+        } else {
+            return assignCompatible(proto, value);
+        }
     }
 
     public boolean writeCompatible(DataType test) {
@@ -237,11 +249,11 @@ public class Env implements MessageProducer {
         int statusCode = 0;
         if (mainEntry == null) {
             message.setType(Message.MessageType.EXECUTION_ERROR);
-            message.setBody("PROGRAM ENTRY '" + Env.mainEntryName + "' FUNCTION NOT FOUND");
+            message.setBody("PROGRAM ENTRY '" + Env.defaultMainEntryName + "' FUNCTION NOT FOUND");
         } else {
             INode callerNode = new INode(LALRNonterminalSymbol.E);
             callerNode.setAttribute(INode.INodeKey.LINE, 0);
-            // call main
+            // call mainj
             FuncCaller caller = new FuncCaller(this);
             try {
                 long exeStartTime = System.currentTimeMillis();
@@ -261,7 +273,7 @@ public class Env implements MessageProducer {
                 message.setType(Message.MessageType.EXECUTION_ERROR);
                 message.setBody(ee);
                 statusCode = -1;
-            } catch (Exception | ReturnStmt.ReturnSignal e) {
+            } catch (Exception | Error | ReturnStmt.ReturnSignal e) {
                 e.printStackTrace();
                 System.out.println(e);
                 message.setType(Message.MessageType.INTERPRETER_SUMMARY);

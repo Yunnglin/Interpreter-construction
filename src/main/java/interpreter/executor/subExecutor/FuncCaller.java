@@ -19,6 +19,15 @@ public class FuncCaller extends BaseExecutor {
         super(env);
     }
 
+    /**
+     * help caller call a function in current execution env
+     * @param funcName String: the name of function
+     * @param paramsVals INode[]: the values of params passing to function
+     * @param caller INode: the symbol node that calls the function
+     * @return the return value of this call
+     * @throws Exception the exception thrown in the process of execution
+     * @throws ReturnStmt.ReturnSignal a unexpected case, the return signal that escaped from catching
+     */
     public Object[] callFunc(String funcName, INode[] paramsVals, INode caller) throws Exception, ReturnStmt.ReturnSignal {
         SymTblEntry funcEntry = env.findSymTblEntry(funcName);
 
@@ -30,7 +39,7 @@ public class FuncCaller extends BaseExecutor {
         }
 
         // get the definition of function
-        SymTbl symtbl = (SymTbl) funcEntry.getValue(SymTbl.SymTblKey.SYMTBL);
+        SymTbl symtbl = ((SymTbl) funcEntry.getValue(SymTbl.SymTblKey.SYMTBL)).copy();
         FuncPrototype prototype = (FuncPrototype) funcEntry.getValue(SymTbl.SymTblKey.FUNC_PROTOTYPE);
         INode[] body = (INode[]) funcEntry.getValue(SymTbl.SymTblKey.FUNC_BODY);
         DataType[] paramTypes = prototype.getParamTypes();
@@ -59,6 +68,9 @@ public class FuncCaller extends BaseExecutor {
             paramEntry.addValue(SymTbl.SymTblKey.VALUE, paramVal[1]);
         }
 
+        // return value
+        Object[] retValue = null;
+        int retLine = 0;
         // execute the function
         env.pushSymTbl(symtbl);
         try {
@@ -66,17 +78,32 @@ public class FuncCaller extends BaseExecutor {
                 executeNode(stmt);
             }
         } catch (ReturnStmt.ReturnSignal returnSignal) {
-            return returnSignal.getRetValue();
+            // return ret value
+            retValue = returnSignal.getRetValue();
+            retLine = returnSignal.getLine();
         } finally {
             env.popSymTbl();
         }
 
         // no return statement executed
         if (prototype.getRetType().equals(DataType.PredefinedType.TYPE_VOID)) {
-            return new Object[] {DataType.PredefinedType.TYPE_VOID, null};
+            retValue = new Object[] {DataType.PredefinedType.TYPE_VOID, null};
+        } else if (funcEntry.equals(env.getMainEntry())) {
+            retValue = new Object[] {DataType.PredefinedType.TYPE_INT, 0};
         }
 
-        throw ExecutionError.newMissingReturnError(funcName, (Integer) caller.getAttribute(INode.INodeKey.LINE));
+        if (retValue == null) {
+            throw ExecutionError.newMissingReturnError(funcName,
+                    (Integer) caller.getAttribute(INode.INodeKey.LINE));
+        } else {
+            if (env.returnCompatible(prototype.getRetType(), (DataType) retValue[0])) {
+                return retValue;
+            } else {
+                throw SemanticError.newReturnIncompatibleTypeError(funcName, prototype.getRetType(),
+                        (DataType) retValue[0], retLine);
+            }
+        }
+
     }
 
     @Override

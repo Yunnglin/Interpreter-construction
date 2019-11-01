@@ -1,6 +1,6 @@
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
-import interpreter.utils.List2Array;
+import interpreter.utils.INodeUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class mylTest {
         stlist2.addChild(stmt2);
         stlist2.addChild(stlist3);
         stlist3.addChild(stmt3);
-        ArrayList<INode> nodes = List2Array.getArray(stlist1);
+        ArrayList<INode> nodes = INodeUtils.getLeftMostNodes(stlist1);
         for (INode node:nodes
              ) {
             System.out.println(node.getSymbol().getSelfText());

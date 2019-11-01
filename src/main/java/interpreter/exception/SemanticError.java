@@ -76,4 +76,11 @@ public class SemanticError extends InterpError {
         return new SemanticError("INDEX OF ARRAY '" + lex + "' IS NON-INTEGER VALUE",
                 line, ErrorCode.NON_INTEGER_ARRAY_INDEX);
     }
+
+    public static SemanticError newReturnIncompatibleTypeError(String lex, DataType protoType,
+                                                               DataType retType, int line) {
+        return new SemanticError("FUNCTION '" + lex + "' RETURNS A INCOMPATIBLE TYPE" +
+                getTypeDesc(retType) + " WHEN " + getTypeDesc(protoType) + " DECLARED IN PROTOTYPE",
+                line, ErrorCode.RET_INCOMPATIBLE);
+    }
 }

@@ -5,8 +5,8 @@ import interpreter.intermediate.node.INode;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class List2Array {
-    public static ArrayList<INode> getArray(INode node){
+public class INodeUtils {
+    public static ArrayList<INode> getLeftMostNodes(INode node){
         ArrayList<INode> nodes = new ArrayList<>();
         INode curNode = node;
         while (curNode!=null){

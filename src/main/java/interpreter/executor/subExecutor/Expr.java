@@ -13,8 +13,7 @@ import interpreter.intermediate.sym.SymTblEntry;
 import interpreter.intermediate.type.BasicType;
 import interpreter.intermediate.type.DataType;
 import interpreter.intermediate.type.TypeForm;
-import interpreter.lexer.token.Token;
-import interpreter.utils.List2Array;
+import interpreter.utils.INodeUtils;
 
 import java.util.ArrayList;
 
@@ -148,7 +147,7 @@ public class Expr extends BaseExecutor {
                             // return the return value of call function
                             // make params a list
                             INode paramValues = more.getChild(1);
-                            ArrayList<INode> params = List2Array.getArray(paramValues);
+                            ArrayList<INode> params = INodeUtils.getLeftMostNodes(paramValues);
                             int size = params.size();
                             // call function
                             FuncCaller caller = new FuncCaller(env);

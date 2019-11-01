@@ -13,6 +13,8 @@ public class LexerTest {
     public void except(){
         InterpError ex = new SyntaxError("error!!!", 10, ErrorCode.UNEXPECTED_CHAR);
         System.out.println(ex.getMessage());
+
+        System.out.println(Integer.parseInt("10000000000"));
     }
 
     @Test

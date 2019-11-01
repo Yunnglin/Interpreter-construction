@@ -1,12 +1,25 @@
 package interpreter.intermediate.sym;
 
 import java.util.HashMap;
+import java.util.Set;
+
 import interpreter.intermediate.sym.SymTbl.SymTblKey;
 
 public class SymTblEntry {
 
     private String name;
     private HashMap<SymTbl.SymTblKey, Object> valuesMap;
+
+    public SymTblEntry copy() {
+        SymTblEntry entry = new SymTblEntry(this.name);
+        Set<SymTblKey> symTblKeys = this.valuesMap.keySet();
+
+        for (SymTblKey key : symTblKeys) {
+            entry.addValue(key, this.valuesMap.get(key));
+        }
+
+        return entry;
+    }
 
     public SymTblEntry(String name) {
         this.name = name;
