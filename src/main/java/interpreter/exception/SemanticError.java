@@ -65,7 +65,8 @@ public class SemanticError extends InterpError {
     }
 
     public static SemanticError newWrongNegativeTpye(DataType wrong, int line) {
-        return new SemanticError("CANNOT BE NEGATIVE " + SemanticError.getTypeDesc(wrong), line, ErrorCode.WRONG_NEGATIVE_TYPE);
+        return new SemanticError("CANNOT BE NEGATIVE " + SemanticError.getTypeDesc(wrong),
+                line, ErrorCode.WRONG_NEGATIVE_TYPE);
     }
 
     public static SemanticError newSymbolNotCallableError(String lex, int line) {
@@ -82,5 +83,10 @@ public class SemanticError extends InterpError {
         return new SemanticError("FUNCTION '" + lex + "' RETURNS A INCOMPATIBLE TYPE" +
                 getTypeDesc(retType) + " WHEN " + getTypeDesc(protoType) + " DECLARED IN PROTOTYPE",
                 line, ErrorCode.RET_INCOMPATIBLE);
+    }
+
+    public static SemanticError newDeclareVoidError(String lex, int line) {
+        return new SemanticError("CANNOT DECLARE SYMBOL'" + lex + "' TO BE VOID TYPE",
+                line, ErrorCode.DECLARE_VOID);
     }
 }

@@ -51,6 +51,13 @@ public class DeclareStmt extends BaseExecutor {
         SymTblEntry entry = symTbl.find(idName);
         BasicType basicType = BasicType.getBasicType(type);
 
+        // check the data type cannot be void
+        // if pointer added, should check whether any pointer exists
+        if (env.getBasicDataType(type).equals(DataType.PredefinedType.TYPE_VOID)) {
+            throw SemanticError.newDeclareVoidError((String) identifier.getAttribute(INodeKey.NAME),
+                    (Integer) identifier.getAttribute(INodeKey.LINE));
+        }
+
         if (entry != null) {
             // a duplicate declaration
             throw SemanticError.newDupDeclareError(idName, (int) declarator.getAttribute(INodeKey.LINE),
