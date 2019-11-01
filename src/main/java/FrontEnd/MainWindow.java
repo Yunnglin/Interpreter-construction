@@ -36,6 +36,9 @@ public class MainWindow {
     private JTextPane parseOutputPane;
     private JScrollPane excuteOutputJSP;
     private JTextPane executeOutputPane;
+    private JPanel executeJPanel;
+    private JPanel paramJPanel;
+    private JTextField textField1;
 
 
     private MTextPane mTextPane;
@@ -86,6 +89,7 @@ public class MainWindow {
 //        System.out.println("Hello");
 //        executeOutputPane.addKeyListener(new MKeyListener(this));
 //        executeOutputPane.setEditable(true);
+        outputTabbedPane.setSelectedComponent(executeJPanel);
     }
 
 
