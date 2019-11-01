@@ -45,7 +45,7 @@ public class ReadStmt extends BaseExecutor {
         if (more.getSymbol().equals(TokenTag.SEMICOLON))
         {
             // terminated, only read a identifier (scalar)
-            if (!type.getForm().equals(TypeForm.SCALAR) || type.getForm().equals(BasicType.VOID)) {
+            if (!type.getForm().equals(TypeForm.SCALAR) || type.getBasicType().equals(BasicType.VOID)) {
                 // required scalar
                 throw SemanticError.newReadWrongTypeError(type,
                         (Integer) identifier.getAttribute(INode.INodeKey.LINE));
@@ -60,13 +60,13 @@ public class ReadStmt extends BaseExecutor {
             Object readResult;
             //尝试进行类型转换
             try {
-                if (type.getForm().equals(BasicType.INT)) {
+                if (type.equals(DataType.PredefinedType.TYPE_INT)) {
                     // if identifier is an INT
                     readResult = Integer.parseInt((String)input.getBody());
                     entry.addValue(SymTbl.SymTblKey.VALUE, readResult);
                     return readResult;
                 } // if identifier is a REAL
-                else if (type.getForm().equals(BasicType.REAL)) {
+                else if (type.equals(DataType.PredefinedType.TYPE_REAL)) {
                     readResult =Double.parseDouble((String)input.getBody());
                     entry.addValue(SymTbl.SymTblKey.VALUE, readResult);
                     return readResult;
@@ -144,7 +144,7 @@ public class ReadStmt extends BaseExecutor {
             }
 
         }
-        return read().getBody();
+        return null;
     }
 
     private Message read() throws InterruptedException {
