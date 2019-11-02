@@ -135,7 +135,7 @@ public class Lexer implements MessageProducer {
             e.printStackTrace();
         } catch (SyntaxError syntaxError) {
             // catch a syntax error when lexing
-            Message errorMsg = new Message(Message.MessageType.SYNTAX_ERROR, syntaxError);
+            Message errorMsg = new Message(Message.MessageType.SYNTAX_LEX_ERROR, syntaxError);
             this.sendMessage(errorMsg);
             System.out.println(syntaxError.getMessage());
             syntaxError.printStackTrace();

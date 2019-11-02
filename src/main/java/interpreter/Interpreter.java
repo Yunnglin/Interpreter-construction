@@ -127,6 +127,22 @@ public class Interpreter implements MessageProducer {
     }
 
     /**
+     * remove a listener from the list of lexer only
+     * @param listener
+     */
+    public void removeLexMessageListener(MessageListener listener) {
+        parser.removeLexMessageListener(listener);
+    }
+
+    /**
+     * remove a listener from the list of parser only
+     * @param listener
+     */
+    public void removeParseMessageListener(MessageListener listener) {
+        parser.removeParseMessageListener(listener);
+    }
+
+    /**
      * send a message to listeners for current interpreter component
      * @param message
      */

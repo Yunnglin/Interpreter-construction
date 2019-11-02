@@ -57,6 +57,22 @@ public class Parser implements MessageProducer {
     }
 
     /**
+     * remove the listener from the list of lexer
+     * @param listener
+     */
+    public void removeLexMessageListener(MessageListener listener) {
+        this.lexer.removeMessageListener(listener);
+    }
+
+    /**
+     * remove the listener from the list of parser only
+     * @param listener
+     */
+    public void removeParseMessageListener(MessageListener listener) {
+        this.parseHandler.removeListener(listener);
+    }
+
+    /**
      * send a message to all listeners in current parser component
      * @param message
      */
@@ -121,7 +137,7 @@ public class Parser implements MessageProducer {
             return root;
         } catch (SyntaxError syntaxError) {
             // catch a syntax error when parsing
-            Message errorMsg = new Message(Message.MessageType.SYNTAX_ERROR, syntaxError);
+            Message errorMsg = new Message(Message.MessageType.SYNTAX_PARSE_ERROR, syntaxError);
             this.sendMessage(errorMsg);
             syntaxError.printStackTrace();
         } catch (Exception | Error syse) {
