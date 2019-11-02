@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class LexerTest {
+
+    public static String testFile = "src/test/res/test.cmm";
+
     @Test
     public void except(){
         InterpError ex = new SyntaxError("error!!!", 10, ErrorCode.UNEXPECTED_CHAR);
@@ -54,19 +57,9 @@ public class LexerTest {
         try {
             reader = new BufferedReader(new FileReader(filepath));
             Lexer myLexer = new Lexer(reader);
-            try {
-                ArrayList<Token> tokens = myLexer.lex();
-                for(Token token : tokens){
-                    System.out.println(token);
-                }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            } catch (SyntaxError syntaxError) {
-                System.out.println(syntaxError.getMessage());
-                syntaxError.printStackTrace();
-            } finally {
-                reader.close();
+            ArrayList<Token> tokens = myLexer.lex();
+            for(Token token : tokens){
+                System.out.println(token);
             }
         } catch (IOException e) {
             e.printStackTrace();

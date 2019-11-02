@@ -29,33 +29,49 @@ import java.util.HashMap;
 public class Parser implements MessageProducer {
     private static boolean update = false;
 
-    private MessageHandler handler;
+    private MessageHandler parseHandler;
     private LALRParseManager parseManager;
     private Lexer lexer;
     private ArrayList<Token> tokens;
 
+    /**
+     * add a listener to all components
+     * including lexer and parser
+     * @param listener
+     */
     @Override
     public void addMessageListener(MessageListener listener) {
-        this.handler.addListener(listener);
-    }
-
-    @Override
-    public void removeMessageListener(MessageListener listener) {
-        this.handler.removeListener(listener);
-    }
-
-    @Override
-    public void sendMessage(Message message) {
-        this.handler.sendMessage(message);
+        this.lexer.addMessageListener(listener);
+        this.parseHandler.addListener(listener);
     }
 
     /**
-     * Constructor
-     * @param lexer the lexer that have not done lexing
+     * remove a listener from all components if it exits in the list
+     * including lexer and parser
+     * @param listener
+     */
+    @Override
+    public void removeMessageListener(MessageListener listener) {
+        this.lexer.removeMessageListener(listener);
+        this.parseHandler.removeListener(listener);
+    }
+
+    /**
+     * send a message to all listeners in current parser component
+     * @param message
+     */
+    @Override
+    public void sendMessage(Message message) {
+        this.parseHandler.sendMessage(message);
+    }
+
+    /**
+     * Constructor with lexer
+     * @param lexer the lexer responsible for lexing
      */
     public Parser(Lexer lexer) {
         this.lexer = lexer;
-        this.handler = new MessageHandler();
+        this.parseHandler = new MessageHandler();
         if (update) {
             this.parseManager = new LALRParseManager();
         } else {
@@ -63,14 +79,23 @@ public class Parser implements MessageProducer {
             try {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
                 this.parseManager = (LALRParseManager) ois.readObject();
-            } catch (IOException e) {
-                System.out.println(e);
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
+                // cannot read the parseManager object file
+                // or the file have been out of date
+                // TODO handle the error properly ?
                 System.out.println(e);
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Constructor with reader of source file
+     * will construct lexer automatically
+     * @param reader buffered reader of source file
+     */
+    public Parser(BufferedReader reader) {
+        this(new Lexer(reader));
     }
 
     /**
@@ -82,13 +107,7 @@ public class Parser implements MessageProducer {
             long lexStartTime = System.currentTimeMillis();
 
             if (tokens == null) {
-                // lexer part
-                ArrayList<Token> tokens = lexer.lex();
-                this.tokens = tokens;
-                // lexical part finished, sending summary message.
-                double lexElapsedTime = (System.currentTimeMillis() - lexStartTime) / 1000.0;
-                Object[] lexMsgBody = new Object[] {lexElapsedTime, tokens};
-                this.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
+                tokens = lexer.lex();
             }
 
             // measure how much time parser spent
@@ -100,17 +119,17 @@ public class Parser implements MessageProducer {
             this.sendMessage(new Message(Message.MessageType.PARSER_SUMMARY, parseMsgBody));
 
             return root;
-        } catch (IOException e) {
-            Message errorMsg = new Message(Message.MessageType.IO_ERROR, e);
-            this.sendMessage(errorMsg);
-            e.printStackTrace();
         } catch (SyntaxError syntaxError) {
+            // catch a syntax error when parsing
             Message errorMsg = new Message(Message.MessageType.SYNTAX_ERROR, syntaxError);
             this.sendMessage(errorMsg);
             syntaxError.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
+        } catch (Exception | Error syse) {
+            // catch a system error
+            Message systemError = new Message(Message.MessageType.SYS_ERROR, syse);
+            this.sendMessage(systemError);
+            System.out.println(syse.getMessage());
+            syse.printStackTrace();
         }
 
         return null;

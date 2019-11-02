@@ -7,33 +7,61 @@ import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
 import interpreter.executor.subExecutor.FuncCaller;
 import interpreter.executor.subExecutor.ReturnStmt;
-import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTblEntry;
+import interpreter.lexer.Lexer;
 import interpreter.parser.Parser;
 import message.Message;
 import message.MessageHandler;
 import message.MessageListener;
 import message.MessageProducer;
 
+import java.io.BufferedReader;
+
 public class Interpreter implements MessageProducer {
 
-    private MessageHandler ioHandler;
+    private MessageHandler interpretHandler;
     private Env env;
     private Parser parser;
     private INode root;
 
+    /**
+     * Constructor with parser
+     * @param parser the parser responsible for parsing
+     */
     public Interpreter(Parser parser) {
         this.parser = parser;
-        this.ioHandler = new MessageHandler();
+        this.interpretHandler = new MessageHandler();
         this.env = new Env();
     }
 
+    /**
+     * Constructor with lexer, will construct parser automatically
+     * @param lexer the lexer responsible for lexing
+     */
+    public Interpreter(Lexer lexer) {
+        this(new Parser(lexer));
+    }
+
+    /**
+     * Constructor with the reader of source file
+     * Lexer and parser will be constructed automatically
+     * @param reader buffered reader of source file
+     */
+    public Interpreter(BufferedReader reader) {
+        this(new Parser(reader));
+    }
+
+    /**
+     * do interpreting
+     * @return An Integer that represents the exit status of this process
+     */
     public Integer interpret() {
         // set root node
         if (root == null) {
             root = parser.parse();
         } else {
+            // reset the environment
             this.env = new Env();
         }
 
@@ -74,23 +102,47 @@ public class Interpreter implements MessageProducer {
         return exitStatusCode;
     }
 
+    /**
+     * add a listener to all component
+     * including parser(contains lexer), env(responsible for IO), interpreter
+     * @param listener
+     */
     @Override
     public void addMessageListener(MessageListener listener) {
-        ioHandler.addListener(listener);
         parser.addMessageListener(listener);
+        env.addMessageListener(listener);
+        interpretHandler.addListener(listener);
     }
 
+    /**
+     * remove a listener from all component if it exists in list
+     * including parser(contains lexer), env(responsible for IO), interpreter
+     * @param listener
+     */
     @Override
     public void removeMessageListener(MessageListener listener) {
-        ioHandler.removeListener(listener);
         parser.removeMessageListener(listener);
+        env.removeMessageListener(listener);
+        interpretHandler.removeListener(listener);
     }
 
+    /**
+     * send a message to listeners for current interpreter component
+     * @param message
+     */
     @Override
     public void sendMessage(Message message) {
-        ioHandler.sendMessage(message);
+        interpretHandler.sendMessage(message);
     }
 
+    /**
+     * execute with the root node of syntax tree
+     * @param root INode, the root of syntax tree got from parsing
+     * @param params the arguments for entrance function
+     * @return An Integer returned from the entrance function, represents exit status
+     * @throws Exception
+     * @throws ReturnStmt.ReturnSignal
+     */
     private Integer executeRoot(INode root, INode[] params) throws Exception, ReturnStmt.ReturnSignal {
         // get executor and execute external declarations
         ExecutorFactory executorFactory = ExecutorFactory.getExecutorFactory();

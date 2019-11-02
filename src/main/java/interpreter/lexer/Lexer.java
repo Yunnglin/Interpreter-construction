@@ -6,16 +6,21 @@ import interpreter.lexer.token.IntNum;
 import interpreter.lexer.token.Real;
 import interpreter.lexer.token.Token;
 import interpreter.lexer.token.Word;
+import message.Message;
+import message.MessageListener;
+import message.MessageProducer;
+import message.MessageHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Lexer {
+public class Lexer implements MessageProducer {
     private int curLine;
     private char peek;
     private Token curToken;
     private BufferedReader reader;
+    private MessageHandler lexHandler;
 
     private static final char EOF = 0;
 
@@ -27,10 +32,11 @@ public class Lexer {
      * Constructor
      * set the initial peek a whitespace
      */
-    public Lexer() {
+    private Lexer() {
         this.curLine = 1;
         this.peek = ' ';
         this.reader = null;
+        this.lexHandler = new MessageHandler();
     }
 
     /**
@@ -74,6 +80,8 @@ public class Lexer {
             } else {
                 peek = (char) ch;
             }
+        } else {
+            peek = EOF;
         }
     }
 
@@ -84,7 +92,7 @@ public class Lexer {
      * @throws IOException
      */
     public boolean getNextChar(char c) throws IOException {
-        // 读取下一个字符并判断是否为 c
+        // read the next character and check whether it is c
         getNextChar();
         return c == peek;
     }
@@ -95,13 +103,50 @@ public class Lexer {
      * @throws IOException
      * @throws SyntaxError the error occurred while lexing
      */
-    public ArrayList<Token> lex() throws IOException, SyntaxError {
+    public ArrayList<Token> lex() {
+        // measure how much time lexer spent
+        long lexStartTime = System.currentTimeMillis();
+
         ArrayList<Token> tokens = new ArrayList<Token>();
         Token token = null;
-        while((token = this.getNextToken()).getTag() != TokenTag.PROG_END) {
+        // do lexing
+        try {
+
+            // reset the reader
+            if (reader != null) {
+                reader.reset();
+            }
+
+            while((token = this.getNextToken()).getTag() != TokenTag.PROG_END) {
+                tokens.add(token);
+            }
             tokens.add(token);
+
+            // lex part finished, sending summary message.
+            double lexElapsedTime = (System.currentTimeMillis() - lexStartTime) / 1000.0;
+            Object[] lexMsgBody = new Object[] {lexElapsedTime, tokens};
+            this.sendMessage(new Message(Message.MessageType.LEXER_SUMMARY, lexMsgBody));
+
+        } catch (IOException e) {
+            // catch an io error
+            Message errorMsg = new Message(Message.MessageType.IO_ERROR, e);
+            this.sendMessage(errorMsg);
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } catch (SyntaxError syntaxError) {
+            // catch a syntax error when lexing
+            Message errorMsg = new Message(Message.MessageType.SYNTAX_ERROR, syntaxError);
+            this.sendMessage(errorMsg);
+            System.out.println(syntaxError.getMessage());
+            syntaxError.printStackTrace();
+        } catch (Exception | Error syse) {
+            // catch a unexpected error, may caused by our code
+            Message systemError = new Message(Message.MessageType.SYS_ERROR, syse);
+            this.sendMessage(systemError);
+            System.out.println(syse.getMessage());
+            syse.printStackTrace();
         }
-        tokens.add(token);
+
         return tokens;
     }
 
@@ -291,5 +336,32 @@ public class Lexer {
             throw SyntaxError.newLexicalError(Character.toString(peek), curLine);
         }
         return new Token(TokenTag.PROG_END, curLine);
+    }
+
+    /**
+     * add a listener to lexing component
+     * @param listener
+     */
+    @Override
+    public void addMessageListener(MessageListener listener) {
+        lexHandler.addListener(listener);
+    }
+
+    /**
+     * remove a listener from the list of lexing component
+     * @param listener
+     */
+    @Override
+    public void removeMessageListener(MessageListener listener) {
+        lexHandler.removeListener(listener);
+    }
+
+    /**
+     * send a message to listeners of lexing component
+     * @param message
+     */
+    @Override
+    public void sendMessage(Message message) {
+        lexHandler.sendMessage(message);
     }
 }
