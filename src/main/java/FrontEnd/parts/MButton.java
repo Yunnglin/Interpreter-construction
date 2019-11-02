@@ -2,6 +2,7 @@ package FrontEnd.parts;
 
 import FrontEnd.MainWindow;
 import FrontEnd.parts.conf.MColor;
+import interpreter.Interpreter;
 import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.exception.SyntaxError;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 
 public class MButton {
     private MainWindow mainWindow;
-    private INode rootNode = null;
 
     public MButton(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -77,7 +77,7 @@ public class MButton {
                     }
                     //设置词法分析结果区
                     mainWindow.getOutputPane().setText(stringBuilder.toString());
-                } catch (IOException | SyntaxError e1) {
+                } catch (IOException e1) {
                     mainWindow.getOutputPane().setText(e1.getMessage());
                     e1.printStackTrace();
                 }
@@ -95,10 +95,12 @@ public class MButton {
             //initialize a lexer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                 mainWindow.getOutputTabbedPane().setSelectedComponent(mainWindow.getParseOutputJSP());
+                mainWindow.getFileOperation().setOutputEmpty();
+
                 Lexer lex = new Lexer(reader);
                 Parser myParser = new Parser(lex);
+
                 myParser.addMessageListener(new ParserMessageListener());
-                mainWindow.getFileOperation().setOutputEmpty();
                 myParser.parse();
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
@@ -117,12 +119,20 @@ public class MButton {
             //initialize a lexer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                 mainWindow.getOutputTabbedPane().setSelectedComponent(mainWindow.getExecuteJPanel());
+                mainWindow.getFileOperation().setOutputEmpty();
+
                 Lexer lex = new Lexer(reader);
                 Parser myParser = new Parser(lex);
-                myParser.addMessageListener(new ParserMessageListener());
-                mainWindow.getFileOperation().setOutputEmpty();
-                myParser.parse();
-                startExecute(rootNode);
+                Interpreter interpreter = new Interpreter(myParser);
+
+                interpreter.addMessageListener(new ParserMessageListener());
+                ExecutorMessageListener executorMessageListener = new ExecutorMessageListener();
+                interpreter.addMessageListener(executorMessageListener);
+                mainWindow.getParamTextField().addKeyListener(executorMessageListener);
+                //开始执行
+                interpreter.interpret();
+                mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
+                //startExecute(rootNode);
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
                 e1.printStackTrace();
@@ -130,32 +140,10 @@ public class MButton {
         }).start());
     }
 
-    private void startExecute(INode root) {
-        if (root == null) {
-            return;
-        }
-        new Thread(() -> {
-            Env env = new Env();
-            ExecutorMessageListener executorMessageListener = new ExecutorMessageListener();
-            env.addMessageListener(executorMessageListener);
-            mainWindow.getParamTextField().addKeyListener(executorMessageListener);
-            BaseExecutor baseExecutor = new E(env);
-            try {
-                baseExecutor.Execute(root);
-                env.runProgram();
-            } catch (Exception | ReturnStmt.ReturnSignal e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-            mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
-        }).start();
-
-    }
 
     private class ExecutorMessageListener implements MessageListener, KeyListener {
         JTextPane executePane = mainWindow.getExecuteOutputPane();
         Message message;
-        StringBuilder sb;
         JTextField paramField = mainWindow.getParamTextField();
 
         private void paneTextAppend(String str) {
@@ -178,7 +166,7 @@ public class MButton {
                 }
                 case INTERPRETER_SUMMARY: {
                     Object[] body = (Object[]) message.getBody();
-                    float exeElapsedTime = (float)body[0];
+                    Double exeElapsedTime = (Double)body[0];
                     int statusCode = (int)body[1];
                     String stringBuilder = "----Execute Elapsed Time: " + exeElapsedTime + "s -----\n" +
                             "---- Return Status Code----\n " + statusCode;
@@ -245,7 +233,7 @@ public class MButton {
                 case LEXER_SUMMARY: {
                     //消息体
                     Object[] body = (Object[]) message.getBody();
-                    float lexElapsedTime = (float) body[0];
+                    Double lexElapsedTime = (Double) body[0];
                     ArrayList<Token> tokens = (ArrayList<Token>) body[1];
 
                     StringBuilder stringBuilder = new StringBuilder();
@@ -261,11 +249,8 @@ public class MButton {
                 case PARSER_SUMMARY: {
                     //消息体
                     Object[] body = (Object[]) message.getBody();
-                    float parseElapsedTime = (float) body[0];
+                    Double parseElapsedTime = (Double) body[0];
                     INode root = (INode) body[1];
-
-                    //执行
-                    rootNode = root;
 
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("----Parse Elapsed Time: ").append(parseElapsedTime).append("s -----\n");
@@ -283,11 +268,18 @@ public class MButton {
                     mainWindow.getParseOutputPane().setText(preContent);
                     break;
                 }
-                case SYNTAX_ERROR: {
-                    preContent += "\n-----Syntax Error----\n";
+                case SYNTAX_PARSE_ERROR: {
+                    preContent += "\n-----Syntax Parse Error----\n";
                     SyntaxError syntaxError = (SyntaxError) message.getBody();
                     preContent += syntaxError.getMessage();
                     mainWindow.getParseOutputPane().setText(preContent);
+                    break;
+                }
+                case SYNTAX_LEX_ERROR:{
+                    preContent += "\n-----Syntax Lex Error----\n";
+                    SyntaxError syntaxError = (SyntaxError) message.getBody();
+                    preContent += syntaxError.getMessage();
+                    mainWindow.getOutputPane().setText(preContent);
                     break;
                 }
             }
