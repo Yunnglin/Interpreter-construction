@@ -9,7 +9,7 @@ int main()
     int b = 4;
     int c[4]={1,1,1,};
     int ca[] = { 1, 2, 3,};
-    read a;
+    //read a;
     write b;
 
     //选择语句（if-else）
@@ -20,7 +20,7 @@ int main()
     }
 
     //循环结构（while）
-    while(a<0){
+    while(a>0){
         write a;
         a=a-1;
     }

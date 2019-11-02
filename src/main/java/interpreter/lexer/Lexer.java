@@ -116,11 +116,6 @@ public class Lexer implements MessageProducer {
         // do lexing
         try {
 
-            // reset the reader
-//            if (reader != null) {
-//                reader.reset();
-//            }
-
             while((token = this.getNextToken()).getTag() != TokenTag.PROG_END) {
                 tokens.add(token);
             }

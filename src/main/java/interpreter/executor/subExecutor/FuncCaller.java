@@ -53,7 +53,8 @@ public class FuncCaller extends BaseExecutor {
         }
 
 
-        Iterator<Map.Entry<String, SymTblEntry>> iterator = paramList.iterator();
+        ListIterator<Map.Entry<String, SymTblEntry>> iterator =
+                new ArrayList<>(paramList).listIterator(paramList.size());
         // push each value into symbol table
         for (int i=paramsVals.length-1; i>=0; --i) {
             Object[] paramVal = (Object[]) executeNode(paramsVals[i]);
@@ -63,8 +64,8 @@ public class FuncCaller extends BaseExecutor {
                         (Integer) caller.getAttribute(INode.INodeKey.LINE));
             }
             // pass value to parameter
-            Map.Entry<String, SymTblEntry> next = iterator.next();
-            SymTblEntry paramEntry = next.getValue();
+            Map.Entry<String, SymTblEntry> previous = iterator.previous();
+            SymTblEntry paramEntry = previous.getValue();
             paramEntry.addValue(SymTbl.SymTblKey.VALUE, paramVal[1]);
         }
 
