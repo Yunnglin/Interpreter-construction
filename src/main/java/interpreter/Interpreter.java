@@ -16,7 +16,7 @@ import message.MessageHandler;
 import message.MessageListener;
 import message.MessageProducer;
 
-import java.io.BufferedReader;
+import java.io.Reader;
 
 public class Interpreter implements MessageProducer {
 
@@ -46,9 +46,9 @@ public class Interpreter implements MessageProducer {
     /**
      * Constructor with the reader of source file
      * Lexer and parser will be constructed automatically
-     * @param reader buffered reader of source file
+     * @param reader reader of source file
      */
-    public Interpreter(BufferedReader reader) {
+    public Interpreter(Reader reader) {
         this(new Parser(reader));
     }
 

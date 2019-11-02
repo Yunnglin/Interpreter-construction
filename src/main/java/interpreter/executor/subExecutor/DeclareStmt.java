@@ -22,6 +22,14 @@ public class DeclareStmt extends BaseExecutor {
         super(env);
     }
 
+    /**
+     * Execute declare statement node
+     * do declaration and initialization
+     * @param root INode, the node for a declare statement
+     * @return null, no result returned
+     * @throws Exception
+     * @throws ReturnStmt.ReturnSignal
+     */
     @Override
     public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.DECLARE_STMT)) {
@@ -41,6 +49,13 @@ public class DeclareStmt extends BaseExecutor {
         return null;
     }
 
+    /**
+     * do declaration, declare a symbol in current scope
+     * @param type the type string of the symbol
+     * @param declarator INode, the declarator node
+     * @throws Exception
+     * @throws ReturnStmt.ReturnSignal
+     */
     private void declare(String type, INode declarator) throws Exception, ReturnStmt.ReturnSignal {
         SymTbl symTbl = env.getCurScopeSymTbl();
 
@@ -112,12 +127,21 @@ public class DeclareStmt extends BaseExecutor {
                         newEntry.addValue(SymTblKey.ARRAY_SIZE, values[1]);
                     }
                 }
+                // initialize values
                 initialize(newEntry, initializer);
             }
+            // add to symbol table
             symTbl.addEntry(newEntry);
         }
     }
 
+    /**
+     * do initialization, set initial value to the corresponding entry
+     * @param entry SymTblEntry, the entry for the symbol
+     * @param initializer INode, the initializer node
+     * @throws Exception
+     * @throws ReturnStmt.ReturnSignal
+     */
     private void initialize(SymTblEntry entry, INode initializer) throws Exception, ReturnStmt.ReturnSignal {
         if (initializer != null) {
             DataType entryType = (DataType) entry.getValue(SymTblKey.TYPE);

@@ -11,19 +11,23 @@ import message.MessageListener;
 import message.MessageProducer;
 import message.MessageHandler;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 
 public class Lexer implements MessageProducer {
     private int curLine;
     private char peek;
     private Token curToken;
-    private BufferedReader reader;
+    private Reader reader;
     private MessageHandler lexHandler;
 
     private static final char EOF = 0;
 
+    /**
+     * reserve a new key word
+     * @param tag the TokenTag that identifies the key word
+     */
     private void reserve(TokenTag tag){
         TokenTag.RESERVED_WORDS.put(tag.getText(), tag);
     }
@@ -44,7 +48,7 @@ public class Lexer implements MessageProducer {
      * set the reader of file input stream of the input source code
      * @param reader
      */
-    public Lexer(BufferedReader reader) {
+    public Lexer(Reader reader) {
         this();
         this.reader = reader;
     }

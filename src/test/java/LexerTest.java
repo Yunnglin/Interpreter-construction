@@ -10,8 +10,6 @@ import java.util.Hashtable;
 
 public class LexerTest {
 
-    public static String testFile = "src/test/res/test.cmm";
-
     @Test
     public void except(){
         InterpError ex = new SyntaxError("error!!!", 10, ErrorCode.UNEXPECTED_CHAR);
@@ -51,7 +49,7 @@ public class LexerTest {
     }
 
     @Test
-    public void lexer() {
+    public void lexTest() {
         String filepath = "/Users/asteriachiang/Desktop/13.cmm";
         BufferedReader reader = null;
         try {

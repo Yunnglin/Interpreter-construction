@@ -108,9 +108,9 @@ public class Parser implements MessageProducer {
     /**
      * Constructor with reader of source file
      * will construct lexer automatically
-     * @param reader buffered reader of source file
+     * @param reader reader of source file
      */
-    public Parser(BufferedReader reader) {
+    public Parser(Reader reader) {
         this(new Lexer(reader));
     }
 
