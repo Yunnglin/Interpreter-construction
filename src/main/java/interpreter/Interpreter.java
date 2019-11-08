@@ -26,13 +26,31 @@ public class Interpreter implements MessageProducer {
     private INode root;
 
     /**
+     * Constructor with a built environment and a parser
+     * @param curEnv Env, a built environment
+     * @param parser Parser, the parser responsible for parsing
+     */
+    public Interpreter(Env curEnv, Parser parser) {
+        this.env = curEnv;
+        this.parser = parser;
+        this.interpretHandler = new MessageHandler();
+    }
+
+    /**
      * Constructor with parser
      * @param parser the parser responsible for parsing
      */
     public Interpreter(Parser parser) {
-        this.parser = parser;
-        this.interpretHandler = new MessageHandler();
-        this.env = new Env();
+        this(new Env(), parser);
+    }
+
+    /**
+     * Constructor with a built env and a parser
+     * @param curEnv Env, a built environment
+     * @param lexer Lexer, the lexer responsible for lexing
+     */
+    public Interpreter(Env curEnv, Lexer lexer) {
+        this(curEnv, new Parser(lexer));
     }
 
     /**
@@ -40,7 +58,16 @@ public class Interpreter implements MessageProducer {
      * @param lexer the lexer responsible for lexing
      */
     public Interpreter(Lexer lexer) {
-        this(new Parser(lexer));
+        this(new Env(), lexer);
+    }
+
+    /**
+     * Constructor with a built environment and a reader of source file
+     * @param curEnv Env, a built environment
+     * @param reader reader reader of source file
+     */
+    public Interpreter(Env curEnv, Reader reader) {
+        this(curEnv, new Parser(reader));
     }
 
     /**
@@ -49,7 +76,7 @@ public class Interpreter implements MessageProducer {
      * @param reader reader of source file
      */
     public Interpreter(Reader reader) {
-        this(new Parser(reader));
+        this(new Env(), reader);
     }
 
     /**

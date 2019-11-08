@@ -91,7 +91,15 @@ public class Parser implements MessageProducer {
         if (update) {
             this.parseManager = new LALRParseManager();
         } else {
-            File file = new File(Const.parseManagerInstancePath);
+            String instancePath;
+            if (LALRGrammar.mode.equals("terminal")) {
+                // use the parse manager for terminal
+                instancePath = Const.terminalParseManagerInstancePath;
+            } else {
+                // use the default parse manager
+                instancePath = Const.parseManagerInstancePath;
+            }
+            File file = new File(instancePath);
             try {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
                 this.parseManager = (LALRParseManager) ois.readObject();
@@ -179,8 +187,14 @@ public class Parser implements MessageProducer {
             if (action == null) {
                 // the action is error
                 System.out.println("symbol: " + symbol);
-                System.out.println("" + stateStack.get(symbolTop) + parseManager.getState(stateStack.get(symbolTop)));
-                throw SyntaxError.newUnexpectedTokenError(token);
+                Integer state = stateStack.get(symbolTop);
+                System.out.println("" + state + parseManager.getState(state));
+                ArrayList<TokenTag> expectedTokens = getExpectedTokenTag(state);
+                if (expectedTokens.size() > 0) {
+                    throw SyntaxError.newMissingTokenError(token, expectedTokens);
+                } else {
+                    throw SyntaxError.newUnexpectedTokenError(token);
+                }
             }
 
             if (action == 0) {
@@ -289,7 +303,8 @@ public class Parser implements MessageProducer {
         LALRGrammar grammar = LALRGrammar.getGrammar();
 
         for (GrammarSymbol symbol : row.keySet()) {
-            if (grammar.isTerminalSymbol(symbol.getSelfText())) {
+            if (grammar.isTerminalSymbol(symbol.getSelfText()) && row.get(symbol) > 0) {
+                // a terminal symbol and action is shift
                 expected.add((TokenTag) symbol);
             }
         }

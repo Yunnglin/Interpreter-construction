@@ -111,6 +111,7 @@ public class ParserTest {
 
     @Test
     public void serializeManager() {
+        LALRGrammar.mode = "default";
         LALRParseManager manager = new LALRParseManager();
 //        manager.runStateMachine();
         try {

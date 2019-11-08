@@ -27,7 +27,7 @@ public class LexerTest {
 
     @Test
     public void readFile() {
-        String filepath = "D://test.cmm";
+        String filepath = TestConst.escapeCharsFile;
 
         try (FileReader reader = new FileReader(filepath);
              BufferedReader br = new BufferedReader(reader)) {
@@ -44,13 +44,14 @@ public class LexerTest {
 
     @Test
     public void general() {
-        String whitespaces = " \t\r\n";
+        String whitespaces = " \t\r\n\11";
         System.out.println(whitespaces.indexOf('\0'));
+        System.out.println("abc" + "def");
     }
 
     @Test
     public void lexTest() {
-        String filepath = "/Users/asteriachiang/Desktop/13.cmm";
+        String filepath = TestConst.syntaxTestFile;
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(filepath));
@@ -68,5 +69,10 @@ public class LexerTest {
     public void TokenTagTest() {
         String name = "IDENTIFIER";
         System.out.println(TokenTag.valueOf(name));
+    }
+
+    @Test
+    public void escapeCharTest() {
+        System.out.println("\n");
     }
 }

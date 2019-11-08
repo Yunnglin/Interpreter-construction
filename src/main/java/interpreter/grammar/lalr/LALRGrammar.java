@@ -16,15 +16,35 @@ import java.util.*;
 
 public class LALRGrammar implements Serializable {
 
-    public static Nil NIL = Nil.NIL;
-    private static LALRGrammar instance = null;
+    private static LALRGrammar defaultInstance = null;
+    private static LALRGrammar terminalInstance = null;
 
+    public static Nil NIL = Nil.NIL;
+    public static String mode = "default";  // the switch for parsers of different mode
+
+
+    /**
+     * get a grammar object according to the mode.
+     * 'default' and 'terminal' supported now.
+     * @return the grammar object
+     */
     public static LALRGrammar getGrammar() {
-        if (instance == null) {
-            instance = new LALRGrammar(Const.grammarFilePath);
+        if (mode.equals("terminal")) {
+            if (terminalInstance == null) {
+                terminalInstance = new LALRGrammar(Const.terminalGrammarFilePath);
+            }
+            return terminalInstance;
         }
 
-        return instance;
+        if (!mode.equals("default")) {
+            System.out.println("No such grammar file that support mode '" + mode + "', use default instead");
+        }
+
+        if (defaultInstance == null) {
+            defaultInstance = new LALRGrammar(Const.grammarFilePath);
+        }
+
+        return defaultInstance;
     }
 
     private NonterminalSymbol startSymbol;

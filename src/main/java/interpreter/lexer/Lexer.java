@@ -28,7 +28,7 @@ public class Lexer implements MessageProducer {
      * reserve a new key word
      * @param tag the TokenTag that identifies the key word
      */
-    private void reserve(TokenTag tag){
+    public void reserve(TokenTag tag){
         TokenTag.RESERVED_WORDS.put(tag.getText(), tag);
     }
 
@@ -171,33 +171,33 @@ public class Lexer implements MessageProducer {
                 getNextChar();
             }
             if(peek == EOF) {
-                return new Token(TokenTag.PROG_END, curLine);
+                return (curToken = new Token(TokenTag.PROG_END, curLine));
             }
             // 解析操作符、注释等
             switch (peek) {
                 case '=':
                     if(getNextChar('=')) {
                         getNextChar();
-                        return new Token(TokenTag.EQ, curLine);
+                        return (curToken = new Token(TokenTag.EQ, curLine));
                     } else {
-                        return new Token(TokenTag.ASSIGN, curLine);
+                        return (curToken = new Token(TokenTag.ASSIGN, curLine));
                     }
                 case '<':
                     if(getNextChar('>')) {
                         getNextChar();
-                        return new Token(TokenTag.NEQ, curLine);
+                        return (curToken = new Token(TokenTag.NEQ, curLine));
                     } else if (peek == '=') {
                         getNextChar();
-                        return new Token(TokenTag.LEQ, curLine);
+                        return (curToken = new Token(TokenTag.LEQ, curLine));
                     } else {
-                        return new Token(TokenTag.LESS_THAN, curLine);
+                        return (curToken = new Token(TokenTag.LESS_THAN, curLine));
                     }
                 case '>':
                     if (getNextChar('=')) {
                         getNextChar();
-                        return new Token(TokenTag.GEQ, curLine);
+                        return (curToken = new Token(TokenTag.GEQ, curLine));
                     } else {
-                        return new Token(TokenTag.GREATER_THAN, curLine);
+                        return (curToken = new Token(TokenTag.GREATER_THAN, curLine));
                     }
                 case '/':
                     if(getNextChar('*')) {
@@ -205,16 +205,16 @@ public class Lexer implements MessageProducer {
                         ++comments;
                         while(comments != 0) {
                             if(getNextChar(EOF)) {
-                                return null;
+                                return (curToken = null);
                             } else if (peek == '*'){
                                 if(getNextChar(EOF)) {
-                                    return null;
+                                    return (curToken = null);
                                 } else if (peek == '/') {
                                     --comments;
                                 }
                             } else if (peek == '/') {
                                 if(getNextChar(EOF)) {
-                                    return null;
+                                    return (curToken = null);
                                 } else if (peek == '*') {
                                     ++comments;
                                 }
@@ -232,7 +232,7 @@ public class Lexer implements MessageProducer {
                             getNextChar();
                         }
                         if (peek == EOF) {
-                            return null;
+                            return (curToken = null);
                         } else {
                             ++curLine;
                         }
@@ -240,42 +240,42 @@ public class Lexer implements MessageProducer {
                         goon = true;
                         continue;
                     } else {
-                        return new Token(TokenTag.DIVIDE, curLine);
+                        return (curToken = new Token(TokenTag.DIVIDE, curLine));
                     }
                 case '*':
                     getNextChar();
-                    return new Token(TokenTag.MULTIPLY, curLine);
+                    return (curToken = new Token(TokenTag.MULTIPLY, curLine));
                 case '+':
                     getNextChar();
-                    return new Token(TokenTag.SUM, curLine);
+                    return (curToken = new Token(TokenTag.SUM, curLine));
                 case '(':
                     getNextChar();
-                    return new Token(TokenTag.L_PARENTHESES, curLine);
+                    return (curToken = new Token(TokenTag.L_PARENTHESES, curLine));
                 case ')':
                     getNextChar();
-                    return new Token(TokenTag.R_PARENTHESES, curLine);
+                    return (curToken = new Token(TokenTag.R_PARENTHESES, curLine));
                 case '{':
                     getNextChar();
-                    return new Token(TokenTag.L_BRACES, curLine);
+                    return (curToken = new Token(TokenTag.L_BRACES, curLine));
                 case '}':
                     getNextChar();
-                    return new Token(TokenTag.R_BRACES, curLine);
+                    return (curToken = new Token(TokenTag.R_BRACES, curLine));
                 case '[':
                     getNextChar();
-                    return new Token(TokenTag.L_SQUARE_BRACKETS, curLine);
+                    return (curToken = new Token(TokenTag.L_SQUARE_BRACKETS, curLine));
                 case ']':
                     getNextChar();
-                    return new Token(TokenTag.R_SQUARE_BRACKETS, curLine);
+                    return (curToken = new Token(TokenTag.R_SQUARE_BRACKETS, curLine));
                 case ';':
                     getNextChar();
-                    return new Token(TokenTag.SEMICOLON, curLine);
+                    return (curToken = new Token(TokenTag.SEMICOLON, curLine));
                 case ',':
                     getNextChar();
-                    return new Token(TokenTag.COMMA, curLine);
+                    return (curToken = new Token(TokenTag.COMMA, curLine));
                 case '-':
                     // 负号和减法在词法阶段相同，负数识别在语法分析阶段完成
                     getNextChar();
-                    return new Token(TokenTag.SUB, curLine);
+                    return (curToken = new Token(TokenTag.SUB, curLine));
             }
 
             // 解析整数和实数
@@ -288,7 +288,7 @@ public class Lexer implements MessageProducer {
                 if(peek!='.') {
                     try {
                         int val = Integer.parseInt(num.toString());
-                        return new IntNum(val, curLine);
+                        return (curToken = new IntNum(val, curLine));
                     } catch (NumberFormatException e) {
                         throw SyntaxError.newConstantError(num.toString(), curLine);
                     }
@@ -304,7 +304,7 @@ public class Lexer implements MessageProducer {
                 }
                 try {
                     double val = Double.valueOf(num.toString());
-                    return new Real(val, curLine);
+                    return (curToken = new Real(val, curLine));
                 } catch (NumberFormatException e) {
                     throw SyntaxError.newConstantError(num.toString(), curLine);
                 }
@@ -326,15 +326,15 @@ public class Lexer implements MessageProducer {
                     }
                 }while (Character.isDigit(peek)||Character.isLetter(peek)||peek=='_');
                 if(isKeyWord(name.toString())) {
-                    return new Word(TokenTag.RESERVED_WORDS.get(name.toString()), curLine, name.toString());
+                    return (curToken = new Word(TokenTag.RESERVED_WORDS.get(name.toString()), curLine, name.toString()));
                 }
-                return new Word(TokenTag.IDENTIFIER, curLine, name.toString());
+                return (curToken = new Word(TokenTag.IDENTIFIER, curLine, name.toString()));
             }
 
             // 无法识别的符号
             throw SyntaxError.newLexicalError(Character.toString(peek), curLine);
         }
-        return new Token(TokenTag.PROG_END, curLine);
+        return (curToken = new Token(TokenTag.PROG_END, curLine));
     }
 
     /**

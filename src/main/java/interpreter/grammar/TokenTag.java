@@ -7,18 +7,23 @@ public enum TokenTag implements TerminalSymbol {
 
     // Reserved Words
     IF(1), ELSE(2), INT(3), WHILE(4), READ(5), WRITE(6), REAL(7),
-    VOID(8), RETURN(100),
+    VOID(8), CHAR(9), RETURN(50),
 
     // Symbols
-    SUM(8, "+"), SUB(9, "-"), MULTIPLY(10, "*"), DIVIDE(11, "/"),
-    ASSIGN(12, "="), LESS_THAN(13, "<"), GREATER_THAN(14, ">"),
-    EQ(15, "=="), NEQ(16, "<>"), L_PARENTHESES(17, "("),
-    R_PARENTHESES(18, ")"), SEMICOLON(19, ";"), L_BRACES(20, "{"),
-    R_BRACES(21, "}"), LEQ(22, "<="), GEQ(23, ">="),
-    L_SQUARE_BRACKETS(24, "["), R_SQUARE_BRACKETS(25, "]"), COMMA(26, ","),
+    SUM(51, "+"), SUB(52, "-"), MULTIPLY(53, "*"), DIVIDE(54, "/"),
+    ASSIGN(55, "="), LESS_THAN(56, "<"), GREATER_THAN(57, ">"),
+    EQ(58, "=="), NEQ(59, "<>"), L_PARENTHESES(60, "("),
+    R_PARENTHESES(61, ")"), SEMICOLON(62, ";"), L_BRACES(63, "{"),
+    R_BRACES(64, "}"), LEQ(65, "<="), GEQ(66, ">="),
+    L_SQUARE_BRACKETS(67, "["), R_SQUARE_BRACKETS(68, "]"), AND(69, "&&"),
+    OR(70, "||"), NOT(71, "!"),
+    COMMA(100, ","),
 
     // Others
-    REAL_NUMBER(48), INTEGER(49), IDENTIFIER(50),
+    REAL_NUMBER(101), INTEGER(102), IDENTIFIER(103), CHARACTER(104), STRING(105),
+
+    // terminal keyword
+    CLEAR(51),
 
     // End
     PROG_END(200);
@@ -70,9 +75,9 @@ public enum TokenTag implements TerminalSymbol {
         return this.toString();
     }
 
-    // Hashtable of lowercase of reserved words in CMM.
+    // Hashtable of lowercase of reserved words in CMM (default interpreter).
     public static Hashtable<String, TokenTag> RESERVED_WORDS = new Hashtable<>();
-    // Hashtable of CMM symbols
+    // Hashtable of CMM symbols (default interpreter)
     public static Hashtable<String, TokenTag> SYMBOLS = new Hashtable<>();
     static {
         TokenTag[] values = TokenTag.values();

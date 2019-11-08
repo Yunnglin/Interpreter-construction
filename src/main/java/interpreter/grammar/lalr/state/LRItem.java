@@ -21,7 +21,7 @@ public class LRItem implements Serializable {
 
     /**
      * Constructor, set the dotPos 0 and ookAheadSet a empty set
-     * @param productionId
+     * @param productionId the id of production
      */
     public LRItem(int productionId) {
         this(productionId, 0);
@@ -30,7 +30,7 @@ public class LRItem implements Serializable {
     /**
      * Constructor, set lookAheadSet a empty set
      * @param productionId the id of the production
-     * @param dotPos
+     * @param dotPos the position of dot in production
      */
     public LRItem(int productionId, int dotPos) {
         this(productionId, dotPos, new HashSet<TerminalSymbol>());
