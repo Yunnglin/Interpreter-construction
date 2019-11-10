@@ -1,10 +1,12 @@
 import interpreter.grammar.TokenTag;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
+import interpreter.utils.AsciiUtils;
 import org.junit.Test;
 import interpreter.exception.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -74,5 +76,26 @@ public class LexerTest {
     @Test
     public void escapeCharTest() {
         System.out.println("\n");
+    }
+
+    @Test
+    public void hexTest() {
+//        String str = "\\" + "b";
+//        byte[] bytes = str.getBytes(StandardCharsets.US_ASCII);
+//        for (byte aByte : bytes) {
+//            System.out.println(aByte);
+//        }
+
+        System.out.println("test");
+        Byte aByte = AsciiUtils.hexStr2Byte("9");
+        byte[] bytes = new byte[] {aByte};
+        String s = new String(bytes, StandardCharsets.US_ASCII);
+
+        System.out.println(s.charAt(0));
+        System.out.println("test");
+
+        System.out.println("test1");
+        System.out.println(AsciiUtils.hex2Ascii("9"));
+        System.out.println("test1");
     }
 }
