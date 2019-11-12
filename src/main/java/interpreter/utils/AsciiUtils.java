@@ -61,7 +61,70 @@ public class AsciiUtils {
         return byte2Ascii(aByte);
     }
 
-    public static Character decimal2Ascii(int d) {
-        return byte2Ascii((byte) d);
+    public static Byte octal2Byte(String oct) {
+        if (oct.length() > 3) {
+            return null;
+        }
+
+        Byte b;
+        try {
+            b = (byte) Integer.parseInt(oct, 8);
+        } catch (Exception | Error e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+
+            b = null;
+        }
+
+        return b;
+    }
+
+    /**
+     * convert octal number to ascii
+     * @param oct String, octal number in string form
+     * @return the ascii character
+     */
+    public static Character octal2Ascii(String oct) {
+        Byte aByte = octal2Byte(oct);
+        if (aByte == null) {
+            return null;
+        }
+
+        return byte2Ascii(aByte);
+    }
+
+    public static boolean isAsciiCharacter(char ch) {
+        byte[] bytes = Character.toString(ch).getBytes();
+
+        return bytes.length == 1 && bytes[0] >= 0;
+    }
+
+    public static Character convert2EscapeCharacter(String str) {
+        // \c | \010 | \x7f, the param only contains the part after '\'
+        char[] chars = str.toCharArray();
+        int len = chars.length;
+
+        if (len < 1) {
+            return null;
+        }
+
+        StringBuilder value = new StringBuilder();
+        if (chars[0] == 'x') {
+            // in hex form
+            if (len < 2 || len > 3) {
+                return null;
+            }
+            for (int i=1; i<len; ++i) {
+                value.append(chars[i]);
+            }
+
+            return hex2Ascii(value.toString());
+        } else if (len == 1 && Const.controlCharacters.get(chars[0]) != null) {
+            // in control character form
+            return controlChar2Ascii(chars[0]);
+        } else {
+            // in octal form (maybe)
+            return octal2Ascii(str);
+        }
     }
 }

@@ -123,4 +123,19 @@ public class ParserTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void serializeManagerTest() {
+        LALRGrammar.mode = "default";
+        LALRParseManager manager = new LALRParseManager();
+//        manager.runStateMachine();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(
+                    new FileOutputStream("src/main/res/TestParserManagerInstance"));
+            oos.writeObject(manager);
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

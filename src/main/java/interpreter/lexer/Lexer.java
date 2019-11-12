@@ -2,10 +2,8 @@ package interpreter.lexer;
 
 import interpreter.grammar.TokenTag;
 import interpreter.exception.SyntaxError;
-import interpreter.lexer.token.IntNum;
-import interpreter.lexer.token.Real;
-import interpreter.lexer.token.Token;
-import interpreter.lexer.token.Word;
+import interpreter.lexer.token.*;
+import interpreter.utils.AsciiUtils;
 import message.Message;
 import message.MessageListener;
 import message.MessageProducer;
@@ -276,6 +274,125 @@ public class Lexer implements MessageProducer {
                     // 负号和减法在词法阶段相同，负数识别在语法分析阶段完成
                     getNextChar();
                     return (curToken = new Token(TokenTag.SUB, curLine));
+                case '&':
+                    if (getNextChar('&')) {
+                        getNextChar();
+                        return (curToken = new Token(TokenTag.AND, curLine));
+                    } else {
+                        // 无位与操作 &，故抛出异常
+                        throw SyntaxError.newLexicalError(Character.toString(peek), curLine);
+                    }
+                case '|':
+                    if (getNextChar('|')) {
+                        getNextChar();
+                        return (curToken = new Token(TokenTag.OR, curLine));
+                    } else {
+                        // 无位或操作 |，故抛出异常
+                        throw SyntaxError.newLexicalError(Character.toString(peek), curLine);
+                    }
+                case '!':
+                    getNextChar();
+                    return (curToken = new Token(TokenTag.NOT, curLine));
+                case '\'':
+                    // 字符
+                    StringBuilder strBuilder = new StringBuilder();
+                    getNextChar();
+                    if (peek == EOF || peek == '\n') {
+                        // missing terminating '
+                        throw SyntaxError.newCharTerminatingMarkError("'", curLine);
+                    } else if (peek == '\'') {
+                        // empty char constant
+                        throw SyntaxError.newEmptyCharacter(curLine);
+                    }
+                    strBuilder.append(peek);
+                    boolean escape = peek == '\\';
+                    boolean terminate = !escape;
+                    // 循环直到找到非转义的 '
+                    while(!getNextChar('\'') || !terminate) {
+                        terminate = true;
+                        if (peek == '\n' || peek == EOF) {
+                            throw SyntaxError.newCharTerminatingMarkError("\'"+strBuilder.toString(), curLine);
+                        }
+                        strBuilder.append(peek);
+                    }
+                    getNextChar();
+                    String charStr = strBuilder.toString();
+                    if (!escape) {
+                        // 非转义字符长为1个字符
+                        if (strBuilder.length() != 1) {
+                            throw SyntaxError.newMultiCharacterChar(charStr, curLine);
+                        }
+
+                        return (curToken = new Text(TokenTag.CHARACTER, curLine, charStr));
+                    } else {
+                        // 转义字符，字符的最大数量由 MAX_CHARACTERS_IN_ESCAPE 定义
+                        if (strBuilder.length() > Text.MAX_CHARACTERS_IN_ESCAPE) {
+                            throw SyntaxError.newMultiCharacterChar(charStr, curLine);
+                        }
+                        if (strBuilder.length() == 1) {
+                            throw SyntaxError.newCharTerminatingMarkError(charStr, curLine);
+                        }
+
+                        Character character = AsciiUtils.convert2EscapeCharacter(charStr.substring(1));
+                        if (character == null) {
+                            throw SyntaxError.newIllegalEscapeCharacterError(charStr, curLine);
+                        }
+
+                        return (curToken = new Text(TokenTag.CHARACTER, curLine, charStr, character.toString()));
+                    }
+                case '\"':
+                    // 字符串
+                    StringBuilder rawBuilder = new StringBuilder();     // 词素
+                    StringBuilder valueBuilder = new StringBuilder();   // 字符串内容
+                    StringBuilder escapeBuilder = null;                 // 当前转义符构造器
+                    Character curEscape = null;                         // 当前转义符
+                    boolean strTerminated = true;                       // 遇到 " 是否终结
+                    boolean hasEscape = false;                          // 是否处于转义字符构造中
+                    while(!getNextChar('\"') || !strTerminated) {
+                        if (peek == '\n' || peek == EOF) {
+                            throw SyntaxError.newStrTerminatingMarkError(rawBuilder.toString(), curLine);
+                        }
+                        rawBuilder.append(peek);
+                        if (!hasEscape && peek == '\\') {
+                            // 转义字符
+                            strTerminated = false;
+                            hasEscape = true;
+                            escapeBuilder = new StringBuilder();
+                        } else if (hasEscape) {
+                            // 构造当前最长的转义符
+                            strTerminated = true;
+                            escapeBuilder.append(peek);
+                            Character escapeCharacter = AsciiUtils.convert2EscapeCharacter(escapeBuilder.toString());
+                            if (escapeCharacter != null) {
+                                curEscape = escapeCharacter;
+                            } else {
+                                if (curEscape != null) {
+                                    valueBuilder.append(curEscape);
+                                    curEscape = null;
+                                    strTerminated = true;
+                                    hasEscape = false;
+                                } else {
+                                    // cannot construct a escape character
+                                    throw SyntaxError.newIllegalEscapeCharacterError("\\"+peek, curLine);
+                                }
+                                // 将当前字符加入
+                                valueBuilder.append(peek);
+                            }
+                        } else {
+                            // 单字符
+                            valueBuilder.append(peek);
+                        }
+                    }
+
+                    if (curEscape != null) {
+                        valueBuilder.append(curEscape);
+                    }
+                    // 添加字符串末尾 \0
+                    valueBuilder.append('\0');
+
+                    getNextChar();
+                    return (curToken = new Text(TokenTag.STRING, curLine, rawBuilder.toString(),
+                            valueBuilder.toString()));
             }
 
             // 解析整数和实数

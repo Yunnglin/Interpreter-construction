@@ -28,7 +28,7 @@ public class WhileStmt extends BaseExecutor {
             Object[] exeValue1 = (Object[]) exeExpr.Execute(root.getChild(2));
             DataType resultType = (DataType) exeValue1[0];
             //如果表达式的返回值可以转为boolean
-            if (env.whileCompatible(resultType)) {
+            if (env.getTypeSystem().whileCompatible(resultType)) {
                 while (Double.valueOf(exeValue1[1].toString())!=0) {
                     Object[] exeValue2 = (Object[]) exeCompound.Execute(root.getChild(4));
                     exeValue1 = (Object[]) exeExpr.Execute(root.getChild(2));

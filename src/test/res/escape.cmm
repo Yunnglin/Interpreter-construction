@@ -1,1 +1,9 @@
-\a\n\t
+char ch1 = 'a';
+char ch2 = '\n';
+char ch3 = '\a';
+char ch4 = '\\';
+char ch5 = '\x7f';
+char ch6 = '\117';
+char ch7 = '\'';
+//char ch8 = '';
+char * str = "\aabcd\0103";
