@@ -78,7 +78,7 @@ public class Expr extends BaseExecutor {
                 if (preFix.getSymbol().equals(TokenTag.SUB)) {//factor -> - factor
                     result = calExpr(expr.getChild(1));
                     DataType dataType = (DataType) result[0];
-                    if (!env.whileCompatible(dataType)) {
+                    if (!env.getTypeSystem().whileCompatible(dataType)) {
                         throw SemanticError.newWrongNegativeTpye(dataType, (Integer) expr.getChild(1).getAttribute(INode.INodeKey.LINE));
                     }
                     Double res = Double.parseDouble(result[1].toString());

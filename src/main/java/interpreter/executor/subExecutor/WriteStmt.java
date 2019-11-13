@@ -29,7 +29,7 @@ public class WriteStmt extends BaseExecutor {
             Object[] exeValue1 = (Object[]) exeExpr.Execute(root.getChild(1));
             DataType resultType=(DataType) exeValue1[0];
             //如果表达式返回值可以被write
-            if(env.writeCompatible(resultType))
+            if(env.getTypeSystem().writeCompatible(resultType))
             {
                 Message message = new Message(Message.MessageType.WRITE, exeValue1[1]);
                 postMessage(message);

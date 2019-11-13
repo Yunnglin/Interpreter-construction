@@ -59,7 +59,7 @@ public class FuncCaller extends BaseExecutor {
         for (int i=paramsVals.length-1; i>=0; --i) {
             Object[] paramVal = (Object[]) executeNode(paramsVals[i]);
             DataType valType = (DataType) paramVal[0];
-            if (!env.initializeCompatible(paramTypes[i], valType)) {
+            if (!env.getTypeSystem().initializeCompatible(paramTypes[i], valType)) {
                 throw ExecutionError.newArgTypeNotCompatible(funcName, paramTypes[i], valType, i,
                         (Integer) caller.getAttribute(INode.INodeKey.LINE));
             }
@@ -97,7 +97,7 @@ public class FuncCaller extends BaseExecutor {
             throw ExecutionError.newMissingReturnError(funcName,
                     (Integer) caller.getAttribute(INode.INodeKey.LINE));
         } else {
-            if (env.returnCompatible(prototype.getRetType(), (DataType) retValue[0])) {
+            if (env.getTypeSystem().returnCompatible(prototype.getRetType(), (DataType) retValue[0])) {
                 return retValue;
             } else {
                 throw SemanticError.newReturnIncompatibleTypeError(funcName, prototype.getRetType(),

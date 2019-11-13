@@ -60,7 +60,7 @@ public class FuncDefinition extends BaseExecutor {
         SymTbl curScopeSymTbl = env.getCurScopeSymTbl();
         SymTblEntry entry = curScopeSymTbl.find(idName);
         // construct prototype
-        DataType retType = env.getBasicDataType(type);
+        DataType retType = env.getTypeSystem().getBasicDataType(type);
         FuncPrototype prototype = new FuncPrototype();
         prototype.setRetType(retType);
 
@@ -132,11 +132,11 @@ public class FuncDefinition extends BaseExecutor {
             newEntry.addValue(SymTbl.SymTblKey.ARRAY_SIZE, values[1]);
         } else {
             // type id
-            paramType = env.getBasicDataType(typeName);
+            paramType = env.getTypeSystem().getBasicDataType(typeName);
         }
         newEntry.addValue(SymTbl.SymTblKey.TYPE, paramType);
         // set param initial value
-        env.defaultInitializer(newEntry);
+        env.getTypeSystem().defaultInitializer(newEntry);
         // add to symbol table
         initialTbl.addEntry(newEntry);
 

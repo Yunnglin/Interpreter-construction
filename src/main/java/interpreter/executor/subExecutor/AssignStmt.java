@@ -49,7 +49,7 @@ public class AssignStmt extends BaseExecutor {
                     Object[] exeValue = (Object[]) exe.Execute(AssignNodeList.get(1));
                     DataType exeResultType = (DataType) exeValue[0];
                     //如果标识符与表达式的结果类型匹配
-                    if (env.assignCompatible(NodeType, exeResultType)) {
+                    if (env.getTypeSystem().assignCompatible(NodeType, exeResultType)) {
                         entry.addValue(SymTbl.SymTblKey.VALUE, exeValue[1]);
                        return exeValue[1];
                     }
@@ -76,7 +76,7 @@ public class AssignStmt extends BaseExecutor {
                                 DataType exeResultType = (DataType) exeValue2[0];
                                 DataType elementType= new DataType(NodeType.getBasicType(),TypeForm.SCALAR);
                                 //判断类型是否匹配
-                                if (env.assignCompatible(elementType, exeResultType)) {
+                                if (env.getTypeSystem().assignCompatible(elementType, exeResultType)) {
                                     //判断索引是否越界,首先获取节点的数组size
                                     int arrayLength = (int) entry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
                                     //如果索引大于等于0且小于等于length-1

@@ -7,7 +7,7 @@ public enum TokenTag implements TerminalSymbol {
 
     // Reserved Words
     IF(1), ELSE(2), INT(3), WHILE(4), READ(5), WRITE(6), REAL(7),
-    VOID(8), CHAR(9), RETURN(50),
+    VOID(8), CHAR(9), BREAK(10), CONTINUE(11), RETURN(50),
 
     // Symbols
     SUM(51, "+"), SUB(52, "-"), MULTIPLY(53, "*"), DIVIDE(54, "/"),

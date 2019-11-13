@@ -68,7 +68,7 @@ public class DeclareStmt extends BaseExecutor {
 
         // check the data type cannot be void
         // if pointer added, should check whether any pointer exists
-        if (env.getBasicDataType(type).equals(DataType.PredefinedType.TYPE_VOID)) {
+        if (env.getTypeSystem().getBasicDataType(type).equals(DataType.PredefinedType.TYPE_VOID)) {
             throw SemanticError.newDeclareVoidError((String) identifier.getAttribute(INodeKey.NAME),
                     (Integer) identifier.getAttribute(INodeKey.LINE));
         }
@@ -88,7 +88,7 @@ public class DeclareStmt extends BaseExecutor {
                 // set it to a scalar of specific type
                 newEntry.addValue(SymTblKey.TYPE, new DataType(basicType, TypeForm.SCALAR));
                 // set initial value
-                env.defaultInitializer(newEntry);
+                env.getTypeSystem().defaultInitializer(newEntry);
                 symTbl.addEntry(newEntry);
             } else {
                 // find whether there is a initializer
@@ -161,7 +161,7 @@ public class DeclareStmt extends BaseExecutor {
                     throw SemanticError.newInvalidInitializerError(entryType, entry.getName(),
                             (Integer) initializer.getAttribute(INodeKey.LINE));
                 }
-                if (!env.initializeCompatible(entryType, exprType)) {
+                if (!env.getTypeSystem().initializeCompatible(entryType, exprType)) {
                     // incompatible type
                     throw SemanticError.newInitialIncompatibleTypeError(entryType, exprType,
                             (Integer) initializer.getAttribute(INodeKey.LINE));
@@ -186,7 +186,7 @@ public class DeclareStmt extends BaseExecutor {
                     Object[] exprValues = (Object[]) executeNode(expr);
                     DataType exprType = (DataType) exprValues[0];
                     Object exprValue = exprValues[1];
-                    if (!env.initializeCompatible(eleType, exprType)) {
+                    if (!env.getTypeSystem().initializeCompatible(eleType, exprType)) {
                         // the element type is not compatible
                         throw SemanticError.newInitialIncompatibleTypeError(eleType, exprType,
                                 (Integer) expr.getAttribute(INodeKey.LINE));
@@ -214,7 +214,7 @@ public class DeclareStmt extends BaseExecutor {
             }
         } else {
             // default initializer
-            env.defaultInitializer(entry);
+            env.getTypeSystem().defaultInitializer(entry);
         }
     }
 
