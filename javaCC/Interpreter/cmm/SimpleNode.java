@@ -10,7 +10,7 @@ class SimpleNode extends MyNode implements Node {
   protected int id;
   protected Object value;
   protected CMMParser parser;
-  protected Token firstToken;
+  public Token firstToken;
   protected Token lastToken;
 
   public SimpleNode(int i) {

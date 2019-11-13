@@ -4,7 +4,7 @@ public class CMM {
   /** Main entry point. */
   public static void main(String args[]) {
 	  CMMParser parser;
-	  String file = "cmm/fact.spl";
+	  String file = "cmm/test.cmm";
       System.out.println("CMM Interpreter Version 0.1:  Reading from file " +file+ " . . .");
       try {
         parser = new CMMParser(new java.io.FileInputStream(file));

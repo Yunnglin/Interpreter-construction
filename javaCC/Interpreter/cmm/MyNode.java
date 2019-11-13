@@ -38,11 +38,11 @@ import java.io.Writer;
 public class MyNode
 {
   /** Symbol table */
-  protected static java.util.Hashtable symtab = new java.util.Hashtable();
+  public static java.util.Hashtable symtab = new java.util.Hashtable();
 
   /** Stack for calculations. */
-  protected static Object[] stack = new Object[1024];
-  protected static int top = -1;
+  public static Object[] stack = new Object[1024];
+  public static int top = -1;
 
   /** @throws UnsupportedOperationException if called */
   public void interpret()

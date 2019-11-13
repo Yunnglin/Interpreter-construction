@@ -4,7 +4,7 @@ package cmm;
 
 public
 class ASTScalarId extends SimpleNode {
-	String name;
+	public String name;
   public ASTScalarId(int id) {
     super(id);
   }

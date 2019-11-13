@@ -2,18 +2,47 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=AST,NODE_EXTENDS=MyNode,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package cmm;
 
-public
-class ASTAddNode extends SimpleNode {
-  public ASTAddNode(int id) {
-    super(id);
-  }
+import exception.SemanticError;
 
-  public ASTAddNode(CMMParser p, int id) {
-    super(p, id);
-  }
+public class ASTAddNode extends SimpleNode {
+	public ASTAddNode(int id) {
+		super(id);
+	}
 
-  public void interpret(){
+	public ASTAddNode(CMMParser p, int id) {
+		super(p, id);
+	}
 
-  }
+	public void interpret() {
+
+	}
+
+	public void check() throws SemanticError {
+//		SimpleNode child0 = (SimpleNode) jjtGetChild(0);
+//		SimpleNode child1 = (SimpleNode) jjtGetChild(1);
+//		if(child0 instanceof ASTScalarId) {
+//			Object val = symtab.get(((ASTScalarId) child0).name);
+//			if (val == null) {
+//				throw SemanticError.newIdentifierNotDefinedError();
+//			}
+//			if(val instanceof int[] || val instanceof double[]) {
+//				throw SemanticError.newArrayPointerExecuteError();
+//			}
+//		}
+//		
+//		if(child1 instanceof ASTScalarId) {
+//			Object val = symtab.get(((ASTScalarId) child0).name);
+//			if (val == null) {
+//				throw SemanticError.newIdentifierNotDefinedError();
+//			}
+//			if(val instanceof int[] || val instanceof double[]) {
+//				throw SemanticError.newArrayPointerExecuteError();
+//			}
+//		}
+	}
+
 }
-/* JavaCC - OriginalChecksum=504dd896a915a4041f05489b6fc4cad6 (do not edit this line) */
+/*
+ * JavaCC - OriginalChecksum=504dd896a915a4041f05489b6fc4cad6 (do not edit this
+ * line)
+ */

@@ -8,6 +8,7 @@ class ASTFormDeclaration extends SimpleNode implements CMMParserConstants{
 	public int type;
 	public String name;
 	public int count=0;
+	public Token countToken;
   public ASTFormDeclaration(int id) {
     super(id);
   }
@@ -18,7 +19,7 @@ class ASTFormDeclaration extends SimpleNode implements CMMParserConstants{
   
   public void putInTable() throws SemanticError {
 	  if(count<0) {
-		  throw SemanticError.newNegativeArraySizeError();
+		  throw SemanticError.newNegativeArraySizeError(countToken);
 	  }
 	  if (type == INT) {
 		  symtab.put(name, new int[count]);
