@@ -282,6 +282,13 @@ public class MButton {
                     mainWindow.getOutputPane().setText(preContent);
                     break;
                 }
+                case SYS_ERROR:{
+                    preContent += "\n-----System Error----\n";
+                    Exception syntaxError = (Exception) message.getBody();
+                    preContent += syntaxError.getMessage();
+                    mainWindow.getOutputPane().setText(preContent);
+                    break;
+                }
             }
         }
 

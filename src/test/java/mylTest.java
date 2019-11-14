@@ -36,7 +36,7 @@ public class mylTest {
     }
     @Test
     public void test2(){
-        Object a = 1;
-        Object[] b = (Object[]) a;
+        double a=0.1;
+
     }
 }
