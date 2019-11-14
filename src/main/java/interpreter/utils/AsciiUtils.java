@@ -2,6 +2,7 @@ package interpreter.utils;
 
 import interpreter.Const;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class AsciiUtils {
@@ -126,5 +127,10 @@ public class AsciiUtils {
             // in octal form (maybe)
             return octal2Ascii(str);
         }
+    }
+
+    public static String convert2AsciiString(String str) {
+        byte[] bytes = str.getBytes(Charset.defaultCharset());
+        return new String(bytes, StandardCharsets.US_ASCII);
     }
 }

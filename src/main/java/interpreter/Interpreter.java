@@ -110,20 +110,23 @@ public class Interpreter implements MessageProducer {
             sendMessage(exeMessage);
 
         } catch (SemanticError se) {
-            System.out.println(se);
             Message semanticError = new Message(Message.MessageType.SEMANTIC_ERROR, se);
             this.sendMessage(semanticError);
             exitStatusCode = -1;
+            System.out.println(se);
+            se.printStackTrace();
         } catch (ExecutionError ee) {
-            System.out.println(ee);
             Message executionError = new Message(Message.MessageType.EXECUTION_ERROR, ee);
             this.sendMessage(executionError);
             exitStatusCode = -1;
+            System.out.println(ee);
+            ee.printStackTrace();
         } catch (ReturnStmt.ReturnSignal | Error | Exception syse) {
-            System.out.println(syse);
             Message systemError = new Message(Message.MessageType.SYS_ERROR, syse);
             this.sendMessage(systemError);
             exitStatusCode = -1000;
+            System.out.println(syse);
+            syse.printStackTrace();
         }
 
         return exitStatusCode;

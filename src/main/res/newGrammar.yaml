@@ -95,15 +95,17 @@ STMT:
   -
     - WRITE_STMT
   -
-    - ASSIGN_STMT
-  -
     - DECLARE_STMT
   -
     - COMPOUND_STMT
   -
-    - RETURN_STMT
+    - JUMP_STMT
   -
     - EXPR_STMT
+#  -
+#    - ASSIGN_STMT
+#  -
+#    - RETURN_STMT
 COMPOUND_STMT:
   -
     - L_BRACES
@@ -244,36 +246,60 @@ WRITE_STMT:
     - WRITE
     - EXPR
     - SEMICOLON
-ASSIGN_STMT:
+#ASSIGN_STMT:
+#  -
+#    - IDENTIFIER
+#    - OTHER_ASSIGN
+#OTHER_ASSIGN:
+#  -
+#    - ASSIGN
+#    - EXPR
+#    - SEMICOLON
+#  -
+#    - L_SQUARE_BRACKETS
+#    - EXPR
+#    - R_SQUARE_BRACKETS
+#    - ASSIGN
+#    - EXPR
+#    - SEMICOLON
+#RETURN_STMT:
+#  -
+#    - RETURN
+#    - EXPR
+#    - SEMICOLON
+#  -
+#    - RETURN
+#    - SEMICOLON
+JUMP_STMT:
   -
-    - IDENTIFIER
-    - OTHER_ASSIGN
-OTHER_ASSIGN:
-  -
-    - ASSIGN
-    - EXPR
+    - CONTINUE
     - SEMICOLON
   -
-    - L_SQUARE_BRACKETS
-    - EXPR
-    - R_SQUARE_BRACKETS
-    - ASSIGN
-    - EXPR
+    - BREAK
     - SEMICOLON
-RETURN_STMT:
+  -
+    - RETURN
+    - SEMICOLON
   -
     - RETURN
     - EXPR
-    - SEMICOLON
-  -
-    - RETURN
     - SEMICOLON
 #EXPR:
 #  -
 #    - RELATIONAL_EXPR
 EXPR:
   -
+    - ASSIGN_EXPR
+ASSIGN_EXPR:
+  -
+    - FACTOR
+    - ASSIGN_OP
+    - ASSIGN_EXPR
+  -
     - LOGICAL_OR_EXPR
+ASSIGN_OP:
+  -
+    - ASSIGN
 LOGICAL_OR_EXPR:
   -
     - LOGICAL_AND_EXPR

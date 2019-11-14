@@ -169,6 +169,7 @@ public class Lexer implements MessageProducer {
                 getNextChar();
             }
             if(peek == EOF) {
+                // end of file
                 return (curToken = new Token(TokenTag.PROG_END, curLine));
             }
             // 解析操作符、注释等
@@ -203,16 +204,19 @@ public class Lexer implements MessageProducer {
                         ++comments;
                         while(comments != 0) {
                             if(getNextChar(EOF)) {
-                                return (curToken = null);
+                                // end of file
+                                return (curToken = new Token(TokenTag.PROG_END, curLine));
                             } else if (peek == '*'){
                                 if(getNextChar(EOF)) {
-                                    return (curToken = null);
+                                    // end of file
+                                    return (curToken = new Token(TokenTag.PROG_END, curLine));
                                 } else if (peek == '/') {
                                     --comments;
                                 }
                             } else if (peek == '/') {
                                 if(getNextChar(EOF)) {
-                                    return (curToken = null);
+                                    // end of file
+                                    return (curToken = new Token(TokenTag.PROG_END, curLine));
                                 } else if (peek == '*') {
                                     ++comments;
                                 }
@@ -230,7 +234,7 @@ public class Lexer implements MessageProducer {
                             getNextChar();
                         }
                         if (peek == EOF) {
-                            return (curToken = null);
+                            return (curToken = new Token(TokenTag.PROG_END, curLine));
                         } else {
                             ++curLine;
                         }
@@ -319,7 +323,8 @@ public class Lexer implements MessageProducer {
                     String charStr = strBuilder.toString();
                     if (!escape) {
                         // 非转义字符长为1个字符
-                        if (strBuilder.length() != 1) {
+                        String asciiString = AsciiUtils.convert2AsciiString(charStr);
+                        if (asciiString.length() > 1) {
                             throw SyntaxError.newMultiCharacterChar(charStr, curLine);
                         }
 
@@ -389,10 +394,10 @@ public class Lexer implements MessageProducer {
                     }
                     // 添加字符串末尾 \0
                     valueBuilder.append('\0');
+                    String valueStr = AsciiUtils.convert2AsciiString(valueBuilder.toString());
 
                     getNextChar();
-                    return (curToken = new Text(TokenTag.STRING, curLine, rawBuilder.toString(),
-                            valueBuilder.toString()));
+                    return (curToken = new Text(TokenTag.STRING, curLine, rawBuilder.toString(), valueStr));
             }
 
             // 解析整数和实数

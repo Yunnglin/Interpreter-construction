@@ -6,6 +6,7 @@ import org.junit.Test;
 import interpreter.exception.*;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -112,14 +113,11 @@ public class LexerTest {
 //        String str = "嗯";
 //        System.out.println(str.charAt(0));
 //        System.out.println(AsciiUtils.isAsciiCharacter('\n'));
+        char c = '\u55ef'; char ch = 4;
+        System.out.println(c);
+        System.out.println(AsciiUtils.convert2AsciiString((String.valueOf(c))) +
+                "1234");
 
-        System.out.println(String.valueOf('\n').getBytes(StandardCharsets.US_ASCII).length);
-        byte[] bytes = "嗯".getBytes(StandardCharsets.US_ASCII);
-        StringBuilder builder = new StringBuilder();
-        for (byte b : bytes) {
-            builder.append((char) b);
-        }
-
-        System.out.println(builder.toString());
+        System.out.println(AsciiUtils.convert2AsciiString("a").length());
     }
 }
