@@ -222,6 +222,11 @@ public class MButton {
     }
 
     private class ParserMessageListener implements MessageListener {
+
+        private void paneTextAppend(String str, JTextPane pane) {
+            pane.setText(pane.getText() + str + '\n');
+        }
+
         @Override
         public void onMessageReceived(Message message) {
             //消息种类
@@ -284,9 +289,11 @@ public class MButton {
                 }
                 case SYS_ERROR:{
                     preContent += "\n-----System Error----\n";
-                    Exception syntaxError = (Exception) message.getBody();
-                    preContent += syntaxError.getMessage();
-                    mainWindow.getOutputPane().setText(preContent);
+                    Throwable sysError = (Throwable) message.getBody();
+                    preContent += sysError.getMessage();
+                    paneTextAppend(preContent, mainWindow.getOutputPane());
+                    paneTextAppend(preContent, mainWindow.getParseOutputPane());
+                    paneTextAppend(preContent, mainWindow.getExecuteOutputPane());
                     break;
                 }
             }

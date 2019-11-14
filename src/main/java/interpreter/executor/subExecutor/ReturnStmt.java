@@ -7,12 +7,19 @@ import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.type.DataType;
 
+import java.util.Arrays;
+
 public class ReturnStmt extends BaseExecutor {
 
     public class ReturnSignal extends Throwable {
 
         private Object[] retValue;
         private int line;
+
+        @Override
+        public String getMessage() {
+            return "Uncaught Return Signal: " + Arrays.toString(this.getRetValue());
+        }
 
         public ReturnSignal(int line) {
             this.retValue = new Object[] {DataType.PredefinedType.TYPE_VOID, null};

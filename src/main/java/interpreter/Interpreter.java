@@ -121,8 +121,15 @@ public class Interpreter implements MessageProducer {
             exitStatusCode = -1;
             System.out.println(ee);
             ee.printStackTrace();
-        } catch (ReturnStmt.ReturnSignal | Error | Exception syse) {
-            Message systemError = new Message(Message.MessageType.SYS_ERROR, syse);
+        } catch (ReturnStmt.ReturnSignal missRet) {
+            Message missRetError = new Message(Message.MessageType.SYS_ERROR, missRet);
+            this.sendMessage(missRetError);
+            exitStatusCode = -1001;
+            System.out.println(missRet);
+            missRet.printStackTrace();
+        } catch (Error | Exception syse) {
+            String syseMessage = syse.getMessage() == null ? syse.getClass().getSimpleName() : syse.getMessage();
+            Message systemError = new Message(Message.MessageType.SYS_ERROR, new Exception(syseMessage));
             this.sendMessage(systemError);
             exitStatusCode = -1000;
             System.out.println(syse);
