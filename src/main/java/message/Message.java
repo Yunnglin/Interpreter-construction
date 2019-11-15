@@ -1,9 +1,12 @@
 package message;
 
+import java.util.concurrent.locks.Condition;
+
 public class Message {
     public enum MessageType {
         PARSER_SUMMARY, INTERPRETER_SUMMARY, LEXER_SUMMARY, SYS_ERROR, SYNTAX_PARSE_ERROR,
-        SYNTAX_LEX_ERROR, IO_ERROR, READ_INPUT,WRITE, EXECUTION_ERROR, SEMANTIC_ERROR
+        SYNTAX_LEX_ERROR, IO_ERROR, READ_INPUT,WRITE, EXECUTION_ERROR, SEMANTIC_ERROR,
+        SUSPEND_ON_TRAP
     }
 
     private MessageType type;

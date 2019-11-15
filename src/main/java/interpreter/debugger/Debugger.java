@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Debugger {
 
     private ArrayList<Breakpoint> breakpoints;
-    private Object debugLock;
+    private final Object debugLock;
     private int curLine;
     private Breakpoint lastBreakpoint;
 
@@ -27,6 +27,10 @@ public class Debugger {
         return debugLock;
     }
 
+    public StepFlag getStepFlag() {
+        return stepFlag;
+    }
+
     private void stepOver() {
         this.stepFlag = StepFlag.STEP_OVER;
         synchronized (debugLock) {
@@ -40,6 +44,13 @@ public class Debugger {
             debugLock.notifyAll();
         }
 
+    }
+
+    private void continueExecution() {
+        this.stepFlag = StepFlag.OFF;
+        synchronized (debugLock) {
+            debugLock.notifyAll();
+        }
     }
 
     public boolean addBreakpoint(Breakpoint breakpoint) {
@@ -57,7 +68,7 @@ public class Debugger {
     public boolean shouldBreak(int line) {
         // if current line encounters a breakpoint
         // and there is no other execution stopped by it before in this line.
-        return line != lastBreakpoint.getLine() && encounterBreakpoint(line) != null;
+        return (lastBreakpoint == null || line != lastBreakpoint.getLine()) && encounterBreakpoint(line) != null;
 
     }
 
@@ -69,6 +80,16 @@ public class Debugger {
         }
 
         return null;
+    }
+
+    public void stopCurExecution(int line) throws InterruptedException {
+        Breakpoint breakpoint = encounterBreakpoint(line);
+        if (breakpoint != null) {
+            lastBreakpoint = breakpoint;
+        }
+        synchronized (debugLock) {
+            debugLock.wait();
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package interpreter.env;
 
 import interpreter.debugger.Breakpoint;
 import interpreter.debugger.Debugger;
+import interpreter.debugger.StepFlag;
 import interpreter.intermediate.type.FuncPrototype;
 import message.Message;
 import message.MessageHandler;
@@ -155,9 +156,34 @@ public class Env implements MessageProducer {
         return onDebug;
     }
 
+    public void setOnDebug(boolean isOn) {
+        this.onDebug = isOn;
+    }
+
     public void initDebugger(ArrayList<Breakpoint> breakpoints) {
         this.onDebug = true;
         this.debugger = new Debugger(breakpoints);
+    }
+
+    public StepFlag getCurStepFlag() {
+        if (this.onDebug) {
+            return this.debugger.getStepFlag();
+        }
+
+        return null;
+    }
+
+    public boolean shouldStopExecution(int line) {
+        StepFlag stepFlag = this.debugger.getStepFlag();
+        return this.onDebug && (
+                (stepFlag.equals(StepFlag.OFF) && this.debugger.shouldBreak(line)) ||
+                        stepFlag.equals(StepFlag.STEP_IN) ||
+                        stepFlag.equals(StepFlag.STEP_OVER)
+                );
+    }
+
+    public void stopCurExecution(int line) throws InterruptedException {
+        this.debugger.stopCurExecution(line);
     }
 
 }
