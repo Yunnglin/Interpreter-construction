@@ -23,22 +23,18 @@ public class Debugger {
         this(new ArrayList<Breakpoint>());
     }
 
-    public Object getDebugLock() {
-        return debugLock;
-    }
-
     public StepFlag getStepFlag() {
         return stepFlag;
     }
 
-    private void stepOver() {
+    public void stepOver() {
         this.stepFlag = StepFlag.STEP_OVER;
         synchronized (debugLock) {
             debugLock.notifyAll();
         }
     }
 
-    private void stepIn() {
+    public void stepIn() {
         this.stepFlag = StepFlag.STEP_IN;
         synchronized (debugLock) {
             debugLock.notifyAll();
@@ -46,7 +42,7 @@ public class Debugger {
 
     }
 
-    private void continueExecution() {
+    public void continueExecution() {
         this.stepFlag = StepFlag.OFF;
         synchronized (debugLock) {
             debugLock.notifyAll();

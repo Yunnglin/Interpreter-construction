@@ -152,19 +152,35 @@ public class Env implements MessageProducer {
         this.mainEntry = entry;
     }
 
+    /**
+     * get the debug status
+     * @return boolean
+     */
     public boolean isOnDebug() {
         return onDebug;
     }
 
+    /**
+     * set the debug status
+     * @param isOn boolean
+     */
     public void setOnDebug(boolean isOn) {
         this.onDebug = isOn;
     }
 
+    /**
+     * initialize debugger with breakpoints
+     * @param breakpoints ArrayList of Breakpoint
+     */
     public void initDebugger(ArrayList<Breakpoint> breakpoints) {
         this.onDebug = true;
         this.debugger = new Debugger(breakpoints);
     }
 
+    /**
+     * get the current step flag (step in, step over, step out, off)
+     * @return StepFlag
+     */
     public StepFlag getCurStepFlag() {
         if (this.onDebug) {
             return this.debugger.getStepFlag();
@@ -173,6 +189,11 @@ public class Env implements MessageProducer {
         return null;
     }
 
+    /**
+     * check whether the execution of specified line should be stopped
+     * @param line int, the number of line
+     * @return boolean
+     */
     public boolean shouldStopExecution(int line) {
         StepFlag stepFlag = this.debugger.getStepFlag();
         return this.onDebug && (
@@ -182,8 +203,38 @@ public class Env implements MessageProducer {
                 );
     }
 
+    /**
+     * stop the current execution by suspend the execution thread
+     * @param line int, the number of the line where the statement is at
+     * @throws InterruptedException
+     */
     public void stopCurExecution(int line) throws InterruptedException {
         this.debugger.stopCurExecution(line);
     }
 
+    public void stepIn() {
+        if (onDebug) {
+            this.debugger.stepIn();
+        }
+    }
+
+    public void stepOver() {
+        if (onDebug) {
+            this.debugger.stepOver();
+        }
+    }
+
+    public void continueExecution() {
+        if (onDebug) {
+            this.debugger.continueExecution();
+        }
+    }
+
+    public boolean addBreakpoint(Breakpoint breakpoint) {
+        return this.debugger.addBreakpoint(breakpoint);
+    }
+
+    public boolean removeBreakpoint(Breakpoint breakpoint) {
+        return this.debugger.removeBreakpoint(breakpoint);
+    }
 }

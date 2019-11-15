@@ -1,5 +1,6 @@
 package interpreter;
 
+import interpreter.debugger.Breakpoint;
 import interpreter.env.Env;
 import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
@@ -17,6 +18,7 @@ import message.MessageListener;
 import message.MessageProducer;
 
 import java.io.Reader;
+import java.util.ArrayList;
 
 public class Interpreter implements MessageProducer {
 
@@ -214,4 +216,42 @@ public class Interpreter implements MessageProducer {
             return (Integer) values[1];
         }
     }
+
+    public void stepIn() {
+        this.env.stepIn();
+    }
+
+    public void stepOver() {
+        this.env.stepOver();
+    }
+
+    public void continueExecution() {
+        this.env.continueExecution();
+    }
+
+    public boolean addBreakpoint(Breakpoint breakpoint) {
+        return this.env.addBreakpoint(breakpoint);
+    }
+
+    public boolean removeBreakpoint(Breakpoint breakpoint) {
+        return this.env.removeBreakpoint(breakpoint);
+    }
+
+    /**
+     * initialize the debugger and turn it on
+     * @param breakpoints ArrayList of Breakpoint
+     */
+    public void initDebugger(ArrayList<Breakpoint> breakpoints) {
+        this.env.initDebugger(breakpoints);
+    }
+
+    /**
+     * find the symbol table entry for the specified name in available scope
+     * @param symbolName String, the name of symbol
+     * @return SymTblEntry
+     */
+    public SymTblEntry findSymTblEntry(String symbolName) {
+        return this.env.findSymTblEntry(symbolName);
+    }
+
 }
