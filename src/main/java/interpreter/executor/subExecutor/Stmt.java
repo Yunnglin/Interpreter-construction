@@ -24,18 +24,7 @@ public class Stmt extends BaseExecutor {
             onTrap(line);
         }
         // execute the statement
-        // choose whether to stop according step flag
-        boolean onDebug = env.isOnDebug();
-        StepFlag curStepFlag = env.getCurStepFlag();
-        if (onDebug && curStepFlag.equals(StepFlag.STEP_OVER)) {
-            // ignore debug during the statement execution
-            env.setOnDebug(false);
-            Object exeResult = executeNode(root.getChild(0));
-            env.setOnDebug(true);
-            return exeResult;
-        } else {
-            return executeNode(root.getChild(0));
-        }
+        return executeNode(root.getChild(0));
     }
 
     private void onTrap(int line) throws InterruptedException {

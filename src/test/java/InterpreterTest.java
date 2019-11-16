@@ -35,7 +35,13 @@ public class InterpreterTest {
     }
 
     @Test
-    public void numberTest() {
+    public void debugTest() {
+        int i = 0;
+        while (i < 10) {
+            ++i;
+            System.out.println("loop");
+        }
 
+        System.out.println("loop ends");
     }
 }
