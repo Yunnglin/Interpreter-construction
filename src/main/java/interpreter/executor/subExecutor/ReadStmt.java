@@ -79,7 +79,7 @@ public class ReadStmt extends BaseExecutor {
             }
         }
         else
-        //read identifier [expr]
+        //read identifier [expr] ;
         {
             // not terminated, read to a array element
             if (!type.getForm().equals(TypeForm.ARRAY)) {
@@ -88,9 +88,9 @@ public class ReadStmt extends BaseExecutor {
             }
             Message input = read();
             ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
-            Executor exe = factory.getExecutor(root.getChild(4), env);
+            Executor exe = factory.getExecutor(root.getChild(3), env);
             //执行结果
-            Object[] exeValue1 = (Object[]) exe.Execute(root.getChild(4));
+            Object[] exeValue1 = (Object[]) exe.Execute(root.getChild(3));
             DataType exe1Type = (DataType) exeValue1[0];
             //判断索引的类型是否是整数
             if (exe1Type.getBasicType().equals(BasicType.INT))
