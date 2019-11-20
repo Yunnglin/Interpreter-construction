@@ -50,6 +50,9 @@ public class MainWindow {
     private JPanel paramJPanel;
     private JTextField paramTextField;
     private JLabel promptLabel;
+    private JButton debugBtn;
+    private JButton stepOverBtn;
+    private JButton stepInBtn;
 
 
     private MTextPane mTextPane;
@@ -57,6 +60,12 @@ public class MainWindow {
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
     private MFoldersTree mFoldersTree;
+    private JList lineNumList;
+
+    public JList getLineNumList() {
+        return lineNumList;
+    }
+
 
     private JTextPane[] outputPanes = {
             outputPane,
@@ -103,6 +112,18 @@ public class MainWindow {
 //        outputTabbedPane.setSelectedComponent(executeJPanel);
     }
 
+
+    public JButton getDebugBtn() {
+        return debugBtn;
+    }
+
+    public JButton getStepOverBtn() {
+        return stepOverBtn;
+    }
+
+    public JButton getStepInBtn() {
+        return stepInBtn;
+    }
 
     public JScrollPane getTreePane() {
         return treePane;

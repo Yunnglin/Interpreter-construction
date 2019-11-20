@@ -126,7 +126,7 @@ public class MButton {
                 Interpreter interpreter = new Interpreter(myParser);
 
                 interpreter.addMessageListener(new ParserMessageListener());
-                ExecutorMessageListener executorMessageListener = new ExecutorMessageListener();
+                ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
                 interpreter.addMessageListener(executorMessageListener);
                 mainWindow.getParamTextField().addKeyListener(executorMessageListener);
                 //开始执行
@@ -142,10 +142,13 @@ public class MButton {
 
 
     private class ExecutorMessageListener implements MessageListener, KeyListener {
-        JTextPane executePane = mainWindow.getExecuteOutputPane();
+        JTextPane executePane;
         Message message;
         JTextField paramField = mainWindow.getParamTextField();
 
+        public ExecutorMessageListener(JTextPane textField){
+            executePane = textField;
+        }
         private void paneTextAppend(String str) {
             executePane.setText(executePane.getText() + str + '\n');
         }
