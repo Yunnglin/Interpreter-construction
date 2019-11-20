@@ -6,9 +6,8 @@ import FrontEnd.parts.conf.MFont;
 import FrontEnd.parts.conf.MSize;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -20,12 +19,14 @@ public class MScrollPane {
     private JScrollPane editScroll;
     private DefaultListModel lineList;
     private JList lineNumList;
-    private List<Integer> selectedItems=new ArrayList<>();;
+    private List<Integer> selectedItems = new ArrayList<>();
+    private MyCellRender myCellRender;
 
-    public MScrollPane(MainWindow mainWindow){
+    public MScrollPane(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
     }
-    public void init(){
+
+    public void init() {
         this.setEditScroll();
     }
 
@@ -34,11 +35,13 @@ public class MScrollPane {
         return lineNumList;
     }
 
-    private void setEditScroll(){
+    private void setEditScroll() {
         editScroll = mainWindow.getEditScrollPane();
         lineList = new DefaultListModel();
 
         lineNumList = new JList(lineList);
+        myCellRender = new MyCellRender();
+        lineNumList.setCellRenderer(myCellRender);
         lineNumList.setFixedCellWidth(MSize.lineCellWidth);
         lineNumList.setFixedCellHeight(MSize.lineCellHeight);
         lineNumList.setBackground(MColor.lineAreaColor);
@@ -60,36 +63,47 @@ public class MScrollPane {
                 this.lineList.removeElementAt(i - 1);
         }
     }
-//    private class SelectChange implements ListSelectionListener {
-//
-//        @Override
-//        public void valueChanged(ListSelectionEvent e) {
-//            JList theList = (JList) e.getSource();
-//
-//            int selectedIndex = theList.getSelectedIndex();
-//            if(selectedItems.contains(selectedIndex)){
-//                selectedItems.remove((Integer)selectedIndex);
-//            }
-//            else{
-//                selectedItems.add((Integer)selectedIndex);
-//            }
-//            //List<Integer>转int[]
-//            theList.setSelectedIndices(selectedItems.stream().mapToInt(Integer::valueOf).toArray());
-//        }
-//    }
 
-    private class ListClickListener implements MouseListener{
+    public int curLine;
+
+    private class MyCellRender extends DefaultListCellRenderer {
+
+        public Component getListCellRendererComponent(JList list, Object value,
+                                                      int index, boolean isSelected, boolean cellHasFocus) {
+            setText(value + "");
+            setBackground(MColor.lineAreaColor);
+            setFont(MFont.lineNumFont);
+
+            if (isSelected) {
+                setBackground(MColor.breakPointColor);
+            }
+            int nextLine = mainWindow.getmButton().curLine;
+            if (curLine != nextLine) {//下一行
+                if ((index + 1) == nextLine) {
+                    curLine = nextLine;
+                    setBackground(MColor.curPointColor);
+                }
+            }
+            return this;
+        }
+    }
+
+
+    public void freshList() {
+        lineNumList.repaint();
+    }
+
+    private class ListClickListener implements MouseListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
             JList theList = (JList) e.getSource();
 
             int selectedIndex = theList.getSelectedIndex();
-            if(selectedItems.contains(selectedIndex)){
-                selectedItems.remove((Integer)selectedIndex);
-            }
-            else{
-                selectedItems.add((Integer)selectedIndex);
+            if (selectedItems.contains(selectedIndex)) {
+                selectedItems.remove((Integer) selectedIndex);
+            } else {
+                selectedItems.add((Integer) selectedIndex);
             }
             //List<Integer>转int[]
             theList.setSelectedIndices(selectedItems.stream().mapToInt(Integer::valueOf).toArray());

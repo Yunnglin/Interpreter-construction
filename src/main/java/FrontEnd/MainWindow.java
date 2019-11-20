@@ -64,6 +64,12 @@ public class MainWindow {
     private FileOperation fileOperation;
     private MFoldersTree mFoldersTree;
 
+    public MButton getmButton() {
+        return mButton;
+    }
+
+    private MButton mButton;
+
 
 
     private JTextPane[] outputPanes = {
@@ -89,7 +95,7 @@ public class MainWindow {
         mSplitPane.setSplitInOut(splitInOut);
         mSplitPane.setSplitTreeEdit(splitTreeEdit);
 
-        MButton mButton = new MButton(this);
+        mButton = new MButton(this);
         mButton.init();
 
         mTextPane = new MTextPane(this);

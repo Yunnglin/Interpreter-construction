@@ -1,17 +1,13 @@
 package FrontEnd.parts;
 
+import FrontEnd.DebuggerForm;
 import FrontEnd.MainWindow;
 import FrontEnd.parts.conf.MColor;
 import interpreter.Interpreter;
 import interpreter.debugger.Breakpoint;
-import interpreter.debugger.Debugger;
 import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.exception.SyntaxError;
-import interpreter.executor.BaseExecutor;
-import interpreter.executor.subExecutor.E;
-import interpreter.env.Env;
-import interpreter.executor.subExecutor.ReturnStmt;
 import interpreter.intermediate.node.INode;
 import interpreter.lexer.Lexer;
 import interpreter.lexer.token.Token;
@@ -28,6 +24,9 @@ import java.util.List;
 
 public class MButton {
     private MainWindow mainWindow;
+    private Interpreter interpreter;
+    public int curLine;
+
     private Icon debugIcon = new ImageIcon("src/main/java/FrontEnd/resource/debug.png");
     private Icon stepOverIcon = new ImageIcon("src/main/java/FrontEnd/resource/stepOver.png");
     private Icon stepIntoIcon = new ImageIcon("src/main/java/FrontEnd/resource/stepInto.png");
@@ -50,14 +49,15 @@ public class MButton {
         setContinueButton(mainWindow.getContinueBtn());
 
         mainWindow.getDebugBtn().setIcon(debugIcon);
-        setDebugVisible(false);
+        setDebugEnabled(false);
     }
 
-    private void setDebugVisible(boolean visible){
-        mainWindow.getStepOverBtn().setVisible(visible);
-        mainWindow.getStepInBtn().setVisible(visible);
-        mainWindow.getContinueBtn().setVisible(visible);
+    private void setDebugEnabled(boolean enabled) {
+        mainWindow.getStepOverBtn().setEnabled(enabled);
+        mainWindow.getStepInBtn().setEnabled(enabled);
+        mainWindow.getContinueBtn().setEnabled(enabled);
     }
+
     private void setFileButton(JButton button) {
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -81,7 +81,7 @@ public class MButton {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                interpreter.stepOver();
             }
         });
     }
@@ -91,7 +91,7 @@ public class MButton {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                interpreter.stepIn();
             }
         });
     }
@@ -101,7 +101,7 @@ public class MButton {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                interpreter.continueExecution();
             }
         });
     }
@@ -173,7 +173,7 @@ public class MButton {
 
                 Lexer lexer = new Lexer(reader);
                 Parser parser = new Parser(lexer);
-                Interpreter interpreter = new Interpreter(parser);
+                interpreter = new Interpreter(parser);
                 if (!debug) {
                     interpreter.addMessageListener(new ParserMessageListener());
                     ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
@@ -184,21 +184,32 @@ public class MButton {
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
                 } else {
                     //debug模式
-                    setDebugVisible(true);
+                    DebuggerForm debuggerForm = new DebuggerForm();
+                    debuggerForm.init();
+
                     List points = mainWindow.getmScrollPane().getLineNumList().getSelectedValuesList();
                     ArrayList<Breakpoint> breakpoints = new ArrayList<>();
                     for (Object point : points.toArray()) {
-                        System.out.println((int)point);
-                        breakpoints.add(new Breakpoint((int)point));
+                        System.out.println((int) point);
+                        breakpoints.add(new Breakpoint((int) point));
                     }
-                    Debugger debugger = new Debugger(breakpoints);
-                    //setDebugVisible(false);
+                    interpreter.initDebugger(breakpoints);
+                    mainWindow.getmScrollPane().curLine = 0;
+
+                    interpreter.addMessageListener(new ParserMessageListener());
+                    ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
+                    interpreter.addMessageListener(executorMessageListener);
+                    mainWindow.getParamTextField().addKeyListener(executorMessageListener);
+                    //开始执行
+                    interpreter.interpret();
+                    mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
+                    setDebugEnabled(false);
                 }
 
 
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
-                setDebugVisible(false);
+                setDebugEnabled(false);
                 e1.printStackTrace();
             }
         }).start());
@@ -251,6 +262,13 @@ public class MButton {
                     SemanticError error = (SemanticError) message.getBody();
                     String s = error.toString();
                     paneTextAppend(s);
+                    break;
+                }
+                case SUSPEND_ON_TRAP: {
+                    //System.out.println("stop");
+                    curLine = (int) message.getBody();
+                    mainWindow.getmScrollPane().freshList();
+                    setDebugEnabled(true);
                     break;
                 }
             }

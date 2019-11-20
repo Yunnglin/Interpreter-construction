@@ -32,7 +32,7 @@ public class Stmt extends BaseExecutor {
         Message message = new Message(Message.MessageType.SUSPEND_ON_TRAP, line);
         new Thread(() -> {
             postMessage(message);
-        });
+        }).start();
 
         // wait next action
         env.stopCurExecution(line);

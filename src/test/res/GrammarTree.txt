@@ -31,26 +31,35 @@ PROG
 						SEMICOLON
 				STMT_LIST
 					STMT
-						IF_STMT
-							IF
-							L_PARENTHESES
-							EXPR
-								RELATIONAL_EXPR
-									SIMPLE_EXPR
-										TERM
-											FACTOR
-												NUMBER
-													INTEGER
-											MORE_FACTOR
-										MORE_TERM
-									RELATIONAL_EXPR_MORE
-							R_PARENTHESES
-							COMPOUND_STMT
-								L_BRACES
-								STMT_LIST
-									STMT
-										WRITE_STMT
-											WRITE
+						DECLARE_STMT
+							TYPE
+								INT
+							DECLARATOR_LIST
+								DECLARATOR
+									IDENTIFIER
+									INITIALIZER
+										ASSIGN
+										EXPR
+											RELATIONAL_EXPR
+												SIMPLE_EXPR
+													TERM
+														FACTOR
+															NUMBER
+																INTEGER
+														MORE_FACTOR
+													MORE_TERM
+												RELATIONAL_EXPR_MORE
+							SEMICOLON
+					STMT_LIST
+						STMT
+							DECLARE_STMT
+								TYPE
+									INT
+								DECLARATOR_LIST
+									DECLARATOR
+										IDENTIFIER
+										INITIALIZER
+											ASSIGN
 											EXPR
 												RELATIONAL_EXPR
 													SIMPLE_EXPR
@@ -61,33 +70,5 @@ PROG
 															MORE_FACTOR
 														MORE_TERM
 													RELATIONAL_EXPR_MORE
-											SEMICOLON
-								R_BRACES
-							MORE_IF_ELSE
-								ELSE
-								ELSE_STMT
-									COMPOUND_STMT
-										L_BRACES
-										STMT_LIST
-											STMT
-												READ_STMT
-													READ
-													IDENTIFIER
-													SEMICOLON
-										R_BRACES
-					STMT_LIST
-						STMT
-							RETURN_STMT
-								RETURN
-								EXPR
-									RELATIONAL_EXPR
-										SIMPLE_EXPR
-											TERM
-												FACTOR
-													NUMBER
-														INTEGER
-												MORE_FACTOR
-											MORE_TERM
-										RELATIONAL_EXPR_MORE
 								SEMICOLON
 			R_BRACES
