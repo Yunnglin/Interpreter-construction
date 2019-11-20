@@ -3,6 +3,8 @@ package FrontEnd.parts;
 import FrontEnd.MainWindow;
 import FrontEnd.parts.conf.MColor;
 import interpreter.Interpreter;
+import interpreter.debugger.Breakpoint;
+import interpreter.debugger.Debugger;
 import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.exception.SyntaxError;
@@ -22,9 +24,14 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MButton {
     private MainWindow mainWindow;
+    private Icon debugIcon = new ImageIcon("src/main/java/FrontEnd/resource/debug.png");
+    private Icon stepOverIcon = new ImageIcon("src/main/java/FrontEnd/resource/stepOver.png");
+    private Icon stepIntoIcon = new ImageIcon("src/main/java/FrontEnd/resource/stepInto.png");
+    private Icon continueIcon = new ImageIcon("src/main/java/FrontEnd/resource/continue.png");
 
     public MButton(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -35,9 +42,22 @@ public class MButton {
         setFileButton(mainWindow.getFileButton());
         setLexerButton(mainWindow.getLexerBtn());
         setParserButton(mainWindow.getParserBtn());
-        setExecuteButton(mainWindow.getExecuteBtn());
+        setExecuteButton(mainWindow.getExecuteBtn(), false);
+
+        setExecuteButton(mainWindow.getDebugBtn(), true);
+        setStepOverButton(mainWindow.getStepOverBtn());
+        setStepInButton(mainWindow.getStepInBtn());
+        setContinueButton(mainWindow.getContinueBtn());
+
+        mainWindow.getDebugBtn().setIcon(debugIcon);
+        setDebugVisible(false);
     }
 
+    private void setDebugVisible(boolean visible){
+        mainWindow.getStepOverBtn().setVisible(visible);
+        mainWindow.getStepInBtn().setVisible(visible);
+        mainWindow.getContinueBtn().setVisible(visible);
+    }
     private void setFileButton(JButton button) {
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -52,6 +72,36 @@ public class MButton {
             @Override
             public void mouseClicked(MouseEvent e) {
                 mainWindow.getmPopMenu().getEditMenu().show(button, button.getX() - button.getWidth(), button.getY() + button.getHeight());
+            }
+        });
+    }
+
+    private void setStepOverButton(JButton button) {
+        button.setIcon(stepOverIcon);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+        });
+    }
+
+    private void setStepInButton(JButton button) {
+        button.setIcon(stepIntoIcon);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+        });
+    }
+
+    private void setContinueButton(JButton button) {
+        button.setIcon(continueIcon);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
             }
         });
     }
@@ -109,7 +159,7 @@ public class MButton {
         }).start());
     }
 
-    private void setExecuteButton(JButton button) {
+    private void setExecuteButton(JButton button, boolean debug) {
         button.addActionListener(e -> new Thread(() -> {
             if (mainWindow.getEditPane().getText().isEmpty())
                 return;
@@ -121,20 +171,34 @@ public class MButton {
                 mainWindow.getOutputTabbedPane().setSelectedComponent(mainWindow.getExecuteJPanel());
                 mainWindow.getFileOperation().setOutputEmpty();
 
-                Lexer lex = new Lexer(reader);
-                Parser myParser = new Parser(lex);
-                Interpreter interpreter = new Interpreter(myParser);
+                Lexer lexer = new Lexer(reader);
+                Parser parser = new Parser(lexer);
+                Interpreter interpreter = new Interpreter(parser);
+                if (!debug) {
+                    interpreter.addMessageListener(new ParserMessageListener());
+                    ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
+                    interpreter.addMessageListener(executorMessageListener);
+                    mainWindow.getParamTextField().addKeyListener(executorMessageListener);
+                    //开始执行
+                    interpreter.interpret();
+                    mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
+                } else {
+                    //debug模式
+                    setDebugVisible(true);
+                    List points = mainWindow.getmScrollPane().getLineNumList().getSelectedValuesList();
+                    ArrayList<Breakpoint> breakpoints = new ArrayList<>();
+                    for (Object point : points.toArray()) {
+                        System.out.println((int)point);
+                        breakpoints.add(new Breakpoint((int)point));
+                    }
+                    Debugger debugger = new Debugger(breakpoints);
+                    //setDebugVisible(false);
+                }
 
-                interpreter.addMessageListener(new ParserMessageListener());
-                ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
-                interpreter.addMessageListener(executorMessageListener);
-                mainWindow.getParamTextField().addKeyListener(executorMessageListener);
-                //开始执行
-                interpreter.interpret();
-                mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
-                //startExecute(rootNode);
+
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
+                setDebugVisible(false);
                 e1.printStackTrace();
             }
         }).start());
@@ -146,9 +210,10 @@ public class MButton {
         Message message;
         JTextField paramField = mainWindow.getParamTextField();
 
-        public ExecutorMessageListener(JTextPane textField){
+        public ExecutorMessageListener(JTextPane textField) {
             executePane = textField;
         }
+
         private void paneTextAppend(String str) {
             executePane.setText(executePane.getText() + str + '\n');
         }
@@ -169,15 +234,15 @@ public class MButton {
                 }
                 case INTERPRETER_SUMMARY: {
                     Object[] body = (Object[]) message.getBody();
-                    Double exeElapsedTime = (Double)body[0];
-                    int statusCode = (int)body[1];
+                    Double exeElapsedTime = (Double) body[0];
+                    int statusCode = (int) body[1];
                     String stringBuilder = "----Execute Elapsed Time: " + exeElapsedTime + "s -----\n" +
                             "---- Return Status Code----\n " + statusCode;
                     paneTextAppend(stringBuilder);
                     break;
                 }
-                case EXECUTION_ERROR:{
-                    ExecutionError error = (ExecutionError)message.getBody();
+                case EXECUTION_ERROR: {
+                    ExecutionError error = (ExecutionError) message.getBody();
                     String s = error.toString();
                     paneTextAppend(s);
                     break;
@@ -209,7 +274,7 @@ public class MButton {
                     System.out.println("notified " + paramField.getText());
                 }
                 //追加内容
-                   paneTextAppend(paramField.getText());
+                paneTextAppend(paramField.getText());
             }
         }
 
@@ -283,14 +348,14 @@ public class MButton {
                     mainWindow.getParseOutputPane().setText(preContent);
                     break;
                 }
-                case SYNTAX_LEX_ERROR:{
+                case SYNTAX_LEX_ERROR: {
                     preContent += "\n-----Syntax Lex Error----\n";
                     SyntaxError syntaxError = (SyntaxError) message.getBody();
                     preContent += syntaxError.getMessage();
                     mainWindow.getOutputPane().setText(preContent);
                     break;
                 }
-                case SYS_ERROR:{
+                case SYS_ERROR: {
                     preContent += "\n-----System Error----\n";
                     Throwable sysError = (Throwable) message.getBody();
                     preContent += sysError.getMessage();

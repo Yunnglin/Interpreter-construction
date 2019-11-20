@@ -55,16 +55,15 @@ public class MainWindow {
     private JButton stepInBtn;
 
 
+    private JButton continueBtn;
+
+
     private MTextPane mTextPane;
     private MPopMenu mPopMenu;
     private MScrollPane mScrollPane;
     private FileOperation fileOperation;
     private MFoldersTree mFoldersTree;
-    private JList lineNumList;
 
-    public JList getLineNumList() {
-        return lineNumList;
-    }
 
 
     private JTextPane[] outputPanes = {
@@ -73,10 +72,17 @@ public class MainWindow {
             executeOutputPane
     };
 
+    public JButton getContinueBtn() {
+        return continueBtn;
+    }
     private MainWindow() {
         //更新顺序
         mPopMenu = new MPopMenu(this);
         mPopMenu.init();
+
+        MToolBar mToolBar = new MToolBar();
+        mToolBar.setToolBar(funcToolBar);
+        mToolBar.setToolBar(fileToolBar);
 
 
         MSplitPane mSplitPane = new MSplitPane();

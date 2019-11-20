@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="33" y="20" width="685" height="400"/>
+      <xy x="33" y="20" width="741" height="400"/>
     </constraints>
     <properties>
       <background color="-1476083"/>
@@ -273,17 +273,27 @@
               <component id="4105c" class="javax.swing.JButton" binding="debugBtn">
                 <constraints/>
                 <properties>
-                  <text value="调试"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="d54ca" class="javax.swing.JToolBar$Separator">
                 <constraints/>
                 <properties/>
               </component>
+              <component id="239bf" class="javax.swing.JButton" binding="continueBtn">
+                <constraints/>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="53f31" class="javax.swing.JToolBar$Separator">
+                <constraints/>
+                <properties/>
+              </component>
               <component id="13a52" class="javax.swing.JButton" binding="stepOverBtn">
                 <constraints/>
                 <properties>
-                  <text value="Step Over"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="e49b9" class="javax.swing.JToolBar$Separator">
@@ -293,7 +303,7 @@
               <component id="8e064" class="javax.swing.JButton" binding="stepInBtn">
                 <constraints/>
                 <properties>
-                  <text value="Step In"/>
+                  <text value=""/>
                 </properties>
               </component>
             </children>

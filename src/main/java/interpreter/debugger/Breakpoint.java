@@ -17,6 +17,9 @@ public class Breakpoint {
 
         return this.line == ((Breakpoint) obj).getLine();
     }
+    public Breakpoint(int line){
+        this.line = line;
+    }
 
     public int getLine() {
         return line;

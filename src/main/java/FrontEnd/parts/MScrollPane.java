@@ -6,6 +6,8 @@ import FrontEnd.parts.conf.MFont;
 import FrontEnd.parts.conf.MSize;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,10 +24,14 @@ public class MScrollPane {
 
     public MScrollPane(MainWindow mainWindow){
         this.mainWindow = mainWindow;
-        this.lineNumList = mainWindow.getLineNumList();
     }
     public void init(){
         this.setEditScroll();
+    }
+
+
+    public JList getLineNumList() {
+        return lineNumList;
     }
 
     private void setEditScroll(){
@@ -54,12 +60,30 @@ public class MScrollPane {
                 this.lineList.removeElementAt(i - 1);
         }
     }
+//    private class SelectChange implements ListSelectionListener {
+//
+//        @Override
+//        public void valueChanged(ListSelectionEvent e) {
+//            JList theList = (JList) e.getSource();
+//
+//            int selectedIndex = theList.getSelectedIndex();
+//            if(selectedItems.contains(selectedIndex)){
+//                selectedItems.remove((Integer)selectedIndex);
+//            }
+//            else{
+//                selectedItems.add((Integer)selectedIndex);
+//            }
+//            //List<Integer>转int[]
+//            theList.setSelectedIndices(selectedItems.stream().mapToInt(Integer::valueOf).toArray());
+//        }
+//    }
 
     private class ListClickListener implements MouseListener{
 
         @Override
         public void mouseClicked(MouseEvent e) {
             JList theList = (JList) e.getSource();
+
             int selectedIndex = theList.getSelectedIndex();
             if(selectedItems.contains(selectedIndex)){
                 selectedItems.remove((Integer)selectedIndex);
