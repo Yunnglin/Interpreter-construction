@@ -186,15 +186,21 @@ public class Parser implements MessageProducer {
 
             if (action == null) {
                 // the action is error
+//                if (token.getTag().equals(TokenTag.PROG_END)) {
+//                    // early end
+//                    throw SyntaxError.newMissingTokenError( tokens.get(tokenTop-1),
+//                            getExpectedTokenTag(stateStack.get(symbolTop)));
+//                }
                 System.out.println("symbol: " + symbol);
                 Integer state = stateStack.get(symbolTop);
                 System.out.println("" + state + parseManager.getState(state));
-                ArrayList<TokenTag> expectedTokens = getExpectedTokenTag(state);
-                if (expectedTokens.size() > 0) {
-                    throw SyntaxError.newMissingTokenError(token, expectedTokens);
-                } else {
-                    throw SyntaxError.newUnexpectedTokenError(token);
-                }
+                throw SyntaxError.newUnexpectedTokenError(token);
+//                ArrayList<TokenTag> expectedTokens = getExpectedTokenTag(state);
+//                if (expectedTokens.size() > 0) {
+//                    throw SyntaxError.newMissingTokenError(token, expectedTokens);
+//                } else {
+//                    throw SyntaxError.newUnexpectedTokenError(token);
+//                }
             }
 
             if (action == 0) {
