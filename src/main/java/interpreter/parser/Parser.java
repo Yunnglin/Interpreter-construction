@@ -197,7 +197,7 @@ public class Parser implements MessageProducer {
                 throw SyntaxError.newUnexpectedTokenError(token);
 //                ArrayList<TokenTag> expectedTokens = getExpectedTokenTag(state);
 //                if (expectedTokens.size() > 0) {
-//                    throw SyntaxError.newMissingTokenError(token, expectedTokens);
+//                    throw SyntaxError.newMissingTokenError(tokens.get(tokenTop-1), expectedTokens);
 //                } else {
 //                    throw SyntaxError.newUnexpectedTokenError(token);
 //                }

@@ -195,6 +195,9 @@ public class Env implements MessageProducer {
      * @return boolean
      */
     public boolean shouldStopExecution(int line) {
+        if (!onDebug)
+            return false;
+
         StepFlag stepFlag = this.debugger.getStepFlag();
         return this.onDebug && (
                 (stepFlag.equals(StepFlag.OFF) && this.debugger.shouldBreak(line)) ||
@@ -209,7 +212,8 @@ public class Env implements MessageProducer {
      * @throws InterruptedException
      */
     public void stopCurExecution(int line) throws InterruptedException {
-        this.debugger.stopCurExecution(line);
+        if (onDebug)
+            this.debugger.stopCurExecution(line);
     }
 
     public void stepIn() {
@@ -231,10 +235,16 @@ public class Env implements MessageProducer {
     }
 
     public boolean addBreakpoint(Breakpoint breakpoint) {
-        return this.debugger.addBreakpoint(breakpoint);
+        if (onDebug)
+            return this.debugger.addBreakpoint(breakpoint);
+
+        return false;
     }
 
     public boolean removeBreakpoint(Breakpoint breakpoint) {
-        return this.debugger.removeBreakpoint(breakpoint);
+        if (onDebug)
+            return this.debugger.removeBreakpoint(breakpoint);
+
+        return false;
     }
 }

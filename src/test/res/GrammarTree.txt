@@ -12,7 +12,7 @@ PROG
 				STMT
 					DECLARE_STMT
 						TYPE
-							REAL
+							INT
 						DECLARATOR_LIST
 							DECLARATOR
 								IDENTIFIER
@@ -24,7 +24,7 @@ PROG
 												TERM
 													FACTOR
 														NUMBER
-															REAL_NUMBER
+															INTEGER
 													MORE_FACTOR
 												MORE_TERM
 											RELATIONAL_EXPR_MORE
@@ -52,141 +52,135 @@ PROG
 							SEMICOLON
 					STMT_LIST
 						STMT
-							READ_STMT
-								READ
-								IDENTIFIER
-								SEMICOLON
-						STMT_LIST
-							STMT
-								WRITE_STMT
-									WRITE
-									EXPR
-										RELATIONAL_EXPR
-											SIMPLE_EXPR
-												TERM
-													FACTOR
-														IDENTIFIER
-														MORE_IDENTIFIER
-													MORE_FACTOR
-												MORE_TERM
-											RELATIONAL_EXPR_MORE
-									SEMICOLON
-							STMT_LIST
-								STMT
-									IF_STMT
-										IF
-										L_PARENTHESES
+							DECLARE_STMT
+								TYPE
+									INT
+								DECLARATOR_LIST
+									DECLARATOR
+										IDENTIFIER
+										L_SQUARE_BRACKETS
 										EXPR
 											RELATIONAL_EXPR
 												SIMPLE_EXPR
 													TERM
 														FACTOR
-															IDENTIFIER
-															MORE_IDENTIFIER
+															NUMBER
+																INTEGER
 														MORE_FACTOR
 													MORE_TERM
 												RELATIONAL_EXPR_MORE
-													COMPARISON_OP
-														LESS_THAN
-													SIMPLE_EXPR
-														TERM
-															FACTOR
-																NUMBER
-																	INTEGER
-															MORE_FACTOR
-														MORE_TERM
-													RELATIONAL_EXPR_MORE
-										R_PARENTHESES
-										COMPOUND_STMT
+										R_SQUARE_BRACKETS
+										INITIALIZER
+											ASSIGN
 											L_BRACES
-											STMT_LIST
-												STMT
-													WRITE_STMT
-														WRITE
+											INITIALIZER_LIST
+												EXPR
+													RELATIONAL_EXPR
+														SIMPLE_EXPR
+															TERM
+																FACTOR
+																	NUMBER
+																		INTEGER
+																MORE_FACTOR
+															MORE_TERM
+														RELATIONAL_EXPR_MORE
+												COMMA
+												INITIALIZER_LIST
+													EXPR
+														RELATIONAL_EXPR
+															SIMPLE_EXPR
+																TERM
+																	FACTOR
+																		NUMBER
+																			INTEGER
+																	MORE_FACTOR
+																MORE_TERM
+															RELATIONAL_EXPR_MORE
+													COMMA
+													INITIALIZER_LIST
 														EXPR
 															RELATIONAL_EXPR
 																SIMPLE_EXPR
 																	TERM
 																		FACTOR
-																			L_PARENTHESES
-																			EXPR
-																				RELATIONAL_EXPR
-																					SIMPLE_EXPR
-																						TERM
-																							FACTOR
-																								IDENTIFIER
-																								MORE_IDENTIFIER
-																							MORE_FACTOR
-																						MORE_TERM
-																					RELATIONAL_EXPR_MORE
-																			R_PARENTHESES
+																			NUMBER
+																				INTEGER
 																		MORE_FACTOR
 																	MORE_TERM
 																RELATIONAL_EXPR_MORE
-														SEMICOLON
+														COMMA
 											R_BRACES
-										MORE_IF_ELSE
+								SEMICOLON
+						STMT_LIST
+							STMT
+								DECLARE_STMT
+									TYPE
+										INT
+									DECLARATOR_LIST
+										DECLARATOR
+											IDENTIFIER
+											L_SQUARE_BRACKETS
+											R_SQUARE_BRACKETS
+											INITIALIZER
+												ASSIGN
+												L_BRACES
+												INITIALIZER_LIST
+													EXPR
+														RELATIONAL_EXPR
+															SIMPLE_EXPR
+																TERM
+																	FACTOR
+																		NUMBER
+																			INTEGER
+																	MORE_FACTOR
+																MORE_TERM
+															RELATIONAL_EXPR_MORE
+													COMMA
+													INITIALIZER_LIST
+														EXPR
+															RELATIONAL_EXPR
+																SIMPLE_EXPR
+																	TERM
+																		FACTOR
+																			NUMBER
+																				INTEGER
+																		MORE_FACTOR
+																	MORE_TERM
+																RELATIONAL_EXPR_MORE
+														COMMA
+														INITIALIZER_LIST
+															EXPR
+																RELATIONAL_EXPR
+																	SIMPLE_EXPR
+																		TERM
+																			FACTOR
+																				NUMBER
+																					INTEGER
+																			MORE_FACTOR
+																		MORE_TERM
+																	RELATIONAL_EXPR_MORE
+															COMMA
+												R_BRACES
+									SEMICOLON
+							STMT_LIST
+								STMT
+									READ_STMT
+										READ
+										IDENTIFIER
+										SEMICOLON
 								STMT_LIST
 									STMT
-										DECLARE_STMT
-											TYPE
-												INT
-											DECLARATOR_LIST
-												DECLARATOR
-													IDENTIFIER
-													L_SQUARE_BRACKETS
-													EXPR
-														RELATIONAL_EXPR
-															SIMPLE_EXPR
-																TERM
-																	FACTOR
-																		IDENTIFIER
-																		MORE_IDENTIFIER
-																	MORE_FACTOR
-																MORE_TERM
-															RELATIONAL_EXPR_MORE
-													R_SQUARE_BRACKETS
-											SEMICOLON
-									STMT_LIST
-										STMT
-											ASSIGN_STMT
-												IDENTIFIER
-												OTHER_ASSIGN
-													L_SQUARE_BRACKETS
-													EXPR
-														RELATIONAL_EXPR
-															SIMPLE_EXPR
-																TERM
-																	FACTOR
-																		NUMBER
-																			INTEGER
-																	MORE_FACTOR
-																MORE_TERM
-															RELATIONAL_EXPR_MORE
-													R_SQUARE_BRACKETS
-													ASSIGN
-													EXPR
-														RELATIONAL_EXPR
-															SIMPLE_EXPR
-																TERM
-																	FACTOR
-																		NUMBER
-																			INTEGER
-																	MORE_FACTOR
-																MORE_TERM
-															RELATIONAL_EXPR_MORE
-													SEMICOLON
-										STMT_LIST
-											STMT
-												DECLARE_STMT
-													TYPE
-														INT
-													DECLARATOR_LIST
-														DECLARATOR
-															IDENTIFIER
-														COMMA
-														DECLARATOR_LIST
-															DECLARATOR
+										WRITE_STMT
+											WRITE
+											EXPR
+												RELATIONAL_EXPR
+													SIMPLE_EXPR
+														TERM
+															FACTOR
 																IDENTIFIER
-													SEMICOLON
+																MORE_IDENTIFIER
+															MORE_FACTOR
+														MORE_TERM
+													RELATIONAL_EXPR_MORE
+											SEMICOLON
 			R_BRACES
