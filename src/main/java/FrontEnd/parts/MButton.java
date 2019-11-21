@@ -122,6 +122,7 @@ public class MButton {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (curThread != null && curThread.isAlive()) {
+                    // interrupt the executing thread
                     debugOver();
                     curThread.interrupt();
                     curThread = null;
