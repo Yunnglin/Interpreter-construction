@@ -64,7 +64,7 @@ public class MButton {
         mainWindow.getStepOverBtn().setEnabled(enabled);
         mainWindow.getStepInBtn().setEnabled(enabled);
         mainWindow.getContinueBtn().setEnabled(enabled);
-        mainWindow.getStopBtn().setEnabled(enabled);
+        //mainWindow.getStopBtn().setEnabled(enabled);
     }
 
     private void setFileButton(JButton button) {
