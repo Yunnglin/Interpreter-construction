@@ -121,6 +121,10 @@ public class MButton {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (curThread != null) {
+                    if (interpreter != null) {
+                        // if the interpreter is stopped, release lock at first
+                        interpreter.continueExecution();
+                    }
                     curThread.interrupt();
                     curThread = null;
                 }
