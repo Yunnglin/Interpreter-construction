@@ -27,6 +27,7 @@ public class MButton {
     private Interpreter interpreter;
     private DebuggerForm debuggerForm;
     private Thread curThread = null;
+    private ExecutorMessageListener executorMessageListener;
     public int curLine;
 
     private Icon debugIcon = new ImageIcon("src/main/java/FrontEnd/resource/debug.png");
@@ -125,6 +126,16 @@ public class MButton {
                         // if the interpreter is stopped, release lock at first
                         interpreter.continueExecution();
                     }
+                    Message message = executorMessageListener.message;
+                    if (message.getType().equals(Message.MessageType.READ_INPUT)) {
+                        mainWindow.getParamTextField().setEditable(false);
+                        synchronized (message) {
+                            mainWindow.getParamTextField().setBackground(MColor.paramTextFiledRunColor);
+                            message.notifyAll();
+                            System.out.println("notified ");
+                        }
+                    }
+                    debugOver();
                     curThread.interrupt();
                     curThread = null;
                 }
@@ -219,7 +230,7 @@ public class MButton {
                     mainWindow.getmScrollPane().curLine = 0;
 
                     interpreter.addMessageListener(new ParserMessageListener());
-                    ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
+                    executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
                     interpreter.addMessageListener(executorMessageListener);
                     mainWindow.getParamTextField().addKeyListener(executorMessageListener);
                     //开始执行
@@ -238,13 +249,15 @@ public class MButton {
     private void debugOver() {
         setDebugEnabled(false);
         debuggerForm.close();
+        executorMessageListener = null;
+        //curThread=null;
         curLine = -1;
         mainWindow.getmScrollPane().freshList();
     }
 
     private class ExecutorMessageListener implements MessageListener, KeyListener {
         JTextPane executePane;
-        Message message;
+        public Message message;
         JTextField paramField = mainWindow.getParamTextField();
 
         public ExecutorMessageListener(JTextPane textField) {
@@ -290,7 +303,7 @@ public class MButton {
                     paneTextAppend(s);
                     break;
                 }
-                case FORCE_EXIT:{
+                case FORCE_EXIT: {
                     String s = (String) message.getBody();
                     paneTextAppend(s);
                     break;
