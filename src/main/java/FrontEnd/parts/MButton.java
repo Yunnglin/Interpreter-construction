@@ -195,11 +195,13 @@ public class MButton {
                 Lexer lexer = new Lexer(reader);
                 Parser parser = new Parser(lexer);
                 interpreter = new Interpreter(parser);
+
+                interpreter.addMessageListener(new ParserMessageListener());
+                executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
+                interpreter.addMessageListener(executorMessageListener);
+                mainWindow.getParamTextField().addKeyListener(executorMessageListener);
+
                 if (!debug) {
-                    interpreter.addMessageListener(new ParserMessageListener());
-                    ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
-                    interpreter.addMessageListener(executorMessageListener);
-                    mainWindow.getParamTextField().addKeyListener(executorMessageListener);
                     //开始执行
                     interpreter.interpret();
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
@@ -217,10 +219,6 @@ public class MButton {
                     interpreter.initDebugger(breakpoints);
                     mainWindow.getmScrollPane().curLine = 0;
 
-                    interpreter.addMessageListener(new ParserMessageListener());
-                    executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
-                    interpreter.addMessageListener(executorMessageListener);
-                    mainWindow.getParamTextField().addKeyListener(executorMessageListener);
                     //开始执行
                     interpreter.interpret();
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
@@ -236,9 +234,10 @@ public class MButton {
 
     private void debugOver() {
         setDebugEnabled(false);
-        debuggerForm.close();
+        if(debuggerForm!=null){
+            debuggerForm.close();
+        }
         executorMessageListener = null;
-        //curThread=null;
         curLine = -1;
         mainWindow.getmScrollPane().freshList();
         mainWindow.getParamTextField().setEditable(false);
