@@ -2,6 +2,7 @@ package FrontEnd;
 
 import FrontEnd.parts.JTextFieldHintListener;
 import FrontEnd.parts.conf.MColor;
+import FrontEnd.parts.conf.MFont;
 import interpreter.Interpreter;
 import interpreter.intermediate.sym.SymTbl;
 import interpreter.intermediate.sym.SymTblEntry;
@@ -23,9 +24,10 @@ public class DebuggerForm {
     private JTextArea outTextArea;
     private JFrame frame;
     private MainWindow mainWindow;
-    private ArrayList<SymTblEntry> symTblEntries;
+    //private ArrayList<SymTblEntry> symTblEntries;
     private Interpreter interpreter;
-    private String PLACE_HOLDER = "请输入变量名,按回车键查看";
+    private String PLACE_HOLDER = "Please Input NAME of the Variable and PRESS ENTER";
+    private String seprator = ";  ";
 
     public DebuggerForm(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -34,15 +36,20 @@ public class DebuggerForm {
     public void init() {
         inputTextField.addFocusListener(new JTextFieldHintListener(PLACE_HOLDER, inputTextField));
         inputTextField.addKeyListener(new DebuggerMessageListener());
+        inputTextField.setFont(MFont.variableFont);
+        inputTextField.setBackground(MColor.variableInputColor);
+        outTextArea.setFont(MFont.lineNumFont);
+        outTextArea.setBackground(MColor.consoleAreaColor);
         outTextArea.setEditable(false);
         this.interpreter = mainWindow.getmButton().getInterpreter();
         this.interpreter.addMessageListener(new DebuggerMessageListener());
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Variables");
             frame.setContentPane(this.debugerPane);
+            frame.setAlwaysOnTop(true);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.pack();
-            frame.setSize(500, 300);
+            frame.setSize(650, 400);
             frame.setVisible(true);
         });
     }
@@ -63,7 +70,7 @@ public class DebuggerForm {
             if (entry != null) {
                 appendLine(entryToString(entry));
             } else {
-                appendLine("未找到变量: " + s);
+                appendLine("Cannot Find Variable: " + s);
             }
         }
     }
@@ -73,35 +80,35 @@ public class DebuggerForm {
         Object value = symTblEntry.getValue(SymTbl.SymTblKey.VALUE);
         String name = symTblEntry.getName();
         StringBuilder builder = new StringBuilder();
-        builder.append("变量名：").append(name + '\t');
+        builder.append("Name: " + name + seprator);
         if (type.getBasicType().equals(BasicType.INT)) {
             if (type.getForm().equals(TypeForm.SCALAR)) {
                 int curValue = (int) value;
-                builder.append("类型: 整数\t");
-                builder.append("值: " + curValue);
+                builder.append("Type: Int" + seprator);
+                builder.append("Value: " + curValue);
             } else {
-                int size = (int)symTblEntry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
+                int size = (int) symTblEntry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
                 Object[] curValue = (Object[]) value;
-                builder.append("类型: 整数数组\t");
-                builder.append("长度: "+size+"\t");
-                builder.append("值: ");
+                builder.append("Type: Int Array" + seprator);
+                builder.append("Length: " + size + seprator);
+                builder.append("Values: ");
                 for (Object cur : curValue) {
-                    builder.append(String.valueOf(cur==null?0:(int)cur) + '\t');
+                    builder.append(cur == null ? 0 : (int) cur).append(seprator);
                 }
             }
         } else if (type.getBasicType().equals(BasicType.REAL)) {
             if (type.getForm().equals(TypeForm.SCALAR)) {
                 double curValue = (double) value;
-                builder.append("类型: 实数\t");
-                builder.append("值: " + curValue);
+                builder.append("Type: Real" + seprator);
+                builder.append("Value: " + curValue);
             } else {
-                int size = (int)symTblEntry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
+                int size = (int) symTblEntry.getValue(SymTbl.SymTblKey.ARRAY_SIZE);
                 Object[] curValue = (Object[]) value;
-                builder.append("类型: 实数数组\t");
-                builder.append("长度: "+size+"\t");
-                builder.append("值: ");
+                builder.append("Type: Real Array" + seprator);
+                builder.append("Length: " + size + seprator);
+                builder.append("Values: ");
                 for (Object cur : curValue) {
-                    builder.append(String.valueOf(cur==null?0:(double)cur) + '\t');
+                    builder.append(cur == null ? 0 : (double) cur).append(seprator);
                 }
             }
         }

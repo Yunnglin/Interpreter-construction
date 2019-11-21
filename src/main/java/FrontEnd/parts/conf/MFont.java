@@ -10,7 +10,8 @@ public class MFont {
     public static Font codeFont = new Font("Courier New", Font.PLAIN, 18);
     public static Font lineNumFont = new Font("Courier New", Font.BOLD, 18);
 
+    public static Font variableFont = new Font("Courier New",Font.ITALIC,20);
     //console
-    public static Font consoleFont = new Font("Monaco", Font.PLAIN, 16);
+    public static Font consoleFont = new Font("Monaco", Font.PLAIN, 18);
 
 }

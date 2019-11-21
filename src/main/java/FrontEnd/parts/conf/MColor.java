@@ -14,7 +14,7 @@ public class MColor {
     public static Color paramTextFiledRunColor = new Color(240, 203, 183); //运行中
     public static Color breakPointColor = new Color(200,0,0);//断点
     public static Color curPointColor = new Color(97, 200, 121);//断点
-
+    public static Color variableInputColor = new Color(0xfaf9a0);
 
     //标识符颜色
     public static Color symbolColor = new Color(73, 113, 201);
