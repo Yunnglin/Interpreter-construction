@@ -25,12 +25,15 @@ import java.util.List;
 public class MButton {
     private MainWindow mainWindow;
     private Interpreter interpreter;
+    private DebuggerForm debuggerForm;
+    private Thread curThread=null;
     public int curLine;
 
     private Icon debugIcon = new ImageIcon("src/main/java/FrontEnd/resource/debug.png");
     private Icon stepOverIcon = new ImageIcon("src/main/java/FrontEnd/resource/stepOver.png");
     private Icon stepIntoIcon = new ImageIcon("src/main/java/FrontEnd/resource/stepInto.png");
     private Icon continueIcon = new ImageIcon("src/main/java/FrontEnd/resource/continue.png");
+    private Icon stopIcon = new ImageIcon("src/main/java/FrontEnd/resource/stop.png");
 
     public MButton(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -47,6 +50,7 @@ public class MButton {
         setStepOverButton(mainWindow.getStepOverBtn());
         setStepInButton(mainWindow.getStepInBtn());
         setContinueButton(mainWindow.getContinueBtn());
+        setStopButton(mainWindow.getStopBtn());
 
         mainWindow.getDebugBtn().setIcon(debugIcon);
         setDebugEnabled(false);
@@ -56,6 +60,7 @@ public class MButton {
         mainWindow.getStepOverBtn().setEnabled(enabled);
         mainWindow.getStepInBtn().setEnabled(enabled);
         mainWindow.getContinueBtn().setEnabled(enabled);
+        mainWindow.getStopBtn().setEnabled(enabled);
     }
 
     private void setFileButton(JButton button) {
@@ -102,6 +107,19 @@ public class MButton {
             @Override
             public void mouseClicked(MouseEvent e) {
                 interpreter.continueExecution();
+            }
+        });
+    }
+
+    private void setStopButton(JButton button) {
+        button.setIcon(stopIcon);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(curThread!=null){
+                    curThread.interrupt();
+                    curThread=null;
+                }
             }
         });
     }
@@ -161,6 +179,7 @@ public class MButton {
 
     private void setExecuteButton(JButton button, boolean debug) {
         button.addActionListener(e -> new Thread(() -> {
+            curThread = Thread.currentThread();
             if (mainWindow.getEditPane().getText().isEmpty())
                 return;
             if (!mainWindow.getFileOperation().save())//保存
@@ -184,7 +203,7 @@ public class MButton {
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
                 } else {
                     //debug模式
-                    DebuggerForm debuggerForm = new DebuggerForm();
+                    debuggerForm = new DebuggerForm();
                     debuggerForm.init();
 
                     List points = mainWindow.getmScrollPane().getLineNumList().getSelectedValuesList();
@@ -203,18 +222,25 @@ public class MButton {
                     //开始执行
                     interpreter.interpret();
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
-                    setDebugEnabled(false);
+                    debugOver();
+//                    Thread.currentThread().interrupt();
                 }
 
 
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
-                setDebugEnabled(false);
+                debugOver();
                 e1.printStackTrace();
             }
         }).start());
     }
 
+    private void debugOver(){
+        setDebugEnabled(false);
+        debuggerForm.close();
+        curLine = -1;
+        mainWindow.getmScrollPane().freshList();
+    }
 
     private class ExecutorMessageListener implements MessageListener, KeyListener {
         JTextPane executePane;

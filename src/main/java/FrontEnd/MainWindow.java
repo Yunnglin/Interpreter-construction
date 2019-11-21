@@ -57,6 +57,12 @@ public class MainWindow {
 
     private JButton continueBtn;
 
+    public JButton getStopBtn() {
+        return stopBtn;
+    }
+
+    private JButton stopBtn;
+
 
     private MTextPane mTextPane;
     private MPopMenu mPopMenu;
