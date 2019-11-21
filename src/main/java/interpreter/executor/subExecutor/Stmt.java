@@ -35,7 +35,7 @@ public class Stmt extends BaseExecutor {
         return executeNode(root.getChild(0));
     }
 
-    private void onTrap(int line) throws InterruptedException, ForceExitSIgnal {
+    private void onTrap(int line) throws ForceExitSIgnal {
         // encounter a trap
         Message message = new Message(Message.MessageType.SUSPEND_ON_TRAP, line);
         new Thread(() -> {
@@ -43,10 +43,12 @@ public class Stmt extends BaseExecutor {
         }).start();
 
         // wait next action
-        env.stopCurExecution(line);
-
-        // if execution is forced to exit when the execution is about to continue
-        if (Thread.currentThread().isInterrupted()) {
+        try {
+            env.stopCurExecution(line);
+        } catch (InterruptedException e) {
+            // if the thread is interrupted, regard as being forced to exit
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             throw new ForceExitSIgnal(line);
         }
     }

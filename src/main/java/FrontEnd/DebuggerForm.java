@@ -24,7 +24,6 @@ public class DebuggerForm {
     private JTextArea outTextArea;
     private JFrame frame;
     private MainWindow mainWindow;
-    //private ArrayList<SymTblEntry> symTblEntries;
     private Interpreter interpreter;
     private String PLACE_HOLDER = "Please Input NAME of the Variable and PRESS ENTER";
     private String seprator = ";  ";
@@ -43,6 +42,7 @@ public class DebuggerForm {
         outTextArea.setEditable(false);
         this.interpreter = mainWindow.getmButton().getInterpreter();
         this.interpreter.addMessageListener(new DebuggerMessageListener());
+
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Variables");
             frame.setContentPane(this.debugerPane);
@@ -55,7 +55,7 @@ public class DebuggerForm {
     }
 
     public void close() {
-        this.frame.dispose();
+        SwingUtilities.invokeLater(() -> this.frame.dispose());
     }
 
     private void findEntries() {

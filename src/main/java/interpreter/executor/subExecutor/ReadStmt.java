@@ -146,7 +146,7 @@ public class ReadStmt extends BaseExecutor {
         return null;
     }
 
-    private Message read(Integer line) throws InterruptedException, ForceExitSIgnal {
+    private Message read(Integer line) throws ForceExitSIgnal {
         Object[] body = new Object[]{};
         Message message = new Message(Message.MessageType.READ_INPUT, body);
         new Thread(() -> {
@@ -155,11 +155,14 @@ public class ReadStmt extends BaseExecutor {
 
         // wait the input
         synchronized (message) {
-            message.wait();
-        }
-        // if the thread is interrupted, throw force exit signal
-        if (Thread.currentThread().isInterrupted()) {
-            throw new ForceExitSIgnal(line);
+            try {
+                message.wait();
+            } catch (InterruptedException e) {
+                // if the thread is interrupted, regard as being forced to exit
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                throw new ForceExitSIgnal(line);
+            }
         }
 
         return message;

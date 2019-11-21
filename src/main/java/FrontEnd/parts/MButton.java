@@ -27,6 +27,7 @@ public class MButton {
     private Interpreter interpreter;
     private DebuggerForm debuggerForm;
     private Thread curThread = null;
+    private ExecutorMessageListener executorMessageListener;
     public int curLine;
 
     private Icon debugIcon = new ImageIcon("src/main/java/FrontEnd/resource/debug.png");
@@ -64,7 +65,7 @@ public class MButton {
         mainWindow.getStepOverBtn().setEnabled(enabled);
         mainWindow.getStepInBtn().setEnabled(enabled);
         mainWindow.getContinueBtn().setEnabled(enabled);
-        mainWindow.getStopBtn().setEnabled(enabled);
+        //mainWindow.getStopBtn().setEnabled(enabled);
     }
 
     private void setFileButton(JButton button) {
@@ -120,11 +121,8 @@ public class MButton {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (curThread != null) {
-                    if (interpreter != null) {
-                        // if the interpreter is stopped, release lock at first
-                        interpreter.continueExecution();
-                    }
+                if (curThread != null && curThread.isAlive()) {
+                    debugOver();
                     curThread.interrupt();
                     curThread = null;
                 }
@@ -219,17 +217,14 @@ public class MButton {
                     mainWindow.getmScrollPane().curLine = 0;
 
                     interpreter.addMessageListener(new ParserMessageListener());
-                    ExecutorMessageListener executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
+                    executorMessageListener = new ExecutorMessageListener(mainWindow.getExecuteOutputPane());
                     interpreter.addMessageListener(executorMessageListener);
                     mainWindow.getParamTextField().addKeyListener(executorMessageListener);
                     //开始执行
                     interpreter.interpret();
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
                     debugOver();
-//                    Thread.currentThread().interrupt();
                 }
-
-
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
                 debugOver();
@@ -241,13 +236,17 @@ public class MButton {
     private void debugOver() {
         setDebugEnabled(false);
         debuggerForm.close();
+        executorMessageListener = null;
+        //curThread=null;
         curLine = -1;
         mainWindow.getmScrollPane().freshList();
+        mainWindow.getParamTextField().setEditable(false);
+        mainWindow.getParamTextField().setBackground(MColor.paramTextFiledRunColor);
     }
 
     private class ExecutorMessageListener implements MessageListener, KeyListener {
         JTextPane executePane;
-        Message message;
+        public Message message;
         JTextField paramField = mainWindow.getParamTextField();
 
         public ExecutorMessageListener(JTextPane textField) {
@@ -290,6 +289,11 @@ public class MButton {
                 case SEMANTIC_ERROR: {
                     SemanticError error = (SemanticError) message.getBody();
                     String s = error.toString();
+                    paneTextAppend(s);
+                    break;
+                }
+                case FORCE_EXIT: {
+                    String s = (String) message.getBody();
                     paneTextAppend(s);
                     break;
                 }
