@@ -226,10 +226,7 @@ public class MButton {
                     interpreter.interpret();
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
                     debugOver();
-//                    Thread.currentThread().interrupt();
                 }
-
-
             } catch (IOException e1) {
                 mainWindow.getOutputPane().setText(e1.getMessage());
                 debugOver();
@@ -290,6 +287,11 @@ public class MButton {
                 case SEMANTIC_ERROR: {
                     SemanticError error = (SemanticError) message.getBody();
                     String s = error.toString();
+                    paneTextAppend(s);
+                    break;
+                }
+                case FORCE_EXIT:{
+                    String s = (String) message.getBody();
                     paneTextAppend(s);
                     break;
                 }
