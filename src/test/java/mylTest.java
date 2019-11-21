@@ -36,7 +36,8 @@ public class mylTest {
     }
     @Test
     public void test2(){
-        double a=0.1;
+        int[] x={1,2,3};
+        System.out.println(x.toString());
 
     }
 }

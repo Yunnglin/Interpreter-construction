@@ -1,6 +1,6 @@
 package interpreter.intermediate.type;
 
-public class DataType {
+public class  DataType {
 
     public static class PredefinedType {
         public static DataType TYPE_INT = new DataType(BasicType.INT, TypeForm.SCALAR);
