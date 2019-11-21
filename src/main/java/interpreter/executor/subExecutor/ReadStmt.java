@@ -53,7 +53,7 @@ public class ReadStmt extends BaseExecutor {
             }
 
             // start read
-            Message input = read();
+            Message input = read((Integer) root.getAttribute(INode.INodeKey.LINE));
             if (input.getType().equals(MessageType.IO_ERROR)) {
                 // if encountered io error
             }
@@ -87,11 +87,9 @@ public class ReadStmt extends BaseExecutor {
                 throw SemanticError.newWrongSubscriptedType(type,
                         (Integer) identifier.getAttribute(INode.INodeKey.LINE));
             }
-            Message input = read();
-            ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
-            Executor exe = factory.getExecutor(root.getChild(3), env);
+            Message input = read((Integer) root.getAttribute(INode.INodeKey.LINE));
             //执行结果
-            Object[] exeValue1 = (Object[]) exe.Execute(root.getChild(3));
+            Object[] exeValue1 = (Object[]) executeNode(root.getChild(3));
             DataType exe1Type = (DataType) exeValue1[0];
             //判断索引的类型是否是整数
             if (exe1Type.getBasicType().equals(BasicType.INT))
@@ -148,7 +146,7 @@ public class ReadStmt extends BaseExecutor {
         return null;
     }
 
-    private Message read() throws InterruptedException {
+    private Message read(Integer line) throws InterruptedException, ForceExitSIgnal {
         Object[] body = new Object[]{};
         Message message = new Message(Message.MessageType.READ_INPUT, body);
         new Thread(() -> {
@@ -158,6 +156,10 @@ public class ReadStmt extends BaseExecutor {
         // wait the input
         synchronized (message) {
             message.wait();
+        }
+        // if the thread is interrupted, throw force exit signal
+        if (Thread.currentThread().isInterrupted()) {
+            throw new ForceExitSIgnal(line);
         }
 
         return message;

@@ -30,7 +30,6 @@ public class AssignStmt extends BaseExecutor {
             throw new Exception("parse error in assign stmt");
         }
         //获取当前符号表
-        ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
         INode identifierNode = root.getChild(0);
         //获取标识符的名称
         String idName = (String) identifierNode.getAttribute(INode.INodeKey.NAME);
@@ -46,8 +45,7 @@ public class AssignStmt extends BaseExecutor {
                 DataType NodeType = (DataType) entry.getValue(SymTbl.SymTblKey.TYPE);
                 //other-assign->=expr;
                 if (AssignListLength == 3) {
-                    Executor exe = factory.getExecutor(AssignNodeList.get(1), env);
-                    Object[] exeValue = (Object[]) exe.Execute(AssignNodeList.get(1));
+                    Object[] exeValue = (Object[]) executeNode(AssignNodeList.get(1));
                     DataType exeResultType = (DataType) exeValue[0];
                     //如果标识符与表达式的结果类型匹配
                     if (env.getTypeSystem().assignCompatible(NodeType, exeResultType)) {
@@ -64,8 +62,7 @@ public class AssignStmt extends BaseExecutor {
                 else if (AssignListLength == 6) {
                     //判断标识符的类型是否是数组
                         if (NodeType.getForm().equals(TypeForm.ARRAY)) {
-                            Executor exe = factory.getExecutor(AssignNodeList.get(1), env);
-                            Object[] exeValue1 = (Object[]) exe.Execute(AssignNodeList.get(1));
+                            Object[] exeValue1 = (Object[]) executeNode(AssignNodeList.get(1));
                             DataType exe1Type = (DataType) exeValue1[0];
 
                             //判断索引的类型是否是整数
@@ -73,7 +70,7 @@ public class AssignStmt extends BaseExecutor {
                                 //确定索引大小
                                 int indexNum = (int) exeValue1[1];
                                 //执行表达式二
-                                Object[] exeValue2 = (Object[]) exe.Execute(AssignNodeList.get(4));
+                                Object[] exeValue2 = (Object[]) executeNode(AssignNodeList.get(4));
                                 DataType exeResultType = (DataType) exeValue2[0];
                                 DataType elementType= new DataType(NodeType.getBasicType(),TypeForm.SCALAR);
                                 //判断类型是否匹配

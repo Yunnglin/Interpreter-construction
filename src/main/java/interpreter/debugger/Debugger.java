@@ -78,10 +78,14 @@ public class Debugger {
     }
 
     public void stopCurExecution(int line) throws InterruptedException {
-        curLine = line;
+        setCurLine(line);
         synchronized (debugLock) {
             debugLock.wait();
         }
+    }
+
+    public void setCurLine(int line) {
+        this.curLine = line;
     }
 
 }

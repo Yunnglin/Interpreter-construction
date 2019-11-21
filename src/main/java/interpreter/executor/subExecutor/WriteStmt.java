@@ -25,9 +25,7 @@ public class WriteStmt extends BaseExecutor {
         }
         //write-stmt ->write expr ;
         else {
-            ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
-            Executor exeExpr = factory.getExecutor(root.getChild(1), env);
-            Object[] exeValue1 = (Object[]) exeExpr.Execute(root.getChild(1));
+            Object[] exeValue1 = (Object[]) executeNode(root.getChild(1));
             DataType resultType=(DataType) exeValue1[0];
             //如果表达式返回值可以被write
             if(env.getTypeSystem().writeCompatible(resultType))

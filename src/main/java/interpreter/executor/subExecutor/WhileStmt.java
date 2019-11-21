@@ -23,16 +23,15 @@ public class WhileStmt extends BaseExecutor {
         }
         //while-stmt -> while(expr) compound-stmt
         else {
-            ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
-            Executor exeExpr = factory.getExecutor(root.getChild(2), env);
-            Executor exeCompound = factory.getExecutor(root.getChild(4), env);
-            Object[] exeValue1 = (Object[]) exeExpr.Execute(root.getChild(2));
+            // set current line if in debug mode
+            env.setCurDebugLine((Integer) root.getAttribute(INode.INodeKey.LINE));
+            Object[] exeValue1 = (Object[]) executeNode(root.getChild(2));
             DataType resultType = (DataType) exeValue1[0];
             //如果表达式的返回值可以转为boolean
             if (env.getTypeSystem().whileCompatible(resultType)) {
-                while (Double.valueOf(exeValue1[1].toString())!=0) {
-                    Object[] exeValue2 = (Object[]) exeCompound.Execute(root.getChild(4));
-                    exeValue1 = (Object[]) exeExpr.Execute(root.getChild(2));
+                if (Double.valueOf(exeValue1[1].toString())!=0) {
+                    Object[] exeValue2 = (Object[]) executeNode(root.getChild(4));
+                    executeNode(root);
                 }
             }
             //不可则抛出错误

@@ -29,11 +29,9 @@ public class E extends BaseExecutor {
 
     private void progress(INode prog) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         int childSize = prog.getChildren().size();
-        ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
 
         INode externDeclaration = prog.getChild(0);
-        Executor executor = factory.getExecutor(externDeclaration,env);
-        executor.Execute(externDeclaration);
+        executeNode(externDeclaration);
         //[prog]
         if(childSize==2){
             progress(prog.getChild(1));

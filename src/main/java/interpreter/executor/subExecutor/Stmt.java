@@ -29,11 +29,13 @@ public class Stmt extends BaseExecutor {
             // encounter a trap
             onTrap(line);
         }
+        // set current line if in debug mode
+        env.setCurDebugLine(line);
         // execute the statement
         return executeNode(root.getChild(0));
     }
 
-    private void onTrap(int line) throws InterruptedException {
+    private void onTrap(int line) throws InterruptedException, ForceExitSIgnal {
         // encounter a trap
         Message message = new Message(Message.MessageType.SUSPEND_ON_TRAP, line);
         new Thread(() -> {
@@ -42,5 +44,10 @@ public class Stmt extends BaseExecutor {
 
         // wait next action
         env.stopCurExecution(line);
+
+        // if execution is forced to exit when the execution is about to continue
+        if (Thread.currentThread().isInterrupted()) {
+            throw new ForceExitSIgnal(line);
+        }
     }
 }

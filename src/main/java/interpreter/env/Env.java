@@ -177,6 +177,12 @@ public class Env implements MessageProducer {
         this.debugger = new Debugger(breakpoints);
     }
 
+    public void setCurDebugLine(int line) {
+        if (this.onDebug) {
+            this.debugger.setCurLine(line);
+        }
+    }
+
     /**
      * get the current step flag (step in, step over, step out, off)
      * @return StepFlag

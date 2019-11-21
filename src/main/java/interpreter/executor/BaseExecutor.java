@@ -16,7 +16,7 @@ public abstract class BaseExecutor implements Executor {
     }
 
     protected Object executeNode(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
-        ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
+        // set current line if in debug mode
 //        int i = 0;
 //
 //        while (i < root.getChildren().size()) {
@@ -25,7 +25,7 @@ public abstract class BaseExecutor implements Executor {
 //            executor.Execute(child);
 //            i++;
 //        }
-        Executor executor = factory.getExecutor(root, env);
+        Executor executor = getSpecExecutor(root);
 
         return executor.Execute(root);
     }
