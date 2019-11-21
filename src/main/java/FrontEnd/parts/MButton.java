@@ -39,6 +39,9 @@ public class MButton {
         this.mainWindow = mainWindow;
     }
 
+    public Interpreter getInterpreter() {
+        return interpreter;
+    }
     public void init() {
         setEditButton(mainWindow.getEditButton());
         setFileButton(mainWindow.getFileButton());
@@ -203,9 +206,9 @@ public class MButton {
                     mainWindow.getParamTextField().removeKeyListener(executorMessageListener);
                 } else {
                     //debug模式
-                    debuggerForm = new DebuggerForm();
+                    debuggerForm = new DebuggerForm(mainWindow);
                     debuggerForm.init();
-
+                    //添加断点
                     List points = mainWindow.getmScrollPane().getLineNumList().getSelectedValuesList();
                     ArrayList<Breakpoint> breakpoints = new ArrayList<>();
                     for (Object point : points.toArray()) {
