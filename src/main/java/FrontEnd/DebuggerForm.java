@@ -104,6 +104,7 @@ public class DebuggerForm {
         public void onMessageReceived(Message message) {
             Message.MessageType type = message.getType();
             if (type == Message.MessageType.SUSPEND_ON_TRAP) {
+                outTextArea.setText("");
                 findEntries();
             }
         }

@@ -26,7 +26,7 @@ public class MButton {
     private MainWindow mainWindow;
     private Interpreter interpreter;
     private DebuggerForm debuggerForm;
-    private Thread curThread=null;
+    private Thread curThread = null;
     public int curLine;
 
     private Icon debugIcon = new ImageIcon("src/main/java/FrontEnd/resource/debug.png");
@@ -42,6 +42,7 @@ public class MButton {
     public Interpreter getInterpreter() {
         return interpreter;
     }
+
     public void init() {
         setEditButton(mainWindow.getEditButton());
         setFileButton(mainWindow.getFileButton());
@@ -119,9 +120,9 @@ public class MButton {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(curThread!=null){
+                if (curThread != null) {
                     curThread.interrupt();
-                    curThread=null;
+                    curThread = null;
                 }
             }
         });
@@ -141,16 +142,11 @@ public class MButton {
                 //initialize a lexer
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
                     Lexer lex = new Lexer(reader);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    ArrayList<Token> tokens = lex.lex();
-                    for (Token token : tokens) {
-                        stringBuilder.append(token.toString()).append('\n');
-                    }
-                    //设置词法分析结果区
-                    mainWindow.getOutputPane().setText(stringBuilder.toString());
+                    lex.addMessageListener(new ParserMessageListener());
+                    lex.lex();
                 } catch (IOException e1) {
                     mainWindow.getOutputPane().setText(e1.getMessage());
-                    e1.printStackTrace();
+                    //e1.printStackTrace();
                 }
             }).start();
         });
@@ -238,7 +234,7 @@ public class MButton {
         }).start());
     }
 
-    private void debugOver(){
+    private void debugOver() {
         setDebugEnabled(false);
         debuggerForm.close();
         curLine = -1;
