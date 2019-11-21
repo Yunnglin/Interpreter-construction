@@ -2,6 +2,7 @@ package interpreter.executor.subExecutor;
 
 import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
@@ -31,7 +32,7 @@ public class DeclareStmt extends BaseExecutor {
      * @throws ReturnStmt.ReturnSignal
      */
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.DECLARE_STMT)) {
             throw new Exception("parse error in declare stmt at line " +
                     root.getAttribute(INodeKey.LINE));
@@ -56,7 +57,7 @@ public class DeclareStmt extends BaseExecutor {
      * @throws Exception
      * @throws ReturnStmt.ReturnSignal
      */
-    private void declare(String type, INode declarator) throws Exception, ReturnStmt.ReturnSignal {
+    private void declare(String type, INode declarator) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         SymTbl symTbl = env.getCurScopeSymTbl();
 
         // get the nodes
@@ -142,7 +143,7 @@ public class DeclareStmt extends BaseExecutor {
      * @throws Exception
      * @throws ReturnStmt.ReturnSignal
      */
-    private void initialize(SymTblEntry entry, INode initializer) throws Exception, ReturnStmt.ReturnSignal {
+    private void initialize(SymTblEntry entry, INode initializer) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (initializer != null) {
             DataType entryType = (DataType) entry.getValue(SymTblKey.TYPE);
             ArrayList<INode> children = initializer.getChildren();

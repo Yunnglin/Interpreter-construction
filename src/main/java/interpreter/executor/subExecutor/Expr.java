@@ -3,6 +3,7 @@ package interpreter.executor.subExecutor;
 import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.GrammarSymbol;
 import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
@@ -24,7 +25,7 @@ public class Expr extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.EXPR)) {
             throw new Exception("parse error in expression at line " +
                     root.getAttribute(INode.INodeKey.LINE));
@@ -35,7 +36,7 @@ public class Expr extends BaseExecutor {
         return calExpr(relExpr);
     }
 
-    private Object[] calExpr(INode expr) throws Exception, ReturnStmt.ReturnSignal {
+    private Object[] calExpr(INode expr) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         GrammarSymbol nodeSymbol = expr.getSymbol();
 
         if (nodeSymbol.equals(LALRNonterminalSymbol.RELATIONAL_EXPR)

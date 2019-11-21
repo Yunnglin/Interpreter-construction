@@ -2,6 +2,7 @@ package interpreter.executor.subExecutor;
 
 import interpreter.env.Env;
 import interpreter.executor.BaseExecutor;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
@@ -61,7 +62,7 @@ public class ReturnStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.RETURN_STMT)) {
             throw new Exception("parse error in return stmt at line " +
                     root.getAttribute(INode.INodeKey.LINE));

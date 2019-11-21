@@ -3,6 +3,7 @@ package interpreter.executor.subExecutor;
 import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.env.Env;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
@@ -23,7 +24,7 @@ public class FuncDefinition extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.FUNC_DEFINITION)) {
             throw new Exception("parse error in function definition at line " +
                     root.getAttribute(INode.INodeKey.LINE));
@@ -52,7 +53,7 @@ public class FuncDefinition extends BaseExecutor {
         return null;
     }
 
-    private SymTblEntry funcDeclare(String type, INode declarator) throws Exception, ReturnStmt.ReturnSignal {
+    private SymTblEntry funcDeclare(String type, INode declarator) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         // func-declarator -> identifier() | identifier(param-list)
         INode identifier = declarator.getChild(0);
         INode more = declarator.getChild(2);
@@ -103,7 +104,7 @@ public class FuncDefinition extends BaseExecutor {
         return newEntry;
     }
 
-    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclaration) throws Exception, ReturnStmt.ReturnSignal {
+    private DataType paramDeclare(SymTbl initialTbl, INode paramDeclaration) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         INode type = paramDeclaration.getChild(0);
         INode identifier = paramDeclaration.getChild(1);
         SymTblEntry newEntry = new SymTblEntry((String) identifier.getAttribute(INode.INodeKey.NAME));

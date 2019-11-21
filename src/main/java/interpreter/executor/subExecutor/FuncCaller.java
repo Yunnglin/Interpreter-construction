@@ -5,6 +5,7 @@ import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.Executor;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.sym.SymTbl;
 import interpreter.intermediate.sym.SymTblEntry;
@@ -28,7 +29,7 @@ public class FuncCaller extends BaseExecutor {
      * @throws Exception the exception thrown in the process of execution
      * @throws ReturnStmt.ReturnSignal a unexpected case, the return signal that escaped from catching
      */
-    public Object[] callFunc(String funcName, INode[] paramsVals, INode caller) throws Exception, ReturnStmt.ReturnSignal {
+    public Object[] callFunc(String funcName, INode[] paramsVals, INode caller) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         SymTblEntry funcEntry = env.findSymTblEntry(funcName);
 
         // check the name is a function name

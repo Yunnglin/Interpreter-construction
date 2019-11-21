@@ -1,6 +1,7 @@
 package interpreter.executor.subExecutor;
 
 import interpreter.executor.BaseExecutor;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
@@ -15,7 +16,7 @@ public class CompoundStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.COMPOUND_STMT)) {
             throw new Exception("parse error in compound stmt");
         }
