@@ -3,6 +3,7 @@ package interpreter.executor.subExecutor;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.env.Env;
 import interpreter.intermediate.node.INode;
@@ -13,7 +14,7 @@ public class E extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception {
+    public Object Execute(INode root) throws Exception, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.E)) {
             throw new Exception("parse error in E");
         }
@@ -26,7 +27,7 @@ public class E extends BaseExecutor {
         return null;
     }
 
-    private void progress(INode prog) throws Exception, ReturnStmt.ReturnSignal {
+    private void progress(INode prog) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         int childSize = prog.getChildren().size();
         ExecutorFactory factory = ExecutorFactory.getExecutorFactory();
 

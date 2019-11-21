@@ -6,6 +6,7 @@ import interpreter.exception.ExecutionError;
 import interpreter.exception.SemanticError;
 import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.executor.subExecutor.FuncCaller;
 import interpreter.executor.subExecutor.ReturnStmt;
 import interpreter.intermediate.node.INode;
@@ -115,19 +116,19 @@ public class Interpreter implements MessageProducer {
             Message semanticError = new Message(Message.MessageType.SEMANTIC_ERROR, se);
             this.sendMessage(semanticError);
             exitStatusCode = -1;
-            System.out.println(se);
+            System.out.println(se.getMessage());
             se.printStackTrace();
         } catch (ExecutionError ee) {
             Message executionError = new Message(Message.MessageType.EXECUTION_ERROR, ee);
             this.sendMessage(executionError);
             exitStatusCode = -1;
-            System.out.println(ee);
+            System.out.println(ee.getMessage());
             ee.printStackTrace();
         } catch (ReturnStmt.ReturnSignal missRet) {
             Message missRetError = new Message(Message.MessageType.SYS_ERROR, missRet);
             this.sendMessage(missRetError);
             exitStatusCode = -1001;
-            System.out.println(missRet);
+            System.out.println(missRet.getMessage());
             missRet.printStackTrace();
         } catch (Error | Exception syse) {
             String syseMessage = syse.getMessage() == null ? syse.getClass().getSimpleName() : syse.getMessage();
@@ -136,6 +137,13 @@ public class Interpreter implements MessageProducer {
             exitStatusCode = -1000;
             System.out.println(syse);
             syse.printStackTrace();
+        } catch (ForceExitSIgnal forceExitSIgnal) {
+            String exitMessage = forceExitSIgnal.getMessage();
+            Message forceExit = new Message(Message.MessageType.FORCE_EXIT, exitMessage);
+            this.sendMessage(forceExit);
+            exitStatusCode = -1002;
+            System.out.println(forceExitSIgnal.getMessage());
+            forceExitSIgnal.printStackTrace();
         }
 
         return exitStatusCode;
@@ -198,7 +206,7 @@ public class Interpreter implements MessageProducer {
      * @throws Exception
      * @throws ReturnStmt.ReturnSignal
      */
-    private Integer executeRoot(INode root, INode[] params) throws Exception, ReturnStmt.ReturnSignal {
+    private Integer executeRoot(INode root, INode[] params) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         // get executor and execute external declarations
         ExecutorFactory executorFactory = ExecutorFactory.getExecutorFactory();
         Executor rootExecutor = executorFactory.getExecutor(root, env);

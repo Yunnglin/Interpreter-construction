@@ -6,6 +6,7 @@ import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
 import interpreter.intermediate.type.BasicType;
@@ -18,7 +19,7 @@ public class WriteStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.WRITE_STMT)) {
             throw new Exception("parse error in write stmt");
         }

@@ -6,6 +6,7 @@ import interpreter.exception.SemanticError;
 import interpreter.executor.BaseExecutor;
 import interpreter.executor.Executor;
 import interpreter.executor.ExecutorFactory;
+import interpreter.executor.signal.ForceExitSIgnal;
 import interpreter.grammar.TokenTag;
 import interpreter.grammar.lalr.LALRNonterminalSymbol;
 import interpreter.intermediate.node.INode;
@@ -25,7 +26,7 @@ public class ReadStmt extends BaseExecutor {
     }
 
     @Override
-    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal {
+    public Object Execute(INode root) throws Exception, ReturnStmt.ReturnSignal, ForceExitSIgnal {
         if (!root.getSymbol().equals(LALRNonterminalSymbol.READ_STMT)) {
             throw new Exception("parse error in read stmt at line " +
                     root.getAttribute(INode.INodeKey.LINE));

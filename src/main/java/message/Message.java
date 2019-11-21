@@ -6,7 +6,7 @@ public class Message {
     public enum MessageType {
         PARSER_SUMMARY, INTERPRETER_SUMMARY, LEXER_SUMMARY, SYS_ERROR, SYNTAX_PARSE_ERROR,
         SYNTAX_LEX_ERROR, IO_ERROR, READ_INPUT,WRITE, EXECUTION_ERROR, SEMANTIC_ERROR,
-        SUSPEND_ON_TRAP
+        SUSPEND_ON_TRAP, FORCE_EXIT
     }
 
     private MessageType type;
