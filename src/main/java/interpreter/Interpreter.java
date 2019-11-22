@@ -90,12 +90,16 @@ public class Interpreter implements MessageProducer {
         // set root node
         if (root == null) {
             root = parser.parse();
+            if (root == null) {
+                // some errors happened when parsing
+                return -1;
+            }
         } else {
             // reset the environment
             this.env = new Env();
         }
 
-        // the process exit status
+      // the process exit status
         Integer exitStatusCode;
 
         try {

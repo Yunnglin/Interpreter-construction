@@ -132,6 +132,10 @@ public class Parser implements MessageProducer {
 
             if (tokens == null) {
                 tokens = lexer.lex();
+                if (tokens == null) {
+                    // some errors happened when lexing
+                    return null;
+                }
             }
 
             // measure how much time parser spent
