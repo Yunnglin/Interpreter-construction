@@ -294,7 +294,8 @@ public class MButton {
                 }
                 case FORCE_EXIT: {
                     String s = (String) message.getBody();
-                    paneTextAppend(s);
+                    SwingUtilities.invokeLater(() -> paneTextAppend(s));
+
                     break;
                 }
                 case SUSPEND_ON_TRAP: {
